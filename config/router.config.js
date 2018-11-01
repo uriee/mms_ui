@@ -253,7 +253,8 @@ export default [
           {
             path: '/hr/departments',
             name: 'departments',
-            component: './Result/Success',
+            component: './List/EmployeeList_old',
+            params: { entity: 'emp' },
           },
           {
             path: '/hr/certifications',
@@ -305,8 +306,9 @@ export default [
           // result
           {
             path: '/model/part',
-            name: 'part',
-            component: './Result/Success',
+            name: 'parts',
+            component: './List/EmployeeList',
+            params: { entity: 'part' },
           },
           {
             path: '/model/partarc',

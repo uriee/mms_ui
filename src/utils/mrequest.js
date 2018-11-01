@@ -10,6 +10,11 @@ const getLang = () => {
   return langs[getLocale()];
 };
 
+const getUser = () => {
+  const user = JSON.parse(localStorage.getItem('user'))
+  return {token: user.token ,username : user.username}
+}
+
 axios.interceptors.response.use(
   function(response) {
     console.log(' in the interceptor', response);
@@ -85,13 +90,13 @@ export default async function mrequest(
    * Maybe url has the same parameters
    */
   console.log('url:', url);
-  let checkIfUpdated = options.method != 'POST' && url.split('?')[1].includes('update');
+  let checkIfUpdated = options.method !== 'POST' && url.split('?')[1].includes('update');
+  const user = getUser()
+  /* strip UI parameters from url in order to use the caching mechanizem, add lang and authentication*/
   url =
     options.method == 'POST'
       ? url
-      : url.split('?').shift() +
-        '?lang=' +
-        getLang(); /* strip UI parameters from url in order to use the caching mechanizem*/
+      : url.split('?').shift() + `?lang=${getLang()}&token=${user.token}&user=${user.username}`; 
   const fingerprint = url + (options.data ? JSON.stringify(options.data) : '');
   console.log('fingerprint:', fingerprint, options);
   const hashcode = hash
@@ -101,7 +106,8 @@ export default async function mrequest(
   const defaultOptions = {
     credentials: 'include',
   };
-  const newOptions = { ...defaultOptions, ...options };
+  const newOptions = { ...defaultOptions, ...options ,};
+
   if (
     newOptions.method === 'post' ||
     newOptions.method === 'PUT' ||
@@ -114,6 +120,9 @@ export default async function mrequest(
         ...newOptions.headers,
       };
       newOptions.data = JSON.stringify(newOptions.data);
+      newOptions.data.token = user.token /*add authentication */
+      newOptions.data.token = user.username /*add authentication */
+
     } else {
       // newOptions.data is FormData
       newOptions.headers = {
@@ -142,7 +151,7 @@ export default async function mrequest(
   try {
     const resp = await axios({ url: url, ...newOptions }).catch(e => {
       console.log('Error in mrequest axios call', e.response);
-      return e.response;
+      throw new error(e)
     });
     console.log('mrequest after axios call: ', resp);
     await checkStatus(resp);
@@ -173,6 +182,7 @@ export default async function mrequest(
       router.push('/exception/404');
       return;
     }
+      router.push('/exception/404');    
   }
   return;
 }

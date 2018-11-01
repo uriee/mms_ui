@@ -24,8 +24,12 @@ import {
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-
 import styles from './TableList.less';
+
+/*import the schemas*/
+import {emp} from '../schemas/Emp.js';
+import {part} from '../schemas/Part.js';
+const schemas = {emp : emp,part: part}
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -38,7 +42,20 @@ const getValue = obj =>
     .join(',');
 
 /*-if exist value in local language then send it if not use the original -*/
-const check_t = (trans, orig) => (trans > '' ? trans : orig);
+
+const pushKey = (obj) =>  Object.keys(obj).map(key => {
+  obj[key].name = key
+  return obj[key]
+})
+
+const formFields = (obj) => {
+  for (var field in obj) {
+    obj[field].dataIndex = (obj[field].dataIndex > '' ? obj[field].dataIndex : field)
+    obj[field].title = formatMessage({ id: `pages.${obj[field].name}` })
+  }
+  return obj
+}
+
 
 @Form.create()
 class CreateForm extends PureComponent {
@@ -46,7 +63,10 @@ class CreateForm extends PureComponent {
     super(props);
 
     this.state = {
-      formVals: {},
+      formVals: Object.keys(this.props.fields).reduce((obj,key)=>{
+        obj[this.props.fields[key].dataIndex] = this.props.values[this.props.fields[key].dataIndex]
+        return obj
+      },{}),
       currentStep: 0,
     };
 
@@ -57,7 +77,8 @@ class CreateForm extends PureComponent {
   }
 
   handleNext = currentStep => {
-    const { form, handleAdd, choosers } = this.props;
+    const numOfSteps = this.props.formLayout.steps.length-1  
+    const { form, handler, choosers, handleModal } = this.props;
     const { formVals: oldValue } = this.state;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -67,10 +88,10 @@ class CreateForm extends PureComponent {
           formVals,
         },
         () => {
-          if (currentStep < 1) {
+          if (currentStep <  numOfSteps) {
             this.forward();
           } else {
-            handleAdd(formVals);
+            handler(formVals);
           }
         }
       );
@@ -91,89 +112,85 @@ class CreateForm extends PureComponent {
     });
   };
 
-  renderContent = (currentStep, formVals) => {
-    const { form } = this.props;
-    if (currentStep === 1) {
-      return [
-        <FormItem key="username" {...this.formLayout} label="username">
-          {form.getFieldDecorator('username', {
-            rules: [{ required: true, message: 'This field is required' }],
-            initialValue: formVals.username,
-          })(
-            <Select style={{ width: '100%' }}>
-              {this.props.choosers.users.map(user => (
-                <Option key={user.username} value={user.username}>
-                  {user.username}
+  getFormItemFromSchema = (fieldData)  => {
+    const fieldName = fieldData.field
+    const fieldStyle = fieldData.style
+    const { form, fields } = this.props;
+    const field = fields[fieldName]
+    if (!field) return <span/>
+    if(!this.props.choosers) return <span/>
+    if (!this.props.choosers && field.inputMethod === "select") return <span/> //a bug that need to be fixed
+    const placeHolder = fieldData.placeholder || field.title
+    const formVals = this.state.formVals
+    let formField = null
+    let layout = {}
+    switch(field.inputMethod) {
+      case 'input':
+        formField = (<Input placeholder={placeHolder} style={fieldStyle} />)
+        break
+      case 'select':
+      console.log(fieldStyle,this.props)
+        formField = (
+         <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="Select a person"
+            optionFilterProp="children"
+            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+          >
+            {this.props.choosers[field.chooser].map(option => (
+                <Option key={option.name} value={option.name}>
+                  {option.name}
                 </Option>
               ))}
-            </Select>
-          )}
-        </FormItem>,
-        <FormItem key="dept_name" {...this.formLayout} label="username">
-          {form.getFieldDecorator('dept_name', {
-            rules: [{ required: true, message: 'This field is required' }],
-            initialValue: formVals.dept_name,
-          })(
-            <Select style={{ width: '100%' }}>
-              {this.props.choosers.departments.map(dept => (
-                <Option key={dept.name} value={dept.name}>
-                  {dept.name}
-                </Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>,
-      ];
+          </Select>  
+          )
+        layout = this.formLayout
+        break
+      default : formField = (<Input placeholder={field.title} style={field.style} />)
     }
+    return (
+       <FormItem key={field.dataIndex} {...this.Layout} label={field.title}>
+         {form.getFieldDecorator(field.dataIndex, {rules: field.inputRules,initialValue: formVals[field.dataIndex]})(formField)}
+       </FormItem>  
+      )
+  }
 
-    return [
-      <Row key="fname_row">
-        <Col md={12} sm={24}>
-          <FormItem key="fname" label="First name">
-            {form.getFieldDecorator('fname', {
-              rules: [
-                { required: true, message: 'This field is required, minimum 2 charecter', min: 2 },
-              ],
-            })(<Input placeholder="First Name" />)}
-          </FormItem>
-        </Col>
-        <Col md={12} sm={24}>
-          <FormItem key="fname_t" label={<FormattedMessage id="pages.fname" />}>
-            {form.getFieldDecorator('fname_t', {
-              rules: [{ message: 'Minimum 2 charecter', min: 2 }],
-            })(<Input placeholder="" />)}
-          </FormItem>
-        </Col>
-      </Row>,
-      <Row key="sname_row">
-        <Col md={12} sm={24}>
-          <FormItem key="sname" label="Family name">
-            {form.getFieldDecorator('sname', {
-              rules: [
-                { required: true, message: 'This field is required, minimum 2 charecter', min: 2 },
-              ],
-            })(<Input placeholder="Last Name" />)}
-          </FormItem>
-        </Col>
-        <Col md={12} sm={24}>
-          <FormItem key="sname_t" label={<FormattedMessage id="pages.fname" />}>
-            {form.getFieldDecorator('sname_t', {
-              rules: [{ message: 'Minimum 2 charecter)', min: 2 }],
-            })(<Input placeholder="" />)}
-          </FormItem>
-        </Col>
-      </Row>,
-    ];
-  };
 
+  renderContent = (currentStep) => {
+    const type = this.props.formType
+    const steps = this.props.formLayout.steps
+    console.log('steps:',steps,currentStep)    
+    const step = steps[currentStep]
+    const format = step.format
+    const length = format.length
+    const fields = step.fields
+    return format.map((subStep,i) => {
+      const length = subStep.length
+      const elements = subStep.map((place,j) => (
+        <Col md={24/length} sm={24}  key={`${type}step${i}${j}`}>
+          {this.getFormItemFromSchema(fields[place])}
+        </Col>
+        ))
+      return (
+        <Row key={`${type}step${i}`}>
+        {elements}
+        </Row>
+        )
+    })    
+
+  } 
+     
+ 
   renderFooter = currentStep => {
-    const { handleModalVisible } = this.props;
-    if (currentStep === 1) {
+    const { handleModal } = this.props;
+    const numOfSteps = this.props.formLayout.steps.length    
+    if (currentStep === numOfSteps-1) {
       return [
         <Button key="back" style={{ float: 'left' }} onClick={this.backward}>
           Back
         </Button>,
-        <Button key="cancel" onClick={() => handleModalVisible()}>
+        <Button key="cancel" onClick={() => handleModal()}>
           Cancel
         </Button>,
         <Button key="submit" type="primary" onClick={() => this.handleNext(currentStep)}>
@@ -181,8 +198,21 @@ class CreateForm extends PureComponent {
         </Button>,
       ];
     }
+    if (currentStep < numOfSteps-1 && currentStep > 0 ) {
+      return [
+        <Button key="back" style={{ float: 'left' }} onClick={this.backward}>
+          Back
+        </Button>,
+        <Button key="cancel" onClick={() => handleModal()}>
+          Cancel
+        </Button>,
+        <Button key="forward" type="primary" onClick={() => this.handleNext(currentStep)}>
+          Forward
+        </Button>,
+      ];
+    }    
     return [
-      <Button key="cancel" onClick={() => handleModalVisible()}>
+      <Button key="cancel" onClick={() => handleModal()}>
         Cancel
       </Button>,
       <Button key="forward" type="primary" onClick={() => this.handleNext(currentStep)}>
@@ -192,9 +222,11 @@ class CreateForm extends PureComponent {
   };
 
   render() {
-    const { ModalVisible, handleModalVisible } = this.props;
+    if (!this.props.fields) return {}
+    const { ModalVisible, handleModal } = this.props;
     const { currentStep, formVals } = this.state;
-
+    const steps = this.props.formLayout.steps    
+    const type = this.props.formType
     return (
       <Modal
         width={640}
@@ -203,170 +235,10 @@ class CreateForm extends PureComponent {
         title="Edit"
         visible={ModalVisible}
         footer={this.renderFooter(currentStep)}
-        onCancel={() => handleModalVisible()}
+        onCancel={() => handleModal()}
       >
         <Steps style={{ marginBottom: 28 }} size="small" current={currentStep}>
-          <Step title="step 1" />
-          <Step title="step 2" />
-        </Steps>
-        {this.renderContent(currentStep, formVals)}
-      </Modal>
-    );
-  }
-}
-
-@Form.create()
-class UpdateForm extends PureComponent {
-  constructor(props) {
-    super(props);
-    console.log('!!!!~!~', props.values);
-    this.state = {
-      formVals: {
-        name: props.values.name,
-        sname: props.values.sname,
-        fname: props.values.fname,
-        username: props.values.username,
-        dept_name: props.values.dept_name,
-        id: props.values.id,
-      },
-      currentStep: 0,
-    };
-
-    this.formLayout = {
-      labelCol: { span: 7 },
-      wrapperCol: { span: 13 },
-    };
-  }
-
-  handleNext = currentStep => {
-    const { form, handleUpdate, choosers } = this.props;
-    const { formVals: oldValue } = this.state;
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      const formVals = { ...oldValue, ...fieldsValue };
-      this.setState(
-        {
-          formVals,
-        },
-        () => {
-          if (currentStep < 1) {
-            this.forward();
-          } else {
-            handleUpdate(formVals);
-          }
-        }
-      );
-    });
-  };
-
-  backward = () => {
-    const { currentStep } = this.state;
-    this.setState({
-      currentStep: currentStep - 1,
-    });
-  };
-
-  forward = () => {
-    const { currentStep } = this.state;
-    this.setState({
-      currentStep: currentStep + 1,
-    });
-  };
-
-  renderContent = (currentStep, formVals) => {
-    const { form } = this.props;
-    if (currentStep === 1) {
-      return [
-        <FormItem key="username" {...this.formLayout} label="username">
-          {form.getFieldDecorator('username', {
-            rules: [{ required: true, message: 'This field is required' }],
-            initialValue: formVals.username,
-          })(
-            <Select style={{ width: '100%' }}>
-              {this.props.choosers.users.map(user => (
-                <Option key={user.username} value={user.username}>
-                  {user.username}
-                </Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>,
-        <FormItem key="dept_name" {...this.formLayout} label="username">
-          {form.getFieldDecorator('dept_name', {
-            rules: [{ required: true, message: 'This field is required' }],
-            initialValue: formVals.dept_name,
-          })(
-            <Select style={{ width: '100%' }}>
-              {this.props.choosers.departments.map(dept => (
-                <Option key={dept.name} value={dept.name}>
-                  {dept.name}
-                </Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>,
-      ];
-    }
-
-    return [
-      <FormItem key="fname" {...this.formLayout} label={<FormattedMessage id="pages.fname" />}>
-        {form.getFieldDecorator('fname', {
-          rules: [{ required: true, message: 'This field is required' }],
-          initialValue: formVals.fname,
-        })(<Input placeholder="First Name" />)}
-      </FormItem>,
-
-      <FormItem key="sname" {...this.formLayout} label={<FormattedMessage id="pages.sname" />}>
-        {form.getFieldDecorator('sname', {
-          rules: [{ required: true, message: 'This field is required' }],
-          initialValue: formVals.sname,
-        })(<Input placeholder="English" />)}
-      </FormItem>,
-    ];
-  };
-
-  renderFooter = currentStep => {
-    const { handleUpdateModalVisible } = this.props;
-    if (currentStep === 1) {
-      return [
-        <Button key="back" style={{ float: 'left' }} onClick={this.backward}>
-          Back
-        </Button>,
-        <Button key="cancel" onClick={() => handleUpdateModalVisible()}>
-          Cancel
-        </Button>,
-        <Button key="submit" type="primary" onClick={() => this.handleNext(currentStep)}>
-          Submit
-        </Button>,
-      ];
-    }
-    return [
-      <Button key="cancel" onClick={() => handleUpdateModalVisible()}>
-        Cancel
-      </Button>,
-      <Button key="forward" type="primary" onClick={() => this.handleNext(currentStep)}>
-        Forward
-      </Button>,
-    ];
-  };
-
-  render() {
-    const { updateModalVisible, handleUpdateModalVisible } = this.props;
-    const { currentStep, formVals } = this.state;
-
-    return (
-      <Modal
-        width={640}
-        bodyStyle={{ padding: '32px 40px 48px' }}
-        destroyOnClose
-        title="Edit"
-        visible={updateModalVisible}
-        footer={this.renderFooter(currentStep)}
-        onCancel={() => handleUpdateModalVisible()}
-      >
-        <Steps style={{ marginBottom: 28 }} size="small" current={currentStep}>
-          <Step title="step 1" />
-          <Step title="step 2" />
+          {steps.map((step,i) => <Step title={step.title} key={`${type}step${i}`}/>)}
         </Steps>
         {this.renderContent(currentStep, formVals)}
       </Modal>
@@ -375,17 +247,20 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ emp, loading }) => ({
-  emp,
-  loading: loading.models.emp,
+@connect(({ action, loading }) => ({
+  action,
+  loading: loading.models.action,
 }))
 @Form.create()
 class TableList extends PureComponent {
   constructor(props) {
     super(props);
 
+    this.entity = this.props.route.params.entity
+    this.schema = schemas[this.entity]
+    if(!this.schema.fields.id) throw new Error("The schema does not have an id field!")
+
     this.state = {
-      entity: this.props.route.params.entity,
       modalVisible: false,
       updateModalVisible: false,
       expandForm: false,
@@ -394,53 +269,37 @@ class TableList extends PureComponent {
       stepFormValues: {},
     };
 
-    this.columns = [
-      {
-        title: formatMessage({ id: 'pages.emp_name' }),
-        dataIndex: 'name',
-        sorter: true,
-      },
-      {
-        title: formatMessage({ id: 'pages.fname' }),
-        dataIndex: 'fname',
-        sorter: true,
-        align: 'right',
-      },
-      {
-        title: formatMessage({ id: 'pages.sname' }),
-        dataIndex: 'sname',
-        sorter: true,
-        align: 'right',
-      },
-      {
-        title: formatMessage({ id: 'pages.dept_name' }),
-        dataIndex: 'dept_name',
-        sorter: true,
-        align: 'right',
-      },
-      {
-        title: formatMessage({ id: 'pages.username' }),
-        dataIndex: 'username',
-        sorter: true,
-        align: 'right',
-      },
-      {
+    this.fields = pushKey(this.schema.fields)
+    this.formFields = formFields(this.schema.fields)  
+    console.log('88:',this.props)    
+
+    this.columns = this.fields
+                      .filter(field => field.required !== false)
+                      .sort((a,b) => a.order > b.order)
+                      .map(field => ({
+                        title: formatMessage({ id: `pages.${field.name}` }),
+                        dataIndex: (field.dataIndex ? field.dataIndex : field.name),
+                        sorter: (field.sorter ? field.sorter : false),
+                        align: (field.align ? field.align :'left')
+                      }))
+    this.columns.push({
         title: '',
         render: (text, record) => (
           <Fragment>
             <a onClick={() => this.handleUpdateModalVisible(true, record)}>Update</a>
           </Fragment>
         ),
-      },
-    ];
+      })  
   }
+
+
+
 
   componentDidMount() {
     const { dispatch } = this.props;
-    console.log('~~~~~~~~~', this.props, this.state.entity);
     dispatch({
-      type: 'emp/fetch',
-      payload: {},
+      type: 'action/fetch',
+      payload: {entity : this.entity},
     });
   }
 
@@ -465,8 +324,8 @@ class TableList extends PureComponent {
     }
 
     dispatch({
-      type: 'emp/fetch',
-      payload: params,
+      type: 'action/fetch',
+      payload: { ...params, entity: this.entity }
     });
   };
 
@@ -477,8 +336,8 @@ class TableList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'emp/fetch',
-      payload: {},
+      type: 'action/fetch',
+      payload: {entity: this.entity},
     });
   };
 
@@ -489,8 +348,8 @@ class TableList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'emp/fetch',
-      payload: { update: 'yes' },
+      type: 'action/fetch',
+      payload: { update: 'yes' ,entity: this.entity},
     });
   };
 
@@ -509,9 +368,10 @@ class TableList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'emp/fetch',
+          type: 'action/fetch',
           payload: {
             key: selectedRows.map(row => row.key),
+            entity: this.entity
           },
           callback: () => {
             this.setState({
@@ -549,8 +409,8 @@ class TableList extends PureComponent {
       });
 
       dispatch({
-        type: 'emp/fetch',
-        payload: values,
+        type: 'action/fetch',
+        payload: { ...values, entity: this.entity}
       });
     });
   };
@@ -569,47 +429,29 @@ class TableList extends PureComponent {
     });
   };
 
-  handleAdd = fields => {
+  handleAdd = values => {
     const { dispatch } = this.props;
     let lang = { 'zh-CN': 2, 'en-US': 1 };
     let lang_id = lang[getLocale()];
 
     dispatch({
-      type: 'emp/add',
-      payload: {
-        lang_id: lang_id,
-        fname: fields.fname,
-        fname_t: check_t(fields.fname_t, fields.fname),
-        sname: fields.sname,
-        sname_t: check_t(fields.sname_t, fields.sname),
-        emp_name: `${fields.fname} ${fields.sname}`,
-        user_name: fields.username,
-        dept_name: fields.dept_name,
-      },
+      type: 'action/add',
+      payload: Object.assign(values,{lang_id: lang_id, entity: this.entity}),
       callback: this.handleFormAfterIU,
     });
 
     message.success('Raw was Added Successfully');
     this.handleModalVisible();
+    
   };
 
   handleUpdate = fields => {
     const { dispatch } = this.props;
-    console.log(fields);
     let lang = { 'zh-CN': 2, 'en-US': 1 };
     let lang_id = lang[getLocale()];
-
     dispatch({
-      type: 'emp/update',
-      payload: {
-        id: fields.id,
-        lang_id: lang_id,
-        fname: fields.fname,
-        sname: fields.sname,
-        emp_name: fields.name,
-        user_name: fields.username,
-        dept_name: fields.dept_name,
-      },
+      type: 'action/update',
+      payload: Object.assign(fields,{lang_id: lang_id,entity: this.entity}),
       callback: this.handleFormAfterIU,
     });
 
@@ -621,71 +463,19 @@ class TableList extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="Name">
-              {getFieldDecorator('name')(<Input placeholder="Name" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="User Name">
-              {getFieldDecorator('username')(<Input placeholder="User Name" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                Reset
-              </Button>
-              <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                Advanced Filter <Icon type="down" />
-              </a>
-            </span>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
 
-  renderAdvancedForm() {
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
-    return (
+      return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label={<FormattedMessage id="pages.emp_name" />}>
-              {getFieldDecorator('name')(
-                <Input placeholder={<FormattedMessage id="pages.emp_name" />} />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="First Name">
-              {getFieldDecorator('fname')(<Input placeholder="First Name" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="Family Name">
-              {getFieldDecorator('sname')(<Input placeholder="Family Name" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="Department">
-              {getFieldDecorator('dept_name_t')(<Input placeholder="Department" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="User Name">
-              {getFieldDecorator('username')(<Input placeholder="User Name" />)}
-            </FormItem>
-          </Col>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }} >
+          {this.columns.slice(0,2).map(col => (
+                  <Col md={8} sm={24} key={'mainform'+col.dataIndex}>
+                    <FormItem label={col.title}>
+                      {getFieldDecorator(col.dataIndex)(
+                      <Input placeholder={col.title}/>
+                      )}
+                    </FormItem>
+                  </Col>
+                ))}   
         </Row>
         <div style={{ overflow: 'hidden' }}>
           <div style={{ float: 'right', marginBottom: 24 }}>
@@ -704,14 +494,51 @@ class TableList extends PureComponent {
     );
   }
 
+
+  renderMainForm(from,to) {
+    const {
+      form: { getFieldDecorator },
+    } = this.props;
+
+      return (
+      <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }} >
+          {this.columns.slice(from,to).map(col => (
+                  <Col md={8} sm={24} key={'mainform'+col.dataIndex}>
+                    <FormItem label={col.title}>
+                      {getFieldDecorator(col.dataIndex)(
+                      <Input placeholder={col.title}/>
+                      )}
+                    </FormItem>
+                  </Col>
+                ))}   
+        </Row>
+        <div style={{ overflow: 'hidden' }}>
+          <div style={{ float: 'right', marginBottom: 24 }}>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+              Reset
+            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={this.toggleForm}>
+               <Icon type="up" />
+            </Button>
+          </div>
+        </div>
+      </Form>
+    );
+  }
+
   renderForm() {
     const { expandForm } = this.state;
-    return expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
+    return expandForm ? this.renderMainForm(0,-1) :this.renderMainForm(0,2);
   }
 
   render() {
+    console.log("------------------------",this.state,this.props)
     const {
-      emp: { data },
+      action: { data },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
@@ -730,9 +557,10 @@ class TableList extends PureComponent {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
       handleUpdate: this.handleUpdate,
     };
+    console.log("DATA",data)
 
-    return (
-      <PageHeaderWrapper title="Title">
+     return (
+      <PageHeaderWrapper title={this.schema.title}>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
@@ -759,19 +587,32 @@ class TableList extends PureComponent {
             />
           </div>
         </Card>
+        {data.entity === this.entity ? (
+          <div>
         <CreateForm
           {...parentMethods}
           ModalVisible={modalVisible}
           values={stepFormValues}
           choosers={data.choosers}
+          fields={this.formFields}
+          formLayout={this.schema.forms.insert}
+          handler={this.handleAdd}
+          handleModal={this.handleModalVisible}
+          formType='insert'
         />
-        {stepFormValues && Object.keys(stepFormValues).length ? (
-          <UpdateForm
+        
+          <CreateForm
             {...updateMethods}
-            updateModalVisible={updateModalVisible}
+            ModalVisible={updateModalVisible}
             values={stepFormValues}
             choosers={data.choosers}
+            fields={this.formFields}
+            formLayout={this.schema.forms.update}
+            handler={this.handleUpdate}
+            handleModal={this.handleUpdateModalVisible}
+            formType='update'
           />
+        </div>
         ) : null}
       </PageHeaderWrapper>
     );
