@@ -21,6 +21,7 @@ import {
   Divider,
   Steps,
   Radio,
+  List,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -29,7 +30,8 @@ import styles from './TableList.less';
 /*import the schemas*/
 import {emp} from '../schemas/Emp.js';
 import {part} from '../schemas/Part.js';
-const schemas = {emp : emp,part: part}
+import {dept} from '../schemas/Departments.js';
+const schemas = {emp : emp,part: part, dept: dept}
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -42,7 +44,6 @@ const getValue = obj =>
     .join(',');
 
 /*-if exist value in local language then send it if not use the original -*/
-
 const pushKey = (obj) =>  Object.keys(obj).map(key => {
   obj[key].name = key
   return obj[key]
@@ -55,7 +56,6 @@ const formFields = (obj) => {
   }
   return obj
 }
-
 
 @Form.create()
 class CreateForm extends PureComponent {
@@ -100,9 +100,11 @@ class CreateForm extends PureComponent {
 
   backward = () => {
     const { currentStep } = this.state;
-    this.setState({
-      currentStep: currentStep - 1,
-    });
+    if (currentStep > 0) {
+      this.setState({
+        currentStep: currentStep - 1,
+      });
+    }
   };
 
   forward = () => {
@@ -117,9 +119,8 @@ class CreateForm extends PureComponent {
     const fieldStyle = fieldData.style
     const { form, fields } = this.props;
     const field = fields[fieldName]
-    if (!field) return <span/>
-    if(!this.props.choosers) return <span/>
-    if (!this.props.choosers && field.inputMethod === "select") return <span/> //a bug that need to be fixed
+    console.log('~~~~~~~~',field,fieldData)
+    if (field.inputMethod === "select" && !this.props.hasOwnProperty('choosers')) return <span/> //a bug that need to be fixed
     const placeHolder = fieldData.placeholder || field.title
     const formVals = this.state.formVals
     let formField = null
@@ -129,12 +130,11 @@ class CreateForm extends PureComponent {
         formField = (<Input placeholder={placeHolder} style={fieldStyle} />)
         break
       case 'select':
-
         formField = (
          <Select
             showSearch
             style={{ width: 200 }}
-            placeholder="Select a person"
+            placeholder="Select"
             optionFilterProp="children"
             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
           >
@@ -185,10 +185,15 @@ class CreateForm extends PureComponent {
     const { handleModal } = this.props;
     const numOfSteps = this.props.formLayout.steps.length    
     if (currentStep === numOfSteps-1) {
-      return [
+      var ret = []
+       if (currentStep > 0 ) {
+        ret = [
         <Button key="back" style={{ float: 'left' }} onClick={this.backward}>
           Back
-        </Button>,
+        </Button>
+        ]
+       }
+      return [...ret,
         <Button key="cancel" onClick={() => handleModal()}>
           Cancel
         </Button>,
@@ -497,6 +502,41 @@ class TableList extends PureComponent {
     return expandForm ? this.renderMainForm(0,-1) :this.renderMainForm(0,2);
   }
 
+  myList = (data) => (
+    <List key='list'
+      grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 5 }}
+      dataSource={data}
+      renderItem={item => (
+        <List.Item>
+          <Card title={item.name} key={item.name}>
+              {Object.keys(item).filter(x => this.schema.fields.hasOwnProperty(x) && x!== 'id').map(x =>{console.log(item,x);
+                return(
+                <div>
+                  <span > {formatMessage({ id: `pages.${x}` })} : </span>
+                  <span > {item[x].toString()} </span>
+                   
+                </div>)})}
+              <Button key={`bt_update_${item.name}`} style={{ float: 'right' }} onClick={() => this.handleUpdateModalVisible(true, item) }>
+                Update
+              </Button>
+          </Card>
+        </List.Item>
+      )}
+    />    
+  );  
+
+
+  myTable  = (selectedRows,loading,data) => (
+      <StandardTable
+        selectedRows={selectedRows}
+        loading={loading}
+        data={data}
+        columns={this.columns}
+        onSelectRow={this.handleSelectRows}
+        onChange={this.handleStandardTableChange}
+      />
+    )
+
   render() {
     const {
       action: { data },
@@ -518,9 +558,9 @@ class TableList extends PureComponent {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
       handleUpdate: this.handleUpdate,
     };
-    console.log("DATA",data)
+    console.log("DATA",data,this.entity)
     if(data.entity !== this.entity) return <span/>
-
+      console.log("-------------------------------------",window.innerWidth)
      return (
       <PageHeaderWrapper title={this.schema.title}>
         <Card bordered={false}>
@@ -539,14 +579,7 @@ class TableList extends PureComponent {
                 </span>
               )}
             </div>
-            <StandardTable
-              selectedRows={selectedRows}
-              loading={loading}
-              data={data}
-              columns={this.columns}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
-            />
+            {( window.innerWidth < 1000 ? this.myList(data.list) :this.myTable(selectedRows,loading,data))}
           </div>
         </Card>
         <CreateForm

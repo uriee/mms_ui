@@ -105,6 +105,7 @@ export default {
   'menu.account.trigger': 'Trigger Error',
   'menu.account.logout': 'יציאה',
   'pages.id': 'id',
+  'pages.name': 'שם',
   'pages.emp_number': 'מספר עובד',
   'pages.dept_name': 'מחלקה',
   'pages.sname_t': 'שם משפחה',

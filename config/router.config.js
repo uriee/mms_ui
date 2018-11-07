@@ -18,7 +18,7 @@ export default [
     authority: ['admin', 'user'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/dashboard/analysis' },
+      { path: '/', redirect: '/model/part' },
       {
         path: '/dashboard',
         name: 'dashboard',
@@ -27,17 +27,17 @@ export default [
           {
             path: '/dashboard/analysis',
             name: 'analysis',
-            component: './Dashboard/Analysis',
+            component: './Result/Success',
           },
           {
             path: '/dashboard/monitor',
             name: 'monitor',
-            component: './Dashboard/Monitor',
+            component: './Result/Success',
           },
           {
             path: '/dashboard/workplace',
             name: 'workplace',
-            component: './Dashboard/Workplace',
+            component: './Result/Success',
           },
         ],
       },
@@ -50,25 +50,25 @@ export default [
           {
             path: '/prod/work-orders',
             name: 'workorders',
-            component: './Forms/BasicForm',
+            component: './Result/Success',
           },
           {
             path: '/prod/work-report',
             name: 'report',
-            component: './Forms/StepForm',
+            component: './Result/Success',
           },
           {
             path: '/prod/work-plan',
             name: 'plan',
             icon: 'schedule',
             authority: ['admin'],
-            component: './Forms/AdvancedForm',
+            component: './Result/Success',
           },
           {
             path: '/prod/standard',
             name: 'standard',
             authority: ['admin'],
-            component: './Forms/AdvancedForm',
+            component: './Result/Success',
           },
         ],
       },
@@ -81,17 +81,17 @@ export default [
           {
             path: '/service/calls',
             name: 'calls',
-            component: './List/TableList',
+            component: './Result/Success',
           },
           {
             path: '/service/serials',
             name: 'serials',
-            component: './List/BasicList',
+            component: './Result/Success',
           },
           {
             path: '/service/contracts',
             name: 'contracts',
-            component: './List/CardList',
+            component: './Result/Success',
           },
         ],
       },
@@ -104,12 +104,12 @@ export default [
           {
             path: '/kcenter/instructions',
             name: 'instructions',
-            component: './Profile/BasicProfile',
+            component: './Result/Success',
           },
           {
             path: '/kcenter/blogs',
             name: 'blogs',
-            component: './Profile/AdvancedProfile',
+            component: './Result/Success',
           },
         ],
       },
@@ -247,14 +247,14 @@ export default [
           {
             path: '/hr/employees',
             name: 'employees',
-            component: './List/EmployeeList',
+            component: './List/MainList',
             params: { entity: 'emp' },
           },
           {
             path: '/hr/departments',
             name: 'departments',
-            component: './List/EmployeeList_old',
-            params: { entity: 'emp' },
+            component: './List/MainList',
+            params: { entity: 'dept' },
           },
           {
             path: '/hr/certifications',
@@ -307,7 +307,7 @@ export default [
           {
             path: '/model/part',
             name: 'parts',
-            component: './List/EmployeeList',
+            component: './List/MainList',
             params: { entity: 'part' },
           },
           {
@@ -356,50 +356,50 @@ export default [
           {
             path: '/account/center',
             name: 'center',
-            component: './Account/Center/Center',
+            component: './Result/Success',
             routes: [
               {
                 path: '/account/center',
-                redirect: '/account/center/articles',
+                redirect: './Result/Success',
               },
               {
                 path: '/account/center/articles',
-                component: './Account/Center/Articles',
+                component: './Result/Success',
               },
               {
                 path: '/account/center/applications',
-                component: './Account/Center/Applications',
+                component: './Result/Success',
               },
               {
                 path: '/account/center/projects',
-                component: './Account/Center/Projects',
+                component: './Result/Success',
               },
             ],
           },
           {
             path: '/account/settings',
             name: 'settings',
-            component: './Account/Settings/Info',
+            component: './Result/Success',
             routes: [
               {
                 path: '/account/settings',
-                redirect: '/account/settings/base',
+                redirect: './Result/Success',
               },
               {
                 path: '/account/settings/base',
-                component: './Account/Settings/BaseView',
+                component: './Result/Success',
               },
               {
                 path: '/account/settings/security',
-                component: './Account/Settings/SecurityView',
+                component: './Result/Success',
               },
               {
                 path: '/account/settings/binding',
-                component: './Account/Settings/BindingView',
+                component: './Result/Success',
               },
               {
                 path: '/account/settings/notification',
-                component: './Account/Settings/NotificationView',
+                component: './Result/Success',
               },
             ],
           },
