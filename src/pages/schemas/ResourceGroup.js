@@ -1,9 +1,9 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
-const emp = { 
-  "entity": "emp",
-  "title": "Employees",  
+const resourceGroup = { 
+  "entity": "resource_group",
+  "title": "Resource Groups",  
   "forms": {
     "insert": {
       "steps": [
@@ -11,15 +11,8 @@ const emp = {
           "title": "Identifiers",
           "fields": [
             {
-              "field": "emp_number",
-              "placeholder": "Employee Number",
-              "style": {
-                "width": "80%",
-              }
-            },
-            {
-              "field": "user_name",
-              "placeholder": "User Name",
+              "field": "group_name",
+              "placeholder": "Group Name",
               "style": {
                 "width": "80%",
               }
@@ -30,45 +23,39 @@ const emp = {
               "style": {
                 "width": "80%",
               }
-            }                        
+            },
+            {
+              "field": "resource_names",
+              "placeholder": "Resources In Group",
+              "style": {
+                "width": "80%",
+              }
+            } 
           ],
           "format": [
-            [0],[1],[2]
+            [0,1],[2]
           ]
         },
         {   
-          "title": "Employee Names",     	
+          "title": "Description",     	
           "fields": [
             {
-              "field": "fname",
-              "placeholder": "First Name",
+              "field": "description",
+              "placeholder": "Description",
               "style": {
                 "width": "80%",
               }
             },
             {
-              "field": "fname_t",
-              "placeholder": "First Name",
+              "field": "description_t",
+              "placeholder": "Description",
               "style": {
-                "width": "80%"
+                "width": "80%",
               }
-            },
-            {
-              "field": "sname",
-              "style": {
-                "width": "80%"
-              }
-            },
-            {
-              "field": "sname_t",
-              "style": {
-                "width": "80%"
-              }
-            }
+            }            
           ],
           "format": [
-            [0,1],
-            [2,3]
+            [0],[1]
           ]
         },
         {
@@ -103,8 +90,8 @@ const emp = {
           "title": "Identifiers",
           "fields": [
             {
-              "field": "emp_number",
-              "placeholder": "Employee Number",
+              "field": "group_name",
+              "placeholder": "Group Name",
               "style": {
                 "width": "80%",
               }
@@ -115,44 +102,38 @@ const emp = {
               "style": {
                 "width": "80%",
               }
-            }            
+            },
+            {
+              "field": "resource_names",
+              "placeholder": "Resources In Group",
+              "style": {
+                "width": "80%",
+              }
+            } 
           ],
           "format": [
-            [0,1]            
+            [0,1],[2]
           ]
-        },      
+        },     
         {
-          "title": "Employy Names",
+          "title": "Description",
           "fields": [
             {
-              "field": "fname",
-              "placeholder": "First Name",
+              "field": "description",
+              "placeholder": "Description",
               "style": {
                 "width": "100%"
               }
             },
-            {
-              "field": "sname",
-              "style": {
-                "width": "100%"
-              }
-            }
+ 
           ],
           "format": [
-            [0],
-            [1]
+            [0]
           ]
         },
         {
           "title": "Details",
           "fields": [
-            {
-              "field": "user_name",
-              "placeholder": "User Name",
-              "style": {
-                "width": "100%"
-              }
-            },
             {
               "field": "dept_name",
               "placeholder": "Department",
@@ -170,8 +151,7 @@ const emp = {
           ],
           "format": [
             [0],
-            [1],
-            [2]
+            [1]
           ]
         }
       ]
@@ -181,9 +161,8 @@ const emp = {
     "id": {
       "required": false
     },  	
-    "emp_number": {
+    "group_name": {
       "dataIndex":"name",
-      "type": "text",
       "inputMethod": "input",
       "sorter": true,
       "align": "right",
@@ -198,8 +177,9 @@ const emp = {
         }
       ]
     },    
-    "fname": {
+    "description": {
       "type": "text",
+      "dataIndex":"description",
       "inputMethod": "input",
       "sorter": true,
       "align": "right",
@@ -214,72 +194,29 @@ const emp = {
         }
       ]
     },
-    "sname": {
-      "type": "text",
-      "inputMethod": "input",
+    "description_t": {
+      "inputMethod": "textArea",
       "sorter": true,
       "align": "right",
+      "required": false,      
       "inputRules": [
         {
           "required": true,
           "message": "This field is required"
         },
         {
-          "min": 2,
-          "message": " minimum 2 character"
+          "min": 5,
+          "message": " minimum 5 character"
         }
       ]
-    },
-    "fname_t": {
-      "type": "text",
-      "inputMethod": "input",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 2,
-          "message": " minimum 2 character"
-        }
-      ],
-      "required": false,
-      "defaultValue":{
-      	"field": ["fname"]
-      }
-    },
-    "sname_t": {
-      "type": "text",
-      "inputMethod": "input",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 2,
-          "message": " minimum 2 character"
-        }
-      ],
-      "required": false,
-      "defaultValue":{
-      	"field": ["sname"]
-      }      
-    },
+    },    
     "active": {
       "type": "text",
       "inputMethod": "bool",
+      "defaultValue": true,
       "sorter": true,
       "align": "right",
     },    
-    "user_name": {
-      "dataIndex": "user_name",
-      "link" : '/router/users',      
-      "type": "text",
-      "sorter": true,
-      "inputMethod": "select",
-      "chooser": "users",
-    },
     "dept_name": {
       "dataIndex": "dept_name",
       "link" : '/router/departments',      
@@ -307,7 +244,24 @@ const emp = {
           "message": "This field is required"
         }
       ]
-    }
+    },
+    "resource_names": {
+      "dataIndex": "resource_names",
+      "type": "array",
+      "sorter": true,
+      "inputMethod": "tags",
+      "chooser" : "resources",
+      "inputRules": [
+        {
+          "required": true,
+          "message": "This field is required"
+        }
+      ]
+    },
+    "resource_types": {
+      "dataIndex": "resource_types",
+      "required": false,
+    } 
   }
 }
-export {emp}
+export {resourceGroup}

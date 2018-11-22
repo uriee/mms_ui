@@ -70,7 +70,6 @@ class StandardTable extends PureComponent {
       columns,
       rowKey,
     } = this.props;
-
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,

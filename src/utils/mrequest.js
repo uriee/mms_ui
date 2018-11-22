@@ -11,7 +11,7 @@ const getLang = () => {
 };
 
 const getUser = () => {
-  const user = JSON.parse(localStorage.getItem('user'))
+  const user = JSON.parse(localStorage.getItem('user')) || {}
   return {token: user.token ,username : user.username}
 }
 
@@ -27,21 +27,24 @@ axios.interceptors.response.use(
 );
 
 const codeMessage = {
+  0: 'TEST',
   200: '200',
   201: '201',
   202: '202',
   204: '204',
   400: '205',
   401: 'Not authorized',
-  403: '207',
-  404: '208',
-  406: '209',
+  402: 'Payment Required',
+  403: '403',
+  404: 'Not Found',
+  406: '406',
   410: '410',
   422: '422',
   500: '500',
   502: '502',
   503: '503',
   504: '504',
+  555: 'Data not found',
 };
 
 const checkStatus = response => {
@@ -51,10 +54,10 @@ const checkStatus = response => {
   }
   const errortext = codeMessage[response.status] || response.statusText;
   notification.error({
-    message: `Authorization Error ${response.status}: ${response.url}`,
+    message: `Error ${response.status}`,
     description: errortext,
   });
-  return { currentAuthority: 'guest', status: response.status, type: 'acount' };
+  //return { currentAuthority: 'guest', status: response.status, type: 'acount' };
 
   const error = new Error(errortext);
   error.name = response.status;
@@ -96,7 +99,8 @@ export default async function mrequest(
   url =
     options.method == 'POST'
       ? url
-      : url.split('?').shift() + `?lang=${getLang()}&token=${user.token}&user=${user.username}`; 
+      : url + `&lang=${getLang()}&token=${user.token}&user=${user.username}`; 
+  //    : url.split('?').shift() + `?lang=${getLang()}&token=${user.token}&user=${user.username}`; 
   const fingerprint = url + (options.data ? JSON.stringify(options.data) : '');
   console.log('fingerprint:', fingerprint, options);
   const hashcode = hash
@@ -151,7 +155,8 @@ export default async function mrequest(
   try {
     const resp = await axios({ url: url, ...newOptions }).catch(e => {
       console.log('Error in mrequest axios call', e.response);
-      throw new error(e)
+      checkStatus(e.response)
+      throw new Error("Server Error")
     });
     console.log('mrequest after axios call: ', resp);
     await checkStatus(resp);
@@ -168,6 +173,9 @@ export default async function mrequest(
         type: 'login/logout',
       });
       return;
+    }
+    if (status === 555) {
+      return 555;
     }
     // environment should not be used
     if (status === 403) {

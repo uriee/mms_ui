@@ -2,7 +2,7 @@
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
 const dept = { 
-  "entity": "department",
+  "entity": "dept",
   "title" :"Departments",
   "forms": {
     "insert": {

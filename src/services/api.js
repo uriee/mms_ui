@@ -1,7 +1,6 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
 import mrequest from '@/utils/mrequest';
-import axios from 'axios';
 
 export function fetch(params) {
   let x;
@@ -39,7 +38,7 @@ export async function insert(params) {
 }
 
 export async function update(params) {
-  console.log('in update:', params);
+  console.log('********in update*********:', params);
   const entity = params.entity  
   return await mrequest(`http://192.9.200.101/mymes/update/${entity}`, {
     method: 'POST',
@@ -69,9 +68,13 @@ import { parse } from 'url';
 
 const myGet = async (url,entity) => {
   console.log('in myGet1', url,entity);
+
   let dataSource = await mrequest(url, {
     method: 'GET',
   });
+  if (dataSource === 555) {
+    return 555
+  }
   let choosers = dataSource.choosers;
   dataSource = dataSource.main;
   const params = parse(url, true).query;
@@ -80,22 +83,18 @@ const myGet = async (url,entity) => {
     let s = params.sorter.split('_');
     let direction = s[s.length-1]
     let field = s.slice(0,s.length-1).join('_')
-    console.log("field dataSource:",direction)
     dataSource = dataSource.sort((prev, next) => {
       if (direction == 'descend') {
-        console.log(next[field], prev[field])
-        return next[field].toUpperCase() < prev[field].toUpperCase() ? -1 : 1
+        return next[field] && next[field].toUpperCase() < prev[field] && prev[field].toUpperCase() ? -1 : 1
       }
-      return next[field].toUpperCase() > prev[field].toUpperCase() ? -1 : 1
+       return next[field] && next[field].toUpperCase() > prev[field] && prev[field].toUpperCase() ? -1 : 1
     });
-     console.log("field dataSource2:",dataSource,direction,field)
   }
-
 
   let filterDataSource = dataSource;
   Object.keys(params).filter(param => {
-    return dataSource[0].hasOwnProperty(param)}).forEach(param => { 
-    filterDataSource =  filterDataSource.filter(data => data[param].toUpperCase().indexOf(params[param].toUpperCase()) > -1)
+    return dataSource[0] && dataSource[0].hasOwnProperty(param)}).forEach(param => { 
+    filterDataSource =  filterDataSource.filter(data => !data[param] ?  false : data[param].toUpperCase().indexOf(params[param].toUpperCase()) > -1)
   })
   dataSource = (filterDataSource.length  ? filterDataSource : dataSource)
 

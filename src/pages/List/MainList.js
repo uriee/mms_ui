@@ -1,7 +1,10 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
+import Link from 'umi/link';
+import router from 'umi/router';
 import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
+import { notification } from 'antd';
 import {
   Row,
   Col,
@@ -21,6 +24,8 @@ import {
   Divider,
   Steps,
   Radio,
+  Tag,
+  Checkbox,
   List,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
@@ -31,7 +36,20 @@ import styles from './TableList.less';
 import {emp} from '../schemas/Emp.js';
 import {part} from '../schemas/Part.js';
 import {dept} from '../schemas/Departments.js';
-const schemas = {emp : emp,part: part, dept: dept}
+import {user} from '../schemas/User.js';
+import {machine} from '../schemas/Machine.js';
+import {resourceGroup} from '../schemas/ResourceGroup.js';
+import {resource} from '../schemas/Resource.js';
+
+const schemas = {
+  emp : emp,
+  part: part,
+  dept: dept,
+  user: user,
+  machine: machine,
+  resourceGroup : resourceGroup,
+  resource : resource  
+}
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -61,7 +79,6 @@ const formFields = (obj) => {
 class CreateForm extends PureComponent {
   constructor(props) {
     super(props);
-
     this.state = {
       formVals: Object.keys(this.props.fields).reduce((obj,key)=>{
         obj[this.props.fields[key].dataIndex] = this.props.values[this.props.fields[key].dataIndex]
@@ -92,6 +109,10 @@ class CreateForm extends PureComponent {
             this.forward();
           } else {
             handler(formVals);
+            this.setState({
+              formVals: [],
+              currentStep: 0,
+            });
           }
         }
       );
@@ -119,16 +140,39 @@ class CreateForm extends PureComponent {
     const fieldStyle = fieldData.style
     const { form, fields } = this.props;
     const field = fields[fieldName]
-    console.log('~~~~~~~~',field,fieldData)
-    if (field.inputMethod === "select" && !this.props.hasOwnProperty('choosers')) return <span/> //a bug that need to be fixed
+    console.log('~~~~~~~~~~~~~~~~~:',field,fieldData)
+    //if (field.inputMethod === "select" && !this.props.hasOwnProperty('choosers')) return <span/> //a bug that need to be fixed
     const placeHolder = fieldData.placeholder || field.title
     const formVals = this.state.formVals
     let formField = null
+    let fieldValue = (formVals[field.dataIndex] === false ? false :
+                     formVals[field.dataIndex] || field.defaultValue)
     let layout = {}
     switch(field.inputMethod) {
       case 'input':
-        formField = (<Input placeholder={placeHolder} style={fieldStyle} />)
-        break
+        formField = (<Input placeholder={placeHolder} style={fieldStyle} />) 
+        break 
+      case 'bool':
+        formField = (<Checkbox defaultChecked={fieldValue}>{placeHolder}</Checkbox>)  
+        break        
+      case 'textArea':
+        formField = (<TextArea placeholder={placeHolder} style={fieldStyle} />)
+        break        
+      case 'tags':
+        formField = ( <Select
+          mode="tags"
+          placeholder="Please Enter Tags"
+          tokenSeparators={[',']}
+          style={{ width: '100%' }}
+        >
+            {this.props && this.props.choosers[field.chooser].map(option => (
+                <Option key={option.name} value={option.name}>
+                  {option.name}
+                </Option>
+              ))}
+            
+        </Select>)
+        break        
       case 'select':
         formField = (
          <Select
@@ -138,7 +182,12 @@ class CreateForm extends PureComponent {
             optionFilterProp="children"
             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
           >
-            {this.props.choosers[field.chooser].map(option => (
+            {field.selectValues ? field.selectValues.map(option => (
+              <Option key={option} value={option}>
+                  {option}
+                </Option>
+              )) :
+              this.props.choosers[field.chooser].map(option => (
                 <Option key={option.name} value={option.name}>
                   {option.name}
                 </Option>
@@ -151,7 +200,7 @@ class CreateForm extends PureComponent {
     }
     return (
        <FormItem key={field.dataIndex} {...this.Layout} label={field.title}>
-         {form.getFieldDecorator(field.dataIndex, {rules: field.inputRules,initialValue: formVals[field.dataIndex]})(formField)}
+         {form.getFieldDecorator(field.dataIndex, {rules: field.inputRules,initialValue: fieldValue})(formField)}
        </FormItem>  
       )
   }
@@ -226,6 +275,7 @@ class CreateForm extends PureComponent {
   };
 
   render() {
+ 
     if (!this.props.fields) return {}
     const { ModalVisible, handleModal } = this.props;
     const { currentStep, formVals } = this.state;
@@ -259,52 +309,84 @@ class CreateForm extends PureComponent {
 class TableList extends PureComponent {
   constructor(props) {
     super(props);
-
+    console.log("IN CONSTRUCTOR",this.props)
     this.entity = this.props.route.params.entity
-    this.schema = schemas[this.entity]
-    if(!this.schema.fields.id) throw new Error("The schema does not have an id field!")
+    this.schemaChange()    
+    if(!this.schema  || !this.schema.fields.id) throw new Error("The schema does not have an id field!")
 
     this.state = {
       modalVisible: false,
       updateModalVisible: false,
       expandForm: false,
       selectedRows: [],
-      formValues: {},
+      formValues: this.props.route ? this.props.route.params : {},
       stepFormValues: {},
     };
+    const { dispatch } = this.props;
+    const params = this.props.location ? this.props.location.query : {}
+    dispatch({
+      type: 'action/fetch',
+      payload: {...params, entity : this.entity},
+    });
+  }
 
+/*---  change the schema in page loading ---*/
+ schemaChange = (schema) => {
+    this.schema = schemas[this.entity]  
     this.fields = pushKey(this.schema.fields)
-    this.formFields = formFields(this.schema.fields)  
     this.columns = this.fields
-                      .filter(field => field.required !== false)
+                      .filter(field => field.required !== false) /* field ont need to be shown in the table it is needded for input forms only */
                       .sort((a,b) => a.order > b.order)
                       .map(field => ({
-                        title: formatMessage({ id: `pages.${field.name}` }),
+                        title: formatMessage({ id: `pages.${field.name}` }), 
                         dataIndex: (field.dataIndex ? field.dataIndex : field.name),
-                        sorter: (field.sorter ? field.sorter : false),
+                        key: (field.dataIndex ? field.dataIndex : field.name), 
+                        sorter: (field.sorter ? field.sorter : false), /*if the table can be sotrted by this field*/
+                        link:  (field.link ? field.link : false), /*goto link when clicked upon*/
+                        selectValues: (field.selectValues ? field.selectValues : null), /*in case you need to choose from constants in the schema*/
+                        render: (x,z) => ( !x ? <span/> : 
+                          field.link ?  <a onClick={() => router.push(`${field.link}?name=${x}`)}>{x.toString()}</a> :
+                          field.dataIndex === 'tags' && x ? (
+                            <span>
+                              {x.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
+                            </span>
+                          ) :
+                          field.dataIndex === 'resource_names' && x ? this.resourcesRender(x,z) :
+                          field.inputMethod === 'bool' ? <Checkbox  checked={x} disabled /> :
+                          x ),
                         align: (field.align ? field.align :'left')
                       }))
     this.columns.push({
         title: '',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() => this.handleUpdateModalVisible(true, record)}>Update</a>
+            <a onClick={() => this.handleUpdateModalVisible(true, record)}> <Icon type="edit"  /></a>
           </Fragment>
         ),
-      })  
+      }) 
+ }
+
+
+/* Renders the resources */
+  resourcesRender = (x,z) => {
+    const resourceTypeMap = {
+      employee : {link :'employees',color : 'green'},
+      machine: {link :'machines',color : 'orange'},
+      group : {link :'resource_groups',color : 'blue'},
+      place: {link :'places',color : 'blue'}
+    }    
+    const types = z.resource_types.slice(1,-1).split(',');
+    const colors = types.map(x => resourceTypeMap[x].color)
+    const links =  types.map(x => resourceTypeMap[x].link)
+    
+    return( 
+      <span>
+        {x.map((tag,i) => <a onClick={() => router.push(`/router/${links[i]}?name=${tag}`)}><Tag color={colors[i]} key={tag}>{tag}</Tag></a>)}
+      </span>
+    )  
   }
 
-
-
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'action/fetch',
-      payload: {entity : this.entity},
-    });
-  }
-
+  /*--- HandleTable Pagination and sorting  ----*/
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -331,6 +413,7 @@ class TableList extends PureComponent {
     });
   };
 
+  /*--- Handles the reset of the filters form ---*/
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -343,18 +426,18 @@ class TableList extends PureComponent {
     });
   };
 
+  /*--- Refreshes the view After an update or insert ---*/ 
   handleFormAfterIU = () => {
     const { form, dispatch } = this.props;
-    form.resetFields();
-    this.setState({
-      formValues: {},
-    });
+    //form.resetFields();
+ 
     dispatch({
       type: 'action/fetch',
-      payload: { update: 'yes' ,entity: this.entity},
+      payload: { ...this.state.formValues, update: 'yes' ,entity: this.entity},
     });
   };
 
+/*--- Toggels the Fitlters form ---*/
   toggleForm = () => {
     const { expandForm } = this.state;
     this.setState({
@@ -362,6 +445,7 @@ class TableList extends PureComponent {
     });
   };
 
+/*--- HANDLE the menu clisks for the cumulative actions for the form selected raws ---*/
   handleMenuClick = e => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -405,17 +489,23 @@ class TableList extends PureComponent {
         ...fieldsValue,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
+      const filterString = Object.keys(values).filter(x => values[x]).reduce((o,x) => o + `${x}=${values[x]}&`,'')
+      router.push(`${this.props.route.path}?${filterString}`)
 
+/*
       this.setState({
         formValues: values,
       });
+*/
 
       dispatch({
         type: 'action/fetch',
         payload: { ...values, entity: this.entity}
       });
+     
     });
   };
+
 
   handleModalVisible = (flag, record) => {
     this.setState({
@@ -451,6 +541,7 @@ class TableList extends PureComponent {
     const { dispatch } = this.props;
     let lang = { 'zh-CN': 2, 'en-US': 1 };
     let lang_id = lang[getLocale()];
+
     dispatch({
       type: 'action/update',
       payload: Object.assign(fields,{lang_id: lang_id,entity: this.entity}),
@@ -462,14 +553,22 @@ class TableList extends PureComponent {
   };
 
 
+   listPaginationProps = {
+      showSizeChanger: false,
+      showQuickJumper: false,
+      pageSize: 10,
+      total: 50,
+   };
+
   renderMainForm(from,to) {
     const {
       form: { getFieldDecorator },
     } = this.props;
+    /*console.log('=========================:',this.props)     */
       return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }} >
-          {this.columns.slice(from,to).map(col => (
+          {this.columns.filter(col => col.dataIndex !=='tags').slice(from,to).map(col => (
                   <Col md={8} sm={24} key={'mainform'+col.dataIndex}>
                     <FormItem label={col.title}>
                       {getFieldDecorator(col.dataIndex)(
@@ -506,16 +605,27 @@ class TableList extends PureComponent {
     <List key='list'
       grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 5 }}
       dataSource={data}
+      pagination={this.listPaginationProps}
       renderItem={item => (
         <List.Item>
           <Card title={item.name} key={item.name}>
-              {Object.keys(item).filter(x => this.schema.fields.hasOwnProperty(x) && x!== 'id').map(x =>{console.log(item,x);
-                return(
-                <div>
-                  <span > {formatMessage({ id: `pages.${x}` })} : </span>
-                  <span > {item[x].toString()} </span>
-                   
-                </div>)})}
+              {Object.keys(item)
+                .filter(x => this.schema.fields.hasOwnProperty(x) && x!== 'id' && item[x])
+                .map((x,i) =>{
+                  var link  = this.columns.filter(col => col.dataIndex === x)[0].link
+                  link = link ? `${link}?name=${item[x]}` : link
+                  return (
+                    <div key={item.name + 'div' + i}>
+                      <span> {formatMessage({ id: `pages.${x}` })} : </span>
+                      <span> {
+                        Array.isArray(item[x]) ? item[x].map(tag => <Tag>{tag}</Tag> ) :
+                        link ? <a onClick={() => router.push(link)}>{item[x].toString()}</a> :
+                        /*link ? <Link to={link}>{item[x].toString()}</Link> :*/
+                        item[x].toString()
+                      }</span>
+                    </div>
+                )}
+              )}
               <Button key={`bt_update_${item.name}`} style={{ float: 'right' }} onClick={() => this.handleUpdateModalVisible(true, item) }>
                 Update
               </Button>
@@ -523,7 +633,7 @@ class TableList extends PureComponent {
         </List.Item>
       )}
     />    
-  );  
+  )  
 
 
   myTable  = (selectedRows,loading,data) => (
@@ -542,7 +652,11 @@ class TableList extends PureComponent {
       action: { data },
       loading,
     } = this.props;
+    console.log("DATA",data,this.entity)
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
+    this.formFields = formFields(this.schema.fields)  
+    if(data.entity !== this.entity) return <span/>  
+ 
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">Delete</Menu.Item>
@@ -558,9 +672,8 @@ class TableList extends PureComponent {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
       handleUpdate: this.handleUpdate,
     };
-    console.log("DATA",data,this.entity)
-    if(data.entity !== this.entity) return <span/>
-      console.log("-------------------------------------",window.innerWidth)
+
+
      return (
       <PageHeaderWrapper title={this.schema.title}>
         <Card bordered={false}>
@@ -570,16 +683,15 @@ class TableList extends PureComponent {
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)} />
               {selectedRows.length > 0 && (
                 <span>
-                  <Button>what am i ?</Button>
                   <Dropdown overlay={menu}>
                     <Button>
-                      down <Icon type="down" />
+                      Function <Icon type="down" />
                     </Button>
                   </Dropdown>
                 </span>
               )}
             </div>
-            {( window.innerWidth < 1000 ? this.myList(data.list) :this.myTable(selectedRows,loading,data))}
+            {( data.list[0] === undefined ? '' : window.innerWidth < 1000 ? this.myList(data.list) :this.myTable(selectedRows,loading,data))}
           </div>
         </Card>
         <CreateForm

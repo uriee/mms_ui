@@ -70,6 +70,12 @@ export default [
             authority: ['admin'],
             component: './Result/Success',
           },
+          {
+            path: '/prod/machines',
+            name: 'machines',
+            component: './List/MainList',
+            params: { entity: 'machine' },
+          },          
         ],
       },
       // list
@@ -194,7 +200,14 @@ export default [
           {
             path: '/plan/resources',
             name: 'resources',
-            component: './Result/Success',
+            component: './List/MainList',
+            params: { entity: 'resource' },
+          },          
+          {
+            path: '/plan/resource_groups',
+            name: 'resource_groups',
+            component: './List/MainList',
+            params: { entity: 'resourceGroup' },
           },
           {
             path: '/plan/standards',
@@ -332,7 +345,8 @@ export default [
           {
             path: '/admin/users',
             name: 'users',
-            component: './Result/Success',
+            component: './List/MainList',
+            params: { entity: 'user' },       
           },
           {
             path: '/admin/roles',
@@ -405,7 +419,48 @@ export default [
           },
         ],
       },
-
+      {
+        name: 'router',
+        path: '/router',
+        hideInMenu: true,
+        routes: [
+          {
+            path: '/router/users',
+            component: './List/MainList',
+            params: { entity: 'user' },             
+          },
+          {
+            path: '/router/employees',
+            component: './List/MainList',
+            params: { entity: 'emp' },             
+          }, 
+          {
+            path: '/router/departments',
+            component: './List/MainList',
+            params: { entity: 'dept' }           
+          },
+          {
+            path: '/router/parts',
+            component: './List/MainList',
+            params: { entity: 'part' },             
+          },          
+          {
+            path: '/router/resources',
+            component: './List/MainList',
+            params: { entity: 'resource' },             
+          },
+          {
+            path: '/router/machines',
+            component: './List/MainList',
+            params: { entity: 'machine' },             
+          }, 
+          {
+            path: '/router/resource_groups',
+            component: './List/MainList',
+            params: { entity: 'resourceGroup' },             
+          },                            
+        ]
+      },      
       {
         component: '404',
       },

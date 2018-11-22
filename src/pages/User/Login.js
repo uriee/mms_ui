@@ -75,44 +75,28 @@ class LoginPage extends Component {
             this.loginForm = form;
           }}
         >
-          <Tab key="account" tab="חשבון">
+          <Tab key="account" tab="Account">
             {login.status === 'error' &&
               login.type === 'account' &&
               !submitting &&
-              this.renderMessage('שם משצמש ')}
-            <UserName name="userName" placeholder="admin/user" />
+              this.renderMessage('User Name')}
+            <UserName name="userName" placeholder="Enter User Name" />
             <Password
               name="password"
               placeholder="Enter your Password"
               onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
             />
           </Tab>
-          <Tab key="mobile" tab="טלפון">
-            {login.status === 'error' &&
-              login.type === 'mobile' &&
-              !submitting &&
-              this.renderMessage('תרגם אותי טוב')}
-            <Mobile name="mobile" />
-            <Captcha name="captcha" countDown={120} onGetCaptcha={this.onGetCaptcha} />
-          </Tab>
+
           <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
-              זכור אותי
+            Remember Me  
             </Checkbox>
             <a style={{ float: 'right' }} href="">
-              זכור2
+              
             </a>
           </div>
-          <Submit loading={submitting}>שלח</Submit>
-          <div className={styles.other}>
-            זקוק לתרגום
-            <Icon type="alipay-circle" className={styles.icon} theme="outlined" />
-            <Icon type="taobao-circle" className={styles.icon} theme="outlined" />
-            <Icon type="weibo-circle" className={styles.icon} theme="outlined" />
-            <Link className={styles.register} to="/User/Register">
-              הרשם
-            </Link>
-          </div>
+          <Submit loading={submitting}>Log In</Submit>
         </Login>
       </div>
     );

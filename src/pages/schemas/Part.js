@@ -134,7 +134,7 @@ const part = {
       "updateable": false,
       "dataIndex": "description",
       "insertable": true,
-      "inputMethod": "input",
+      "inputMethod": "textArea",
       "sorter": true,
       "align": "right",
       "inputRules": [
@@ -151,7 +151,7 @@ const part = {
     "description_t": {
       "updateable": false,
       "insertable": true,
-      "inputMethod": "input",
+      "inputMethod": "textArea",
       "sorter": true,
       "align": "right",
       "required": false,      

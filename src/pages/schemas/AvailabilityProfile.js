@@ -1,9 +1,9 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
-const emp = { 
-  "entity": "emp",
-  "title": "Employees",  
+const machine = { 
+  "entity": "machine",
+  "title": "Machines",  
   "forms": {
     "insert": {
       "steps": [
@@ -11,15 +11,15 @@ const emp = {
           "title": "Identifiers",
           "fields": [
             {
-              "field": "emp_number",
-              "placeholder": "Employee Number",
+              "field": "machine_name",
+              "placeholder": "Machine Name",
               "style": {
                 "width": "80%",
               }
             },
             {
-              "field": "user_name",
-              "placeholder": "User Name",
+              "field": "mac_address",
+              "placeholder": "MacAddress",
               "style": {
                 "width": "80%",
               }
@@ -37,38 +37,25 @@ const emp = {
           ]
         },
         {   
-          "title": "Employee Names",     	
+          "title": "Description",     	
           "fields": [
             {
-              "field": "fname",
-              "placeholder": "First Name",
+              "field": "description",
+              "placeholder": "Description",
               "style": {
                 "width": "80%",
               }
             },
             {
-              "field": "fname_t",
-              "placeholder": "First Name",
+              "field": "description_t",
+              "placeholder": "Description",
               "style": {
-                "width": "80%"
+                "width": "80%",
               }
-            },
-            {
-              "field": "sname",
-              "style": {
-                "width": "80%"
-              }
-            },
-            {
-              "field": "sname_t",
-              "style": {
-                "width": "80%"
-              }
-            }
+            }            
           ],
           "format": [
-            [0,1],
-            [2,3]
+            [0],[1]
           ]
         },
         {
@@ -103,12 +90,19 @@ const emp = {
           "title": "Identifiers",
           "fields": [
             {
-              "field": "emp_number",
-              "placeholder": "Employee Number",
+              "field": "machine_name",
+              "placeholder": "Machineloyee Name",
               "style": {
                 "width": "80%",
               }
             },
+            {
+              "field": "mac_address",
+              "placeholder": "MacAddress",
+              "style": {
+                "width": "80%",
+              }
+            },            
             {
               "field": "active",
               "placeholder": "Active",
@@ -118,41 +112,28 @@ const emp = {
             }            
           ],
           "format": [
-            [0,1]            
+            [0,2],[1]            
           ]
         },      
         {
-          "title": "Employy Names",
+          "title": "Description",
           "fields": [
             {
-              "field": "fname",
-              "placeholder": "First Name",
+              "field": "description",
+              "placeholder": "Description",
               "style": {
                 "width": "100%"
               }
             },
-            {
-              "field": "sname",
-              "style": {
-                "width": "100%"
-              }
-            }
+ 
           ],
           "format": [
-            [0],
-            [1]
+            [0]
           ]
         },
         {
           "title": "Details",
           "fields": [
-            {
-              "field": "user_name",
-              "placeholder": "User Name",
-              "style": {
-                "width": "100%"
-              }
-            },
             {
               "field": "dept_name",
               "placeholder": "Department",
@@ -170,8 +151,7 @@ const emp = {
           ],
           "format": [
             [0],
-            [1],
-            [2]
+            [1]
           ]
         }
       ]
@@ -181,9 +161,8 @@ const emp = {
     "id": {
       "required": false
     },  	
-    "emp_number": {
+    "machine_name": {
       "dataIndex":"name",
-      "type": "text",
       "inputMethod": "input",
       "sorter": true,
       "align": "right",
@@ -198,8 +177,9 @@ const emp = {
         }
       ]
     },    
-    "fname": {
+    "description": {
       "type": "text",
+      "dataIndex":"description",
       "inputMethod": "input",
       "sorter": true,
       "align": "right",
@@ -214,9 +194,27 @@ const emp = {
         }
       ]
     },
-    "sname": {
+    "description_t": {
+      "inputMethod": "textArea",
+      "sorter": true,
+      "align": "right",
+      "required": false,      
+      "inputRules": [
+        {
+          "required": true,
+          "message": "This field is required"
+        },
+        {
+          "min": 5,
+          "message": " minimum 5 character"
+        }
+      ]
+    },    
+    "mac_address": {
+      "dataIndex":"mac_address",
       "type": "text",
       "inputMethod": "input",
+      "defaultValue": "00:00:00:00:00:00",
       "sorter": true,
       "align": "right",
       "inputRules": [
@@ -229,57 +227,14 @@ const emp = {
           "message": " minimum 2 character"
         }
       ]
-    },
-    "fname_t": {
-      "type": "text",
-      "inputMethod": "input",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 2,
-          "message": " minimum 2 character"
-        }
-      ],
-      "required": false,
-      "defaultValue":{
-      	"field": ["fname"]
-      }
-    },
-    "sname_t": {
-      "type": "text",
-      "inputMethod": "input",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 2,
-          "message": " minimum 2 character"
-        }
-      ],
-      "required": false,
-      "defaultValue":{
-      	"field": ["sname"]
-      }      
-    },
+    },    
     "active": {
       "type": "text",
       "inputMethod": "bool",
+      "defaultValue": true,
       "sorter": true,
       "align": "right",
     },    
-    "user_name": {
-      "dataIndex": "user_name",
-      "link" : '/router/users',      
-      "type": "text",
-      "sorter": true,
-      "inputMethod": "select",
-      "chooser": "users",
-    },
     "dept_name": {
       "dataIndex": "dept_name",
       "link" : '/router/departments',      
@@ -310,4 +265,4 @@ const emp = {
     }
   }
 }
-export {emp}
+export {machine}
