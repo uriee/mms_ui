@@ -1,9 +1,9 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
-const machine = { 
-  "entity": "machine",
-  "title": "Machines",  
+const availabilityProfile = { 
+  "entity": "availability_profile",
+  "title": "Availability_profiles",  
   "forms": {
     "insert": {
       "steps": [
@@ -11,15 +11,8 @@ const machine = {
           "title": "Identifiers",
           "fields": [
             {
-              "field": "machine_name",
-              "placeholder": "Machine Name",
-              "style": {
-                "width": "80%",
-              }
-            },
-            {
-              "field": "mac_address",
-              "placeholder": "MacAddress",
+              "field": "availability_profile_name",
+              "placeholder": "Availability_profile Name",
               "style": {
                 "width": "80%",
               }
@@ -33,7 +26,7 @@ const machine = {
             }                        
           ],
           "format": [
-            [0],[1],[2]
+            [0,1]
           ]
         },
         {   
@@ -58,30 +51,6 @@ const machine = {
             [0],[1]
           ]
         },
-        {
-          "title": "Details",
-          "fields": [
-            {
-              "field": "dept_name",
-              "placeholder": "Department",
-              "style": {
-                "width": "80%",
-                "align": "center"
-              }
-            },
-            {
-              "field": "ap_name",
-              "placeholder": "Availability",
-              "style": {
-                "width": "80%",
-                "align": "center"
-              }
-            }            
-          ],
-          "format": [
-            [0],[1]
-          ]
-        }
       ]
     },
     "update": {
@@ -90,19 +59,12 @@ const machine = {
           "title": "Identifiers",
           "fields": [
             {
-              "field": "machine_name",
-              "placeholder": "Machineloyee Name",
+              "field": "availability_profile_name",
+              "placeholder": "Availability_profileloyee Name",
               "style": {
                 "width": "80%",
               }
             },
-            {
-              "field": "mac_address",
-              "placeholder": "MacAddress",
-              "style": {
-                "width": "80%",
-              }
-            },            
             {
               "field": "active",
               "placeholder": "Active",
@@ -112,7 +74,7 @@ const machine = {
             }            
           ],
           "format": [
-            [0,2],[1]            
+            [0,1]
           ]
         },      
         {
@@ -131,29 +93,6 @@ const machine = {
             [0]
           ]
         },
-        {
-          "title": "Details",
-          "fields": [
-            {
-              "field": "dept_name",
-              "placeholder": "Department",
-              "style": {
-                "width": "100%"
-              }
-            },
-            {
-              "field": "ap_name",
-              "placeholder": "Department",
-              "style": {
-                "width": "100%"
-              }
-            }            
-          ],
-          "format": [
-            [0],
-            [1]
-          ]
-        }
       ]
     }
   },
@@ -161,8 +100,9 @@ const machine = {
     "id": {
       "required": false
     },  	
-    "machine_name": {
+    "availability_profile_name": {
       "dataIndex":"name",
+      "link" : '/router/availabilities',      
       "inputMethod": "input",
       "sorter": true,
       "align": "right",
@@ -210,24 +150,6 @@ const machine = {
         }
       ]
     },    
-    "mac_address": {
-      "dataIndex":"mac_address",
-      "type": "text",
-      "inputMethod": "input",
-      "defaultValue": "00:00:00:00:00:00",
-      "sorter": true,
-      "align": "right",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 2,
-          "message": " minimum 2 character"
-        }
-      ]
-    },    
     "active": {
       "type": "text",
       "inputMethod": "bool",
@@ -235,34 +157,6 @@ const machine = {
       "sorter": true,
       "align": "right",
     },    
-    "dept_name": {
-      "dataIndex": "dept_name",
-      "link" : '/router/departments',      
-      "type": "text",
-      "sorter": true,
-      "inputMethod": "select",
-      "chooser": "departments",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        }
-      ]
-    },    
-    "ap_name": {
-      "dataIndex": "ap_name",
-      "link" : '/router/ap',      
-      "type": "text",
-      "sorter": true,
-      "inputMethod": "select",
-      "chooser" : "availability_profiles",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        }
-      ]
-    }
   }
 }
-export {machine}
+export {availabilityProfile}

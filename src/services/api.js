@@ -85,16 +85,16 @@ const myGet = async (url,entity) => {
     let field = s.slice(0,s.length-1).join('_')
     dataSource = dataSource.sort((prev, next) => {
       if (direction == 'descend') {
-        return next[field] && next[field].toUpperCase() < prev[field] && prev[field].toUpperCase() ? -1 : 1
+        return next[field] && next[field].toString().toUpperCase() < prev[field] && prev[field].toString().toUpperCase() ? -1 : 1
       }
-       return next[field] && next[field].toUpperCase() > prev[field] && prev[field].toUpperCase() ? -1 : 1
+       return next[field] && next[field].toString().toUpperCase() > prev[field] && prev[field].toString().toUpperCase() ? -1 : 1
     });
   }
 
   let filterDataSource = dataSource;
   Object.keys(params).filter(param => {
     return dataSource[0] && dataSource[0].hasOwnProperty(param)}).forEach(param => { 
-    filterDataSource =  filterDataSource.filter(data => !data[param] ?  false : data[param].toUpperCase().indexOf(params[param].toUpperCase()) > -1)
+    filterDataSource =  filterDataSource.filter(data => !data[param] ?  false : data[param].toString().toUpperCase().indexOf(params[param].toString().toUpperCase()) > -1)
   })
   dataSource = (filterDataSource.length  ? filterDataSource : dataSource)
 

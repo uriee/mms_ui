@@ -210,6 +210,12 @@ export default [
             params: { entity: 'resourceGroup' },
           },
           {
+            path: '/plan/availability_profiles',
+            name: 'availability_profiles',
+            component: './List/MainList',
+            params: { entity: 'availabilityProfile' },
+          },          
+          {
             path: '/plan/standards',
             name: 'standards',
             component: './Result/Success',
@@ -458,7 +464,17 @@ export default [
             path: '/router/resource_groups',
             component: './List/MainList',
             params: { entity: 'resourceGroup' },             
-          },                            
+          }, 
+          {
+            path: '/router/ap',
+            component: './List/MainList',
+            params: { entity: 'availabilityProfile' },             
+          },
+          {
+            path: '/router/availabilities',
+            component: './List/MainList',
+            params: { entity: 'availabilities' },             
+          },          
         ]
       },      
       {

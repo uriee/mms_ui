@@ -25,6 +25,13 @@ const resourceGroup = {
               }
             },
             {
+              "field": "is_shift",
+              "placeholder": "shift?",
+              "style": {
+                "width": "80%",
+              }
+            },            
+            {
               "field": "resource_names",
               "placeholder": "Resources In Group",
               "style": {
@@ -33,7 +40,9 @@ const resourceGroup = {
             } 
           ],
           "format": [
-            [0,1],[2]
+            [0],
+            [1,2],
+            [3]
           ]
         },
         {   
@@ -55,7 +64,8 @@ const resourceGroup = {
             }            
           ],
           "format": [
-            [0],[1]
+            [0],
+            [1]
           ]
         },
         {
@@ -79,7 +89,8 @@ const resourceGroup = {
             }            
           ],
           "format": [
-            [0],[1]
+            [0],
+            [1]
           ]
         }
       ]
@@ -104,6 +115,13 @@ const resourceGroup = {
               }
             },
             {
+              "field": "is_shift",
+              "placeholder": "shift?",
+              "style": {
+                "width": "80%",
+              }
+            },            
+            {
               "field": "resource_names",
               "placeholder": "Resources In Group",
               "style": {
@@ -112,7 +130,9 @@ const resourceGroup = {
             } 
           ],
           "format": [
-            [0,1],[2]
+            [0],
+            [1,2],
+            [3]
           ]
         },     
         {
@@ -211,12 +231,21 @@ const resourceGroup = {
       ]
     },    
     "active": {
+      "dataIndex" : "active",
       "type": "text",
       "inputMethod": "bool",
       "defaultValue": true,
       "sorter": true,
       "align": "right",
-    },    
+    }, 
+    "is_shift": {
+      "dataIndex": "is_shift",
+      "type": "text",
+      "inputMethod": "bool",
+      "defaultValue": false,
+      "sorter": true,
+      "align": "right",
+    },        
     "dept_name": {
       "dataIndex": "dept_name",
       "link" : '/router/departments',      
