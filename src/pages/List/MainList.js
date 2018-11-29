@@ -4,7 +4,6 @@ import moment from 'moment';
 import Link from 'umi/link';
 import router from 'umi/router';
 import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
-import { notification } from 'antd';
 import {
   Row,
   Col,
@@ -27,10 +26,13 @@ import {
   Tag,
   Checkbox,
   List,
+  TimePicker,
+  notification
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './TableList.less';
+import MainForm from './MainForm.js'
 
 /*import the schemas*/
 import {emp} from '../schemas/Emp.js';
@@ -40,6 +42,8 @@ import {user} from '../schemas/User.js';
 import {machine} from '../schemas/Machine.js';
 import {resourceGroup} from '../schemas/ResourceGroup.js';
 import {resource} from '../schemas/Resource.js';
+import {availabilityProfile} from '../schemas/AvailabilityProfile.js';
+import {availabilities} from '../schemas/Availabilities.js';
 
 const schemas = {
   emp : emp,
@@ -48,7 +52,9 @@ const schemas = {
   user: user,
   machine: machine,
   resourceGroup : resourceGroup,
-  resource : resource  
+  resource : resource,
+  availabilityProfile : availabilityProfile,
+  availabilities : availabilities
 }
 
 const FormItem = Form.Item;
@@ -75,231 +81,6 @@ const formFields = (obj) => {
   return obj
 }
 
-@Form.create()
-class CreateForm extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      formVals: Object.keys(this.props.fields).reduce((obj,key)=>{
-        obj[this.props.fields[key].dataIndex] = this.props.values[this.props.fields[key].dataIndex]
-        return obj
-      },{}),
-      currentStep: 0,
-    };
-
-    this.formLayout = {
-      labelCol: { span: 7 },
-      wrapperCol: { span: 13 },
-    };
-  }
-
-  handleNext = currentStep => {
-    const numOfSteps = this.props.formLayout.steps.length-1  
-    const { form, handler, choosers, handleModal } = this.props;
-    const { formVals: oldValue } = this.state;
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      const formVals = { ...oldValue, ...fieldsValue };
-      this.setState(
-        {
-          formVals,
-        },
-        () => {
-          if (currentStep <  numOfSteps) {
-            this.forward();
-          } else {
-            handler(formVals);
-            this.setState({
-              formVals: [],
-              currentStep: 0,
-            });
-          }
-        }
-      );
-    });
-  };
-
-  backward = () => {
-    const { currentStep } = this.state;
-    if (currentStep > 0) {
-      this.setState({
-        currentStep: currentStep - 1,
-      });
-    }
-  };
-
-  forward = () => {
-    const { currentStep } = this.state;
-    this.setState({
-      currentStep: currentStep + 1,
-    });
-  };
-
-  getFormItemFromSchema = (fieldData)  => {
-    const fieldName = fieldData.field
-    const fieldStyle = fieldData.style
-    const { form, fields } = this.props;
-    const field = fields[fieldName]
-    console.log('~~~~~~~~~~~~~~~~~:',field,fieldData)
-    //if (field.inputMethod === "select" && !this.props.hasOwnProperty('choosers')) return <span/> //a bug that need to be fixed
-    const placeHolder = fieldData.placeholder || field.title
-    const formVals = this.state.formVals
-    let formField = null
-    let fieldValue = (formVals[field.dataIndex] === false ? false :
-                     formVals[field.dataIndex] || field.defaultValue)
-    let layout = {}
-    switch(field.inputMethod) {
-      case 'input':
-        formField = (<Input placeholder={placeHolder} style={fieldStyle} />) 
-        break 
-      case 'bool':
-        formField = (<Checkbox defaultChecked={fieldValue}>{placeHolder}</Checkbox>)  
-        break        
-      case 'textArea':
-        formField = (<TextArea placeholder={placeHolder} style={fieldStyle} />)
-        break        
-      case 'tags':
-        formField = ( <Select
-          mode="tags"
-          placeholder="Please Enter Tags"
-          tokenSeparators={[',']}
-          style={{ width: '100%' }}
-        >
-            {this.props && this.props.choosers[field.chooser].map(option => (
-                <Option key={option.name} value={option.name}>
-                  {option.name}
-                </Option>
-              ))}
-            
-        </Select>)
-        break        
-      case 'select':
-        formField = (
-         <Select
-            showSearch
-            style={{ width: 200 }}
-            placeholder="Select"
-            optionFilterProp="children"
-            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-          >
-            {field.selectValues ? field.selectValues.map(option => (
-              <Option key={option} value={option}>
-                  {option}
-                </Option>
-              )) :
-              this.props.choosers[field.chooser].map(option => (
-                <Option key={option.name} value={option.name}>
-                  {option.name}
-                </Option>
-              ))}
-          </Select>  
-          )
-        layout = this.formLayout
-        break
-      default : formField = (<Input placeholder={field.title} style={field.style} />)
-    }
-    return (
-       <FormItem key={field.dataIndex} {...this.Layout} label={field.title}>
-         {form.getFieldDecorator(field.dataIndex, {rules: field.inputRules,initialValue: fieldValue})(formField)}
-       </FormItem>  
-      )
-  }
-
-
-  renderContent = (currentStep) => {
-    const type = this.props.formType
-    const steps = this.props.formLayout.steps
-    const step = steps[currentStep]
-    const format = step.format
-    const length = format.length
-    const fields = step.fields
-    return format.map((subStep,i) => {
-      const length = subStep.length
-      const elements = subStep.map((place,j) => (
-        <Col md={24/length} sm={24}  key={`${type}step${i}${j}`}>
-          {this.getFormItemFromSchema(fields[place])}
-        </Col>
-        ))
-      return (
-        <Row key={`${type}step${i}`}>
-        {elements}
-        </Row>
-        )
-    })    
-
-  } 
-     
- 
-  renderFooter = currentStep => {
-    const { handleModal } = this.props;
-    const numOfSteps = this.props.formLayout.steps.length    
-    if (currentStep === numOfSteps-1) {
-      var ret = []
-       if (currentStep > 0 ) {
-        ret = [
-        <Button key="back" style={{ float: 'left' }} onClick={this.backward}>
-          Back
-        </Button>
-        ]
-       }
-      return [...ret,
-        <Button key="cancel" onClick={() => handleModal()}>
-          Cancel
-        </Button>,
-        <Button key="submit" type="primary" onClick={() => this.handleNext(currentStep)}>
-          Submit
-        </Button>,
-      ];
-    }
-    if (currentStep < numOfSteps-1 && currentStep > 0 ) {
-      return [
-        <Button key="back" style={{ float: 'left' }} onClick={this.backward}>
-          Back
-        </Button>,
-        <Button key="cancel" onClick={() => handleModal()}>
-          Cancel
-        </Button>,
-        <Button key="forward" type="primary" onClick={() => this.handleNext(currentStep)}>
-          Forward
-        </Button>,
-      ];
-    }    
-    return [
-      <Button key="cancel" onClick={() => handleModal()}>
-        Cancel
-      </Button>,
-      <Button key="forward" type="primary" onClick={() => this.handleNext(currentStep)}>
-        Forward
-      </Button>,
-    ];
-  };
-
-  render() {
- 
-    if (!this.props.fields) return {}
-    const { ModalVisible, handleModal } = this.props;
-    const { currentStep, formVals } = this.state;
-    const steps = this.props.formLayout.steps    
-    const type = this.props.formType
-    return (
-      <Modal
-        width={640}
-        bodyStyle={{ padding: '32px 40px 48px' }}
-        destroyOnClose
-        title="Edit"
-        visible={ModalVisible}
-        footer={this.renderFooter(currentStep)}
-        onCancel={() => handleModal()}
-      >
-        <Steps style={{ marginBottom: 28 }} size="small" current={currentStep}>
-          {steps.map((step,i) => <Step title={step.title} key={`${type}step${i}`}/>)}
-        </Steps>
-        {this.renderContent(currentStep, formVals)}
-      </Modal>
-    );
-  }
-}
-
 /* eslint react/no-multi-comp:0 */
 @connect(({ action, loading }) => ({
   action,
@@ -319,7 +100,7 @@ class TableList extends PureComponent {
       updateModalVisible: false,
       expandForm: false,
       selectedRows: [],
-      formValues: this.props.route ? this.props.route.params : {},
+      formValues: {...this.props.location.query, ...this.props.route.params }, //get the entity and filters from router
       stepFormValues: {},
     };
     const { dispatch } = this.props;
@@ -329,9 +110,9 @@ class TableList extends PureComponent {
       payload: {...params, entity : this.entity},
     });
   }
-
 /*---  change the schema in page loading ---*/
- schemaChange = (schema) => {
+ schemaChange = () => {
+  console.log('0000000000000000000000:',this.entity,schemas[this.entity] )
     this.schema = schemas[this.entity]  
     this.fields = pushKey(this.schema.fields)
     this.columns = this.fields
@@ -429,12 +210,12 @@ class TableList extends PureComponent {
   /*--- Refreshes the view After an update or insert ---*/ 
   handleFormAfterIU = () => {
     const { form, dispatch } = this.props;
-    //form.resetFields();
- 
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~1:",this.state.formValues) 
     dispatch({
       type: 'action/fetch',
       payload: { ...this.state.formValues, update: 'yes' ,entity: this.entity},
     });
+    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~2:",form)     
   };
 
 /*--- Toggels the Fitlters form ---*/
@@ -492,12 +273,6 @@ class TableList extends PureComponent {
       const filterString = Object.keys(values).filter(x => values[x]).reduce((o,x) => o + `${x}=${values[x]}&`,'')
       router.push(`${this.props.route.path}?${filterString}`)
 
-/*
-      this.setState({
-        formValues: values,
-      });
-*/
-
       dispatch({
         type: 'action/fetch',
         payload: { ...values, entity: this.entity}
@@ -506,7 +281,7 @@ class TableList extends PureComponent {
     });
   };
 
-
+// shows the add new item form
   handleModalVisible = (flag, record) => {
     this.setState({
       modalVisible: !!flag,
@@ -514,6 +289,7 @@ class TableList extends PureComponent {
     });
   };
 
+//shows the update item from
   handleUpdateModalVisible = (flag, record) => {
     this.setState({
       updateModalVisible: !!flag,
@@ -521,6 +297,7 @@ class TableList extends PureComponent {
     });
   };
 
+//handles item add event
   handleAdd = values => {
     const { dispatch } = this.props;
     let lang = { 'zh-CN': 2, 'en-US': 1 };
@@ -534,14 +311,17 @@ class TableList extends PureComponent {
 
     message.success('Raw was Added Successfully');
     this.handleModalVisible();
-    
   };
 
+// handled item update event
   handleUpdate = fields => {
     const { dispatch } = this.props;
     let lang = { 'zh-CN': 2, 'en-US': 1 };
     let lang_id = lang[getLocale()];
-
+    /*console.log('fields 1111111111111111111111111111111111111:', fields)*/
+    Object.keys(fields).forEach(field => {
+      fields[field] = fields[field] instanceof moment ? moment(fields[field]._d).format(fields[field]._f) : fields[field]
+    })
     dispatch({
       type: 'action/update',
       payload: Object.assign(fields,{lang_id: lang_id,entity: this.entity}),
@@ -552,7 +332,7 @@ class TableList extends PureComponent {
     this.handleUpdateModalVisible();
   };
 
-
+// states the pagination attributes
    listPaginationProps = {
       showSizeChanger: false,
       showQuickJumper: false,
@@ -564,6 +344,7 @@ class TableList extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
+ 
     /*console.log('=========================:',this.props)     */
       return (
       <Form onSubmit={this.handleSearch} layout="inline">
@@ -601,6 +382,8 @@ class TableList extends PureComponent {
     return expandForm ? this.renderMainForm(0,-1) :this.renderMainForm(0,2);
   }
 
+
+
   myList = (data) => (
     <List key='list'
       grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 5 }}
@@ -612,17 +395,16 @@ class TableList extends PureComponent {
               {Object.keys(item)
                 .filter(x => this.schema.fields.hasOwnProperty(x) && x!== 'id' && item[x])
                 .map((x,i) =>{
-                  var link  = this.columns.filter(col => col.dataIndex === x)[0].link
+                  console.log("in LIST LIST LIS:",x,this.columns,this.columns.filter(col => col.dataIndex === x))
+                  var schema = this.columns.filter(col => col.dataIndex === x)[0]
+                  if (!schema) return (<span/>)
+                  var link = schema.link
+                  var render = schema.render ? schema.render(item[x],item) : null
                   link = link ? `${link}?name=${item[x]}` : link
                   return (
                     <div key={item.name + 'div' + i}>
                       <span> {formatMessage({ id: `pages.${x}` })} : </span>
-                      <span> {
-                        Array.isArray(item[x]) ? item[x].map(tag => <Tag>{tag}</Tag> ) :
-                        link ? <a onClick={() => router.push(link)}>{item[x].toString()}</a> :
-                        /*link ? <Link to={link}>{item[x].toString()}</Link> :*/
-                        item[x].toString()
-                      }</span>
+                      <span> {render}</span>
                     </div>
                 )}
               )}
@@ -634,7 +416,6 @@ class TableList extends PureComponent {
       )}
     />    
   )  
-
 
   myTable  = (selectedRows,loading,data) => (
       <StandardTable
@@ -673,7 +454,6 @@ class TableList extends PureComponent {
       handleUpdate: this.handleUpdate,
     };
 
-
      return (
       <PageHeaderWrapper title={this.schema.title}>
         <Card bordered={false}>
@@ -694,7 +474,7 @@ class TableList extends PureComponent {
             {( data.list[0] === undefined ? '' : window.innerWidth < 1000 ? this.myList(data.list) :this.myTable(selectedRows,loading,data))}
           </div>
         </Card>
-        <CreateForm
+        <MainForm
           {...parentMethods}
           ModalVisible={modalVisible}
           values={stepFormValues}
@@ -706,7 +486,7 @@ class TableList extends PureComponent {
           formType='insert'
         />
         {stepFormValues && Object.keys(stepFormValues).length ? (
-          <CreateForm
+          <MainForm
             {...updateMethods}
             ModalVisible={updateModalVisible}
             values={stepFormValues}
