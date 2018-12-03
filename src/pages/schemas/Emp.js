@@ -30,10 +30,35 @@ const emp = {
               "style": {
                 "width": "80%",
               }
-            }                        
+            },
+            {
+              "field": "id_n",
+              "placeholder": "ID Number",
+              "style": {
+                "width": "100%"
+              }
+            },
+            {
+              "field": "clock_n",
+              "placeholder": "Clock Number",
+              "style": {
+                "width": "100%"
+              }
+            },
+            {
+              "field": "salary_n",
+              "placeholder": "Salary Number",
+              "style": {
+                "width": "100%"
+              }
+            } 
           ],
           "format": [
-            [0],[1],[2]
+            [0,2],
+            [1],
+            [3],
+            [4],
+            [5]
           ]
         },
         {   
@@ -89,17 +114,25 @@ const emp = {
                 "width": "80%",
                 "align": "center"
               }
-            }            
+            },
+            {
+              "field": "tags",
+              "placeholder": "Tags",
+              "style": {
+                "width": "100%"
+              }
+            }                         
           ],
           "format": [
-            [0],[1]
+            [0,1],
+            [2]
           ]
         }
       ]
     },
     "update": {
       "steps": [
-        {
+                {
           "title": "Identifiers",
           "fields": [
             {
@@ -110,17 +143,49 @@ const emp = {
               }
             },
             {
+              "field": "user_name",
+              "placeholder": "User Name",
+              "style": {
+                "width": "80%",
+              }
+            },
+            {
               "field": "active",
               "placeholder": "Active",
               "style": {
                 "width": "80%",
               }
-            }            
+            },
+            {
+              "field": "id_n",
+              "placeholder": "ID Number",
+              "style": {
+                "width": "100%"
+              }
+            },
+            {
+              "field": "clock_n",
+              "placeholder": "Clock Number",
+              "style": {
+                "width": "100%"
+              }
+            },
+            {
+              "field": "salary_n",
+              "placeholder": "Salary Number",
+              "style": {
+                "width": "100%"
+              }
+            } 
           ],
           "format": [
-            [0,1]            
+            [0,2],
+            [1],
+            [3],
+            [4],
+            [5]
           ]
-        },      
+        },
         {
           "title": "Employy Names",
           "fields": [
@@ -147,30 +212,31 @@ const emp = {
           "title": "Details",
           "fields": [
             {
-              "field": "user_name",
-              "placeholder": "User Name",
-              "style": {
-                "width": "100%"
-              }
-            },
-            {
               "field": "dept_name",
               "placeholder": "Department",
               "style": {
-                "width": "100%"
+                "width": "80%",
+                "align": "center"
               }
             },
             {
               "field": "ap_name",
-              "placeholder": "Department",
+              "placeholder": "Availability",
+              "style": {
+                "width": "80%",
+                "align": "center"
+              }
+            },
+            {
+              "field": "tags",
+              "placeholder": "Tags",
               "style": {
                 "width": "100%"
               }
-            }            
+            }                         
           ],
           "format": [
-            [0],
-            [1],
+            [0,1],
             [2]
           ]
         }
@@ -271,7 +337,22 @@ const emp = {
       "inputMethod": "bool",
       "sorter": true,
       "align": "right",
-    },    
+    }, 
+    "id_n": {
+      "dataIndex": "id_n",
+      "inputMethod": "input",
+      "required" : false
+    }, 
+    "clock_n": {
+      "dataIndex": "clock_n",
+      "inputMethod": "input",
+      "required" : false
+    }, 
+    "salary_n": {
+      "dataIndex": "salary_n",
+      "inputMethod": "input",
+      "required" : false
+    }, 
     "user_name": {
       "dataIndex": "user_name",
       "link" : '/router/users',      
@@ -307,6 +388,10 @@ const emp = {
           "message": "This field is required"
         }
       ]
+    },
+    "tags": {
+      "inputMethod": "tags",
+      "align": "right",
     }
   }
 }
