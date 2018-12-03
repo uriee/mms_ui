@@ -115,6 +115,7 @@ class CreateForm extends PureComponent {
     let fieldValue = (formVals[field.dataIndex] === false ? false :
                      formVals[field.dataIndex] || field.defaultValue)
     let layout = {}
+    let tagArray = []
     switch(field.inputMethod) {
       case 'input':
         formField = (<Input placeholder={placeHolder} style={fieldStyle} />) 
@@ -123,19 +124,20 @@ class CreateForm extends PureComponent {
         formField = (<Checkbox defaultChecked={fieldValue}>{placeHolder}</Checkbox>)  
         break
       case 'time': 
-        formField = (<TimePicker defaultValue={moment(fieldValue, 'HH:mm')} format={'HH:mm'} />)
+        formField = (<TimePicker value={moment(fieldValue, 'HH:mm')} format={'HH:mm'} />)
         break
       case 'textArea':
         formField = (<TextArea placeholder={placeHolder} style={fieldStyle} />)
         break        
       case 'tags':
+        tagArray = (this.props && this.props.choosers[field.chooser]) || (fieldValue && fieldValue.map(x => ({name : x}))) || []
         formField = ( <Select
           mode="tags"
           placeholder="Please Enter Tags"
           tokenSeparators={[',']}
           style={{ width: '100%' }}
         >
-            {this.props && this.props.choosers[field.chooser].map(option => (
+            {tagArray.map(option => (
                 <Option key={option.name} value={option.name}>
                   {option.name}
                 </Option>

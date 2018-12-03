@@ -25,24 +25,24 @@ const resourceGroup = {
               }
             },
             {
-              "field": "is_shift",
-              "placeholder": "shift?",
-              "style": {
-                "width": "80%",
-              }
-            },            
-            {
               "field": "resource_names",
               "placeholder": "Resources In Group",
               "style": {
                 "width": "80%",
               }
-            } 
+            },
+            {
+              "field": "tags",
+              "placeholder": "Tags",
+              "style": {
+                "width": "100%"
+              }
+            },             
           ],
           "format": [
-            [0],
-            [1,2],
-            [3]
+            [0,1],
+            [2],
+            [3]     
           ]
         },
         {   
@@ -114,25 +114,26 @@ const resourceGroup = {
                 "width": "80%",
               }
             },
-            {
-              "field": "is_shift",
-              "placeholder": "shift?",
-              "style": {
-                "width": "80%",
-              }
-            },            
+           
             {
               "field": "resource_names",
               "placeholder": "Resources In Group",
               "style": {
                 "width": "80%",
               }
-            } 
+            } ,
+            {
+              "field": "tags",
+              "placeholder": "Tags",
+              "style": {
+                "width": "100%"
+              }
+            },             
           ],
-          "format": [
-            [0],
-            [1,2],
-            [3]
+          "format":  [
+            [0,1],
+            [2],
+            [3]     
           ]
         },     
         {
@@ -238,14 +239,7 @@ const resourceGroup = {
       "sorter": true,
       "align": "right",
     }, 
-    "is_shift": {
-      "dataIndex": "is_shift",
-      "type": "text",
-      "inputMethod": "bool",
-      "defaultValue": false,
-      "sorter": true,
-      "align": "right",
-    },        
+      
     "dept_name": {
       "dataIndex": "dept_name",
       "link" : '/router/departments',      
@@ -274,6 +268,11 @@ const resourceGroup = {
         }
       ]
     },
+    "tags": {
+      "inputMethod": "tags",
+      "align": "right",
+    },   
+  
     "resource_names": {
       "dataIndex": "resource_names",
       "type": "array",

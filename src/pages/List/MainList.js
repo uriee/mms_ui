@@ -19,7 +19,6 @@ import {
   DatePicker,
   Modal,
   message,
-  Badge,
   Divider,
   Steps,
   Radio,
@@ -39,7 +38,7 @@ import {emp} from '../schemas/Emp.js';
 import {part} from '../schemas/Part.js';
 import {dept} from '../schemas/Departments.js';
 import {user} from '../schemas/User.js';
-import {machine} from '../schemas/Machine.js';
+import {equipment} from '../schemas/Equipment.js';
 import {resourceGroup} from '../schemas/ResourceGroup.js';
 import {resource} from '../schemas/Resource.js';
 import {availabilityProfile} from '../schemas/AvailabilityProfile.js';
@@ -50,7 +49,7 @@ const schemas = {
   part: part,
   dept: dept,
   user: user,
-  machine: machine,
+  equipment: equipment,
   resourceGroup : resourceGroup,
   resource : resource,
   availabilityProfile : availabilityProfile,
@@ -118,22 +117,22 @@ class TableList extends PureComponent {
     this.columns = this.fields
                       .filter(field => field.required !== false) /* field ont need to be shown in the table it is needded for input forms only */
                       .sort((a,b) => a.order > b.order)
-                      .map(field => ({
+                      .map((field,fi) => ({
                         title: formatMessage({ id: `pages.${field.name}` }), 
                         dataIndex: (field.dataIndex ? field.dataIndex : field.name),
-                        key: (field.dataIndex ? field.dataIndex : field.name), 
+                        key: `${(field.dataIndex ? field.dataIndex : field.name)}-${fi}`, 
                         sorter: (field.sorter ? field.sorter : false), /*if the table can be sotrted by this field*/
                         link:  (field.link ? field.link : false), /*goto link when clicked upon*/
                         selectValues: (field.selectValues ? field.selectValues : null), /*in case you need to choose from constants in the schema*/
-                        render: (x,z) => ( !x ? <span/> : 
+                        render: (x,z) => ( !x ? <span key={fi}/> : 
                           field.link ?  <a onClick={() => router.push(`${field.link}?name=${x}`)}>{x.toString()}</a> :
                           field.dataIndex === 'tags' && x ? (
-                            <span>
-                              {x.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
+                            <span key={`tags-${fi}`}>
+                              {x.map((tag,i) => <Tag color="blue" key={`${tag}-${fi}-${i}`}>{tag}</Tag>)}
                             </span>
                           ) :
                           field.dataIndex === 'resource_names' && x ? this.resourcesRender(x,z) :
-                          field.inputMethod === 'bool' ? <Checkbox  checked={x} disabled /> :
+                          field.inputMethod === 'bool' ? <Checkbox key={`check-${fi}`} checked={x} disabled /> :
                           x ),
                         align: (field.align ? field.align :'left')
                       }))
@@ -152,7 +151,7 @@ class TableList extends PureComponent {
   resourcesRender = (x,z) => {
     const resourceTypeMap = {
       employee : {link :'employees',color : 'green'},
-      machine: {link :'machines',color : 'orange'},
+      equipment: {link :'equipments',color : 'orange'},
       group : {link :'resource_groups',color : 'blue'},
       place: {link :'places',color : 'blue'}
     }    
@@ -162,7 +161,7 @@ class TableList extends PureComponent {
     
     return( 
       <span>
-        {x.map((tag,i) => <a onClick={() => router.push(`/router/${links[i]}?name=${tag}`)}><Tag color={colors[i]} key={tag}>{tag}</Tag></a>)}
+        {x.map((tag,i) => <a key={`atag-${z.name}-${tag}-${i}`} onClick={() => router.push(`/router/${links[i]}?name=${tag}`)}><Tag color={colors[i]} key={`rtag-${z.name}-${tag}-${i}`}>{tag}</Tag></a>)}
       </span>
     )  
   }
@@ -171,6 +170,7 @@ class TableList extends PureComponent {
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
+
 
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
@@ -395,7 +395,6 @@ class TableList extends PureComponent {
               {Object.keys(item)
                 .filter(x => this.schema.fields.hasOwnProperty(x) && x!== 'id' && item[x])
                 .map((x,i) =>{
-                  console.log("in LIST LIST LIS:",x,this.columns,this.columns.filter(col => col.dataIndex === x))
                   var schema = this.columns.filter(col => col.dataIndex === x)[0]
                   if (!schema) return (<span/>)
                   var link = schema.link

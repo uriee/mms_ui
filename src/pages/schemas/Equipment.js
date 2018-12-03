@@ -1,9 +1,9 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
-const machine = { 
-  "entity": "machine",
-  "title": "Machines",  
+const equipment = { 
+  "entity": "equipment",
+  "title": "Equipments",  
   "forms": {
     "insert": {
       "steps": [
@@ -11,15 +11,8 @@ const machine = {
           "title": "Identifiers",
           "fields": [
             {
-              "field": "machine_name",
-              "placeholder": "Machine Name",
-              "style": {
-                "width": "80%",
-              }
-            },
-            {
-              "field": "mac_address",
-              "placeholder": "MacAddress",
+              "field": "equipment_name",
+              "placeholder": "Equipment Name",
               "style": {
                 "width": "80%",
               }
@@ -30,10 +23,26 @@ const machine = {
               "style": {
                 "width": "80%",
               }
-            }                        
+            },
+            {
+              "field": "equipment_type",
+              "placeholder": "Type",
+              "style": {
+                "width": "80%",
+              }
+            },                          
+             {
+              "field": "tags",
+              "placeholder": "Tags",
+              "style": {
+                "width": "100%"
+              }
+            }                         
           ],
           "format": [
-            [0],[1],[2]
+            [0],
+            [1,2],
+            [3]
           ]
         },
         {   
@@ -76,25 +85,6 @@ const machine = {
                 "width": "80%",
                 "align": "center"
               }
-            }            
-          ],
-          "format": [
-            [0],[1]
-          ]
-        }
-      ]
-    },
-    "update": {
-      "steps": [
-        {
-          "title": "Identifiers",
-          "fields": [
-            {
-              "field": "machine_name",
-              "placeholder": "Machineloyee Name",
-              "style": {
-                "width": "80%",
-              }
             },
             {
               "field": "mac_address",
@@ -102,30 +92,73 @@ const machine = {
               "style": {
                 "width": "80%",
               }
-            },            
+            },
+            {
+              "field": "serial",
+              "placeholder": "Serial",
+              "style": {
+                "width": "80%",
+              }
+            },
+          ],
+          "format": [
+            [0,1],
+            [2],
+            [3]
+          ]
+        }
+      ]
+    },
+    "update": {
+      "steps":[
+        {
+          "title": "Identifiers",
+          "fields": [
+            {
+              "field": "equipment_name",
+              "placeholder": "Equipment Name",
+              "style": {
+                "width": "80%",
+              }
+            },
             {
               "field": "active",
               "placeholder": "Active",
               "style": {
                 "width": "80%",
               }
-            }            
+            },
+            {
+              "field": "equipment_type",
+              "placeholder": "Type",
+              "style": {
+                "width": "80%",
+              }
+            },                          
+             {
+              "field": "tags",
+              "placeholder": "Tags",
+              "style": {
+                "width": "100%"
+              }
+            }                         
           ],
           "format": [
-            [0,2],[1]            
+            [0],
+            [1,2],
+            [3]
           ]
-        },      
-        {
-          "title": "Description",
+        },
+        {   
+          "title": "Description",       
           "fields": [
             {
               "field": "description",
               "placeholder": "Description",
               "style": {
-                "width": "100%"
+                "width": "80%",
               }
-            },
- 
+            }            
           ],
           "format": [
             [0]
@@ -138,20 +171,37 @@ const machine = {
               "field": "dept_name",
               "placeholder": "Department",
               "style": {
-                "width": "100%"
+                "width": "80%",
+                "align": "center"
               }
             },
             {
               "field": "ap_name",
-              "placeholder": "Department",
+              "placeholder": "Availability",
               "style": {
-                "width": "100%"
+                "width": "80%",
+                "align": "center"
               }
-            }            
+            },
+            {
+              "field": "mac_address",
+              "placeholder": "MacAddress",
+              "style": {
+                "width": "80%",
+              }
+            },
+            {
+              "field": "serial",
+              "placeholder": "Serial",
+              "style": {
+                "width": "80%",
+              }
+            },
           ],
           "format": [
-            [0],
-            [1]
+            [0,1],
+            [2],
+            [3]
           ]
         }
       ]
@@ -161,7 +211,7 @@ const machine = {
     "id": {
       "required": false
     },  	
-    "machine_name": {
+    "equipment_name": {
       "dataIndex":"name",
       "inputMethod": "input",
       "sorter": true,
@@ -234,7 +284,21 @@ const machine = {
       "defaultValue": true,
       "sorter": true,
       "align": "right",
-    },    
+    },  
+    "serial": {
+      "type": "text",
+      "inputMethod": "input",
+      "sorter": true,
+      "align": "right",
+    },
+    "equipment_type": {
+      "type": "text",
+      "inputMethod": "select",
+      "selectValues" : ['tool','machine'],
+      "defaultValue": true,
+      "sorter": true,
+      "align": "right",
+    }, 
     "dept_name": {
       "dataIndex": "dept_name",
       "link" : '/router/departments',      
@@ -262,7 +326,11 @@ const machine = {
           "message": "This field is required"
         }
       ]
-    }
+    },
+    "tags": {
+      "inputMethod": "tags",
+      "align": "right",
+    }     
   }
 }
-export {machine}
+export {equipment}

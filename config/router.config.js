@@ -71,10 +71,10 @@ export default [
             component: './Result/Success',
           },
           {
-            path: '/prod/machines',
-            name: 'machines',
+            path: '/prod/equipments',
+            name: 'equipments',
             component: './List/MainList',
-            params: { entity: 'machine' },
+            params: { entity: 'equipment' },
           },          
         ],
       },
@@ -456,9 +456,9 @@ export default [
             params: { entity: 'resource' },             
           },
           {
-            path: '/router/machines',
+            path: '/router/equipments',
             component: './List/MainList',
-            params: { entity: 'machine' },             
+            params: { entity: 'equipment' },             
           }, 
           {
             path: '/router/resource_groups',
