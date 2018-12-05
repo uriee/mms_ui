@@ -186,7 +186,26 @@ export default [
           {
             path: '/maint/malfunctions',
             name: 'malfunctions',
-            component: './Result/Success',
+            component: './List/MainList',
+            params: { entity: 'malfunctions' },              
+          },
+          {
+            path: '/maint/malfunction_types',
+            name: 'malfunction_types',
+            component: './List/MainList',
+            params: { entity: 'malfunction_types' },              
+          }, 
+                             {
+            path: '/maint/repairs',
+            name: 'repairs',
+            component: './List/MainList',
+            params: { entity: 'repairs' },              
+          },
+          {
+            path: '/maint/repair_types',
+            name: 'repair_types',
+            component: './List/MainList',
+            params: { entity: 'repair_types' },              
           },
         ],
       },
@@ -474,7 +493,30 @@ export default [
             path: '/router/availabilities',
             component: './List/MainList',
             params: { entity: 'availabilities' },             
-          },          
+          }, 
+          {
+            path: '/router/malfunctions',
+            component: './List/MainList',
+            params: { entity: 'malfunctions' },             
+          },
+          {
+            path: '/router/malfunction_types',
+            name: 'malfunction_types',
+            component: './List/MainList',
+            params: { entity: 'malfunction_types' },              
+          },
+                     {
+            path: '/router/repairs',
+            name: 'repaires',            
+            component: './List/MainList',
+            params: { entity: 'repairs' },             
+          },
+          {
+            path: '/router/repair_types',
+            name: 'repair_types',
+            component: './List/MainList',
+            params: { entity: 'repair_types' },              
+          },
         ]
       },      
       {

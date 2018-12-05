@@ -47,6 +47,7 @@ class CreateForm extends PureComponent {
       formVals: Object.keys(this.props.fields).reduce((obj,key)=>{
         var value = this.props.values[this.props.fields[key].dataIndex]
         value = this.props.fields[key].inputMethod === 'time' ? moment(value, 'HH:mm') : value
+        value = this.props.fields[key].inputMethod === 'timestamp' ? moment(value, 'YYYY-MM-DD HH:mm:ss') : value        
         const fieldName = this.props.fields[key].dataIndex
         obj[fieldName] = value
         return obj
@@ -107,7 +108,7 @@ class CreateForm extends PureComponent {
     const fieldStyle = fieldData.style
     const { form, fields } = this.props;
     const field = fields[fieldName]
-    //console.log('~~~~~~~~~~~~~~~~~:',field,fieldData)
+    console.log('~~~~~~~~~~~~~~~~~:',field,fieldData)
     //if (field.inputMethod === "select" && !this.props.hasOwnProperty('choosers')) return <span/> //a bug that need to be fixed
     const placeHolder = fieldData.placeholder || field.title
     const formVals = this.state.formVals
@@ -124,8 +125,19 @@ class CreateForm extends PureComponent {
         formField = (<Checkbox defaultChecked={fieldValue}>{placeHolder}</Checkbox>)  
         break
       case 'time': 
-        formField = (<TimePicker value={moment(fieldValue, 'HH:mm')} format={'HH:mm'} />)
+        formField = (<TimePicker
+                       value={moment(fieldValue, 'HH:mm')}
+                       format={'HH:mm'}
+                    />)
         break
+      case 'timestamp':
+        formField = (<DatePicker
+                       showTime
+                       format="YYYY-MM-DD HH:mm:ss"
+                       value={moment(fieldValue, 'YYYY-MM-DD HH:mm:ss')}
+                       placeholder="Select Date/Time"
+                    />)
+        break;
       case 'textArea':
         formField = (<TextArea placeholder={placeHolder} style={fieldStyle} />)
         break        

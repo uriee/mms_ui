@@ -43,6 +43,10 @@ import {resourceGroup} from '../schemas/ResourceGroup.js';
 import {resource} from '../schemas/Resource.js';
 import {availabilityProfile} from '../schemas/AvailabilityProfile.js';
 import {availabilities} from '../schemas/Availabilities.js';
+import {malfunctions} from '../schemas/Malfunctions.js';
+import {malfunction_types} from '../schemas/Malfunction_Types.js';
+import {repairs} from '../schemas/Repairs.js';
+import {repair_types} from '../schemas/Repair_Types.js';
 
 const schemas = {
   emp : emp,
@@ -53,7 +57,11 @@ const schemas = {
   resourceGroup : resourceGroup,
   resource : resource,
   availabilityProfile : availabilityProfile,
-  availabilities : availabilities
+  availabilities : availabilities,
+  malfunctions : malfunctions,
+  malfunction_types : malfunction_types,
+  repairs : repairs,
+  repair_types : repair_types     
 }
 
 const FormItem = Form.Item;
