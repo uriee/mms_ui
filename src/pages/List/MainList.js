@@ -308,7 +308,7 @@ class TableList extends PureComponent {
 //handles item add event
   handleAdd = values => {
     const { dispatch } = this.props;
-    let lang = { 'zh-CN': 2, 'en-US': 1 };
+    let lang = { 'he-IL': 2, 'en-US': 1 };
     let lang_id = lang[getLocale()];
 
     dispatch({
@@ -324,7 +324,7 @@ class TableList extends PureComponent {
 // handled item update event
   handleUpdate = fields => {
     const { dispatch } = this.props;
-    let lang = { 'zh-CN': 2, 'en-US': 1 };
+    let lang = { 'he-IL': 2, 'en-US': 1 };
     let lang_id = lang[getLocale()];
     /*console.log('fields 1111111111111111111111111111111111111:', fields)*/
     Object.keys(fields).forEach(field => {

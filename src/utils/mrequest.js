@@ -6,7 +6,7 @@ import { isAntdPro } from './utils';
 import { getLocale } from 'umi/locale';
 
 const getLang = () => {
-  const langs = { 'en-US': 1, 'zh-CN': 2, 'de-DE': 3 };
+  const langs = { 'en-US': 1, 'he-IL': 2, 'de-DE': 3 };
   return langs[getLocale()];
 };
 
