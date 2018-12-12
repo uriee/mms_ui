@@ -42,9 +42,9 @@ const getValue = obj =>
 class CreateForm extends PureComponent {
   constructor(props) {
     super(props);
-    /*console.log('==========================:',props)*/
     this.state = {
-      formVals: Object.keys(this.props.fields).reduce((obj,key)=>{
+      formVals: 
+        Object.keys(this.props.fields).reduce((obj,key)=>{
         var value = this.props.values[this.props.fields[key].dataIndex]
         value = this.props.fields[key].inputMethod === 'time' ? moment(value, 'HH:mm') : value
         value = this.props.fields[key].inputMethod === 'timestamp' ? moment(value, 'YYYY-MM-DD HH:mm:ss') : value        
@@ -65,6 +65,7 @@ class CreateForm extends PureComponent {
     const numOfSteps = this.props.formLayout.steps.length-1  
     const { form, handler, choosers, handleModal } = this.props;
     const { formVals: oldValue } = this.state;
+
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const formVals = { ...oldValue, ...fieldsValue };
@@ -78,7 +79,7 @@ class CreateForm extends PureComponent {
           } else {
             handler(formVals);
             this.setState({
-              formVals: [],
+              formVals: {...this.props.insertKey},
               currentStep: 0,
             });
           }
@@ -108,7 +109,7 @@ class CreateForm extends PureComponent {
     const fieldStyle = fieldData.style
     const { form, fields } = this.props;
     const field = fields[fieldName]
-    console.log('~~~~~~~~~~~~~~~~~:',field,fieldData)
+    //console.log('~~~~~~~~~~~~~~~~~:',field,fieldData)
     //if (field.inputMethod === "select" && !this.props.hasOwnProperty('choosers')) return <span/> //a bug that need to be fixed
     const placeHolder = fieldData.placeholder || field.title
     const formVals = this.state.formVals
@@ -140,7 +141,10 @@ class CreateForm extends PureComponent {
         break;
       case 'textArea':
         formField = (<TextArea placeholder={placeHolder} style={fieldStyle} />)
-        break        
+        break 
+      case 'number':
+        formField = (<InputNumber placeholder={placeHolder}  style={field.style} />)
+        break         
       case 'tags':
         tagArray = (this.props && this.props.choosers[field.chooser]) || (fieldValue && fieldValue.map(x => ({name : x}))) || []
         formField = ( <Select
@@ -259,7 +263,7 @@ class CreateForm extends PureComponent {
   };
 
   render() {
- 
+  //console.log('==========================:',this.props,this.state)
     if (!this.props.fields) return {}
     const { ModalVisible, handleModal } = this.props;
     const { currentStep, formVals } = this.state;

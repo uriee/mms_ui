@@ -176,7 +176,8 @@ export default [
           {
             path: '/maint/equipment',
             name: 'equipment',
-            component: './Result/Success',
+            component: './List/MainList',
+            params: { entity: 'equipment' },
           },
           {
             path: '/maint/care',
@@ -207,6 +208,18 @@ export default [
             component: './List/MainList',
             params: { entity: 'repair_types' },              
           },
+          {
+            path: '/maint/mnt_plans',
+            name: 'mnt_plans',            
+            component: './List/MainList',
+            params: { entity: 'mnt_plans' },             
+          },
+          {
+            path: '/maint/mnt_plan_items',
+            name: 'mnt_plan_items',
+            component: './List/MainList',
+            params: { entity: 'mnt_plan_items' },              
+          },          
         ],
       },
 
@@ -505,7 +518,7 @@ export default [
             component: './List/MainList',
             params: { entity: 'malfunction_types' },              
           },
-                     {
+          {
             path: '/router/repairs',
             name: 'repaires',            
             component: './List/MainList',
@@ -516,6 +529,18 @@ export default [
             name: 'repair_types',
             component: './List/MainList',
             params: { entity: 'repair_types' },              
+          },
+          {
+            path: '/router/mnt_plans',
+            name: 'mnt_plans',            
+            component: './List/MainList',
+            params: { entity: 'mnt_plans' },             
+          },
+          {
+            path: '/router/mnt_plan_items',
+            name: 'mnt_plan_items',
+            component: './List/MainList',
+            params: { entity: 'mnt_plan_items' },              
           },
         ]
       },      

@@ -5,6 +5,7 @@ import hash from 'hash.js';
 import { isAntdPro } from './utils';
 import { getLocale } from 'umi/locale';
 
+
 const getLang = () => {
   const langs = { 'en-US': 1, 'he-IL': 2, 'de-DE': 3 };
   return langs[getLocale()];
@@ -93,6 +94,7 @@ export default async function mrequest(
    * Maybe url has the same parameters
    */
   console.log('url:', url);
+
   let checkIfUpdated = options.method !== 'POST' && url.split('?')[1].includes('update');
   const user = getUser()
   /* strip UI parameters from url in order to use the caching mechanizem, add lang and authentication*/
@@ -153,11 +155,11 @@ export default async function mrequest(
   }
   console.log('before fetch', { url: url, ...newOptions });
   try {
-    const resp = await axios({ url: url, ...newOptions }).catch(e => {
+    const resp = await axios({ url: url, ...newOptions })/*.catch(e => {
       console.log('Error in mrequest axios call', e.response);
       checkStatus(e.response)
       throw new Error("Server Error")
-    });
+    });*/
     console.log('mrequest after axios call: ', resp);
     await checkStatus(resp);
     await cachedSave(resp, hashcode);
@@ -165,32 +167,36 @@ export default async function mrequest(
     return resp.data;
   } catch (e) {
     console.log('erorr:', e, e.response);
-    const status = e.name;
+    const status = e.response.request.status;
     if (status === 401) {
       // @HACK
       /* eslint-disable no-underscore-dangle */
       window.g_app._store.dispatch({
         type: 'login/logout',
       });
-      return;
+      return 0;
     }
-    if (status === 555) {
-      return 555;
-    }
+
     // environment should not be used
     if (status === 403) {
       router.push('/exception/403');
-      return;
+      return 0;
     }
     if (status <= 504 && status >= 500) {
       router.push('/exception/500');
-      return;
+      return 0;
     }
     if (status >= 404 && status < 422) {
       router.push('/exception/404');
-      return;
+      return 0;
     }
-      router.push('/exception/404');    
+    notification.error({
+      message: `Error ${status}`,
+      description: "Undefined Error",
+      });  
+    router.push('/exception/404'); 
+    console.log('___________________________________________',window.location.href)
+          return 0;
   }
-  return;
+  return 1;
 }

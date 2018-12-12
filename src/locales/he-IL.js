@@ -48,6 +48,7 @@ export default {
   'menu.maint.equipment': 'ציוד',
   'menu.maint.care': 'טיפולים',
   'menu.maint.malfunctions': 'תקלות',
+  'menu.maint.malfunction_types': "סוגי תקלה",  
   'menu.plan': 'תכנון יצור',
   'menu.plan.resource_groups': 'קיבוץ משאבים',
   'menu.plan.resources': 'משאבים',  

@@ -47,6 +47,8 @@ import {malfunctions} from '../schemas/Malfunctions.js';
 import {malfunction_types} from '../schemas/Malfunction_Types.js';
 import {repairs} from '../schemas/Repairs.js';
 import {repair_types} from '../schemas/Repair_Types.js';
+import {mnt_plans} from '../schemas/Mnt_plans.js';
+import {mnt_plan_items} from '../schemas/Mnt_plan_items.js';
 
 const schemas = {
   emp : emp,
@@ -61,7 +63,9 @@ const schemas = {
   malfunctions : malfunctions,
   malfunction_types : malfunction_types,
   repairs : repairs,
-  repair_types : repair_types     
+  repair_types : repair_types,
+  mnt_plans : mnt_plans,
+  mnt_plan_items : mnt_plan_items 
 }
 
 const FormItem = Form.Item;
@@ -101,6 +105,10 @@ class TableList extends PureComponent {
     this.entity = this.props.route.params.entity
     this.schemaChange()    
     if(!this.schema  || !this.schema.fields.id) throw new Error("The schema does not have an id field!")
+    const params = this.props.location ? this.props.location.query : {}      
+
+    this.insertKey = {} //this.insetrKey passes to the inset form in order to allow insertion of new child rows in parent-child entities
+    if(this.schema.defaultKey){this.insertKey[this.schema.defaultKey] = params.name}
 
     this.state = {
       modalVisible: false,
@@ -108,14 +116,15 @@ class TableList extends PureComponent {
       expandForm: false,
       selectedRows: [],
       formValues: {...this.props.location.query, ...this.props.route.params }, //get the entity and filters from router
-      stepFormValues: {},
+      stepFormValues: {}
     };
     const { dispatch } = this.props;
-    const params = this.props.location ? this.props.location.query : {}
+
     dispatch({
       type: 'action/fetch',
       payload: {...params, entity : this.entity},
     });
+    console.log('???????????????????????:',params,this.entity)
   }
 /*---  change the schema in page loading ---*/
  schemaChange = () => {
@@ -152,6 +161,7 @@ class TableList extends PureComponent {
           </Fragment>
         ),
       }) 
+return 1;  
  }
 
 
@@ -218,12 +228,10 @@ class TableList extends PureComponent {
   /*--- Refreshes the view After an update or insert ---*/ 
   handleFormAfterIU = () => {
     const { form, dispatch } = this.props;
-    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~1:",this.state.formValues) 
     dispatch({
       type: 'action/fetch',
-      payload: { ...this.state.formValues, update: 'yes' ,entity: this.entity},
+      payload: { ...this.state.formValues,update: 'yes' ,entity: this.entity},
     });
-    console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~2:",form)     
   };
 
 /*--- Toggels the Fitlters form ---*/
@@ -293,7 +301,7 @@ class TableList extends PureComponent {
   handleModalVisible = (flag, record) => {
     this.setState({
       modalVisible: !!flag,
-      stepFormValues: record || {},
+      stepFormValues: {...record, ...this.state.stepFormValues},
     });
   };
 
@@ -316,6 +324,11 @@ class TableList extends PureComponent {
       payload: Object.assign(values,{lang_id: lang_id, entity: this.entity}),
       callback: this.handleFormAfterIU,
     });
+
+    this.insertKey = {}
+    let params = this.props.location ? this.props.location.query : {}
+    if(this.schema.defaultKey){this.insertKey[this.schema.defaultKey] = params.name}
+    console.log('_+_+_+_+_+_+_+2:',this.insertKey,this.schema.defaultKey)    
 
     message.success('Raw was Added Successfully');
     this.handleModalVisible();
@@ -440,7 +453,7 @@ class TableList extends PureComponent {
       action: { data },
       loading,
     } = this.props;
-    console.log("DATA",data,this.entity)
+    console.log("DATA",data,this.entity,this.state,this.insertKey)
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
     this.formFields = formFields(this.schema.fields)  
     if(data.entity !== this.entity) return <span/>  
@@ -484,12 +497,13 @@ class TableList extends PureComponent {
         <MainForm
           {...parentMethods}
           ModalVisible={modalVisible}
-          values={stepFormValues}
+          values={this.insertKey}
           choosers={data.choosers}
           fields={this.formFields}
           formLayout={this.schema.forms.insert}
           handler={this.handleAdd}
           handleModal={this.handleModalVisible}
+          insertKey = {this.insertKey}
           formType='insert'
         />
         {stepFormValues && Object.keys(stepFormValues).length ? (

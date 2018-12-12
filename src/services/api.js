@@ -3,6 +3,7 @@ import request from '@/utils/request';
 import mrequest from '@/utils/mrequest';
 
 export function fetch(params) {
+  console.log("in fetch api",params)
   let x;
   const entity = params.entity
   try {
@@ -72,12 +73,10 @@ const myGet = async (url,entity) => {
   let dataSource = await mrequest(url, {
     method: 'GET',
   });
-  if (dataSource === 555) {
-    return 555
-  }
   let choosers = dataSource.choosers;
   dataSource = dataSource.main;
   const params = parse(url, true).query;
+  if (dataSource === undefined ) return 0  
   console.log('in myGet2', dataSource, params);
   if (params.sorter) {
     let s = params.sorter.split('_');
