@@ -23,10 +23,18 @@ const availabilityProfile = {
               "style": {
                 "width": "80%",
               }
-            }                        
+            },
+            {
+              "field": "tags",
+              "placeholder": "tags",
+              "style": {
+                "width": "100%",
+              }
+            }                                   
           ],
           "format": [
-            [0,1]
+            [0,1],
+            [2]
           ]
         },
         {   
@@ -71,10 +79,18 @@ const availabilityProfile = {
               "style": {
                 "width": "80%",
               }
-            }            
+            },
+            {
+              "field": "tags",
+              "placeholder": "tags",
+              "style": {
+                "width": "100%",
+              }
+            }                         
           ],
           "format": [
-            [0,1]
+            [0,1],
+            [2]
           ]
         },      
         {
@@ -156,7 +172,11 @@ const availabilityProfile = {
       "defaultValue": true,
       "sorter": true,
       "align": "right",
-    },    
+    },
+    "tags": {
+      "inputMethod": "tags",
+      "align": "right",
+    } 
   }
 }
 export {availabilityProfile}

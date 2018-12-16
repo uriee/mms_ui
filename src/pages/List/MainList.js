@@ -1,8 +1,8 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import moment from 'moment';
 import Link from 'umi/link';
 import router from 'umi/router';
+import moment from 'moment';
 import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
 import {
   Row,
@@ -15,8 +15,6 @@ import {
   Button,
   Dropdown,
   Menu,
-  InputNumber,
-  DatePicker,
   Modal,
   message,
   Divider,
@@ -25,7 +23,6 @@ import {
   Tag,
   Checkbox,
   List,
-  TimePicker,
   notification
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
@@ -50,6 +47,7 @@ import {repair_types} from '../schemas/Repair_Types.js';
 import {mnt_plans} from '../schemas/Mnt_plans.js';
 import {mnt_plan_items} from '../schemas/Mnt_plan_items.js';
 
+const lang = { 'he-IL': {id:2, align:'right'}, 'en-US': {id:1, align:'left'}};
 const schemas = {
   emp : emp,
   part: part,
@@ -124,7 +122,6 @@ class TableList extends PureComponent {
       type: 'action/fetch',
       payload: {...params, entity : this.entity},
     });
-    console.log('???????????????????????:',params,this.entity)
   }
 /*---  change the schema in page loading ---*/
  schemaChange = () => {
@@ -143,15 +140,15 @@ class TableList extends PureComponent {
                         selectValues: (field.selectValues ? field.selectValues : null), /*in case you need to choose from constants in the schema*/
                         render: (x,z) => ( !x ? <span key={fi}/> : 
                           field.link ?  <a onClick={() => router.push(`${field.link}?name=${x}`)}>{x.toString()}</a> :
-                          field.dataIndex === 'tags' && x ? (
+                          field.dataIndex === 'tags' && x ? this.tagsRender(x,fi) :/*(
                             <span key={`tags-${fi}`}>
                               {x.map((tag,i) => <Tag color="blue" key={`${tag}-${fi}-${i}`}>{tag}</Tag>)}
                             </span>
-                          ) :
+                          ) :*/
                           field.dataIndex === 'resource_names' && x ? this.resourcesRender(x,z) :
                           field.inputMethod === 'bool' ? <Checkbox key={`check-${fi}`} checked={x} disabled /> :
                           x ),
-                        align: (field.align ? field.align :'left')
+                        align: lang[getLocale()].align
                       }))
     this.columns.push({
         title: '',
@@ -161,16 +158,22 @@ class TableList extends PureComponent {
           </Fragment>
         ),
       }) 
+    if(lang[getLocale()].align === 'right') this.columns.reverse()
+      console.log("~~~~~~~",this.columns)
 return 1;  
  }
 
-
+  tagsRender = (x,j) => (<span key={`tags-${j}`}>
+                              {x.map((tag,i) => (<a key={`${tag}a-${j}-${i}`} onClick={() => router.push(`/router/tags?tags=${tag}`)}>
+                                                    <Tag color="blue" key={`${tag}-${j}-${i}`}>{tag}</Tag>
+                                                </a>))}
+                              </span>)
 /* Renders the resources */
   resourcesRender = (x,z) => {
     const resourceTypeMap = {
       employee : {link :'employees',color : 'green'},
       equipment: {link :'equipments',color : 'orange'},
-      group : {link :'resource_groups',color : 'blue'},
+      resource_group : {link :'resource_groups',color : 'blue'},
       place: {link :'places',color : 'blue'}
     }    
     const types = z.resource_types.slice(1,-1).split(',');
@@ -316,8 +319,7 @@ return 1;
 //handles item add event
   handleAdd = values => {
     const { dispatch } = this.props;
-    let lang = { 'he-IL': 2, 'en-US': 1 };
-    let lang_id = lang[getLocale()];
+    let lang_id = lang[getLocale()].id;
 
     dispatch({
       type: 'action/add',
@@ -337,8 +339,7 @@ return 1;
 // handled item update event
   handleUpdate = fields => {
     const { dispatch } = this.props;
-    let lang = { 'he-IL': 2, 'en-US': 1 };
-    let lang_id = lang[getLocale()];
+    let lang_id = lang[getLocale()].id;
     /*console.log('fields 1111111111111111111111111111111111111:', fields)*/
     Object.keys(fields).forEach(field => {
       fields[field] = fields[field] instanceof moment ? moment(fields[field]._d).format(fields[field]._f) : fields[field]
@@ -370,7 +371,7 @@ return 1;
       return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }} >
-          {this.columns.filter(col => col.dataIndex !=='tags').slice(from,to).map(col => (
+          {this.columns.filter(col => col.dataIndex && col.dataIndex !=='tags').slice(from,to).map(col => (
                   <Col md={8} sm={24} key={'mainform'+col.dataIndex}>
                     <FormItem label={col.title}>
                       {getFieldDecorator(col.dataIndex)(
@@ -380,7 +381,7 @@ return 1;
                   </Col>
                 ))}   
 
-        <div style={{ overflow: 'hidden' }}>
+        <div >
           <div style={{ float: 'right', marginBottom: 24 }}>
             <Button type="primary" htmlType="submit">
               Submit
@@ -400,7 +401,8 @@ return 1;
 
   renderForm() {
     const { expandForm } = this.state;
-    return expandForm ? this.renderMainForm(0,-1) :this.renderMainForm(0,2);
+    return expandForm ? this.renderMainForm(0,this.columns.length-1) :
+    lang[getLocale()].align === 'left' ? this.renderMainForm(0,2) : this.renderMainForm( this.columns.length-3,this.columns.length-1);
   }
 
 

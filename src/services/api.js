@@ -15,27 +15,17 @@ export function fetch(params) {
   return x;
 }
 
-
-export function queryEmp(params) {
-  let x;
-  try {
-    x = myGet(`http://192.9.200.101/mymes/employees?${stringify(params)}`);
-  } catch (e) {
-    console.log(e);
-  }
-  console.log('Returned From myGet:', x);
-  return x;
-}
-
 export async function insert(params) {
   console.log('in insert:', params);
   const entity = params.entity
-  return await mrequest(`http://192.9.200.101/mymes/insert/${entity}`, {
+  const ret = await mrequest(`http://192.9.200.101/mymes/insert/${entity}`, {
     method: 'POST',
     data: {
       ...params,
     },
   });
+  console.log('retRETert:',ret)
+  return ret;
 }
 
 export async function update(params) {
@@ -64,7 +54,6 @@ export async function accountLogin(params) {
   return x;
 }
 
-
 import { parse } from 'url';
 
 const myGet = async (url,entity) => {
@@ -73,6 +62,7 @@ const myGet = async (url,entity) => {
   let dataSource = await mrequest(url, {
     method: 'GET',
   });
+  console.log("DATSOURCE",dataSource)
   let choosers = dataSource.choosers;
   dataSource = dataSource.main;
   const params = parse(url, true).query;

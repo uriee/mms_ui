@@ -16,16 +16,11 @@ export default {
       console.log("in action fetch",payload)
       const response = yield call(fetch, payload);
       console.log('in affects fetche:',response,payload)
-      if (response === 555) {
-        return
-      }
-      else{
-        const ret = (response.list !== undefined ? response :{list: response}) /*, pagination: {total: 48, pageSize: 10, current: 1}})*/
+      const ret = (response.list !== undefined ? response :{list: response}) /*, pagination: {total: 48, pageSize: 10, current: 1}})*/
         yield put({
           type: 'save',
           payload: ret,
         });        
-      }
     },    
 
     *add({ payload, callback }, { call }) {

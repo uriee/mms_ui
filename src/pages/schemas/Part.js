@@ -30,11 +30,19 @@ const part = {
               "style": {
                 "width": "80%",
               }
-            }                         
+            }, 
+            {
+              "field": "tags",
+              "placeholder": "Tags",
+              "style": {
+                "width": "100%"
+              }
+            } 
           ],
           "format": [
             [0],
-            [1,2]            
+            [1,2],
+            [3]            
           ]
         },
         {
@@ -94,12 +102,20 @@ const part = {
               "style": {
                 "width": "80%",
               }
-            }                         
+            },
+            {
+              "field": "tags",
+              "placeholder": "Tags",
+              "style": {
+                "width": "100%"
+              }
+            } 
           ],
           "format": [
             [0],
             [1],
-            [2,3]            
+            [2,3],
+            [4]
           ]
         },
       ]
@@ -194,7 +210,10 @@ const part = {
           "message": "This field is required"
         }
       ]
-    }
+    },
+    "tags": {
+      "inputMethod": "tags",
+    }    
   }
 }
 export {part}

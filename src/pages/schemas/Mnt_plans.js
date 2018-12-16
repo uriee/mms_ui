@@ -68,11 +68,19 @@ const mnt_plans = {
               "style": {
                 "width": "80%",
               }
-            }
+            },
+            {
+              "field": "tags",
+              "placeholder": "Tags",
+              "style": {
+                "width": "100%"
+              }
+            }            
           ],
           "format": [
             [0],
             [1],
+            [2]
           ]
         }        
       ]
@@ -134,9 +142,17 @@ const mnt_plans = {
                 "width": "80%",
               }
             },
+            {
+              "field": "tags",
+              "placeholder": "Tags",
+              "style": {
+                "width": "100%"
+              }
+            }            
           ],
           "format": [
-            [0]
+            [0],
+            [1]
           ]
         }        
       ]
@@ -223,7 +239,10 @@ const mnt_plans = {
       "dataIndex":"reschedule",
       "inputMethod": "bool",
       "sorter": true
-    },    
+    },
+    "tags": {
+      "inputMethod": "tags"
+    }
   }
 }
 export {mnt_plans}

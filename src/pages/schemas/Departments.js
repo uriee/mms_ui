@@ -17,9 +17,17 @@ const dept = {
                 "width": "80%",
               }
             },
+            {
+              "field": "tags",
+              "placeholder": "tags",
+              "style": {
+                "width": "100%",
+              }
+            }             
           ],
           "format": [
-            [0]
+            [0],
+            [1]
           ]
         },
         {
@@ -65,11 +73,19 @@ const dept = {
               "style": {
                 "width": "80%",
               }
-            }            
+            },
+            {
+              "field": "tags",
+              "placeholder": "tags",
+              "style": {
+                "width": "100%",
+              }
+            }                        
           ],
           "format": [
             [0],
-            [1]
+            [1],
+            [2]
           ]
         },
       ]
@@ -135,7 +151,11 @@ const dept = {
           "message": " minimum 5 character"
         }
       ]
-    },    
+    },
+    "tags": {
+      "inputMethod": "tags",
+      "align": "right",
+    } 
   }
 }
 export {dept}

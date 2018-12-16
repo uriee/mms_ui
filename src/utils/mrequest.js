@@ -167,7 +167,9 @@ export default async function mrequest(
     return resp.data;
   } catch (e) {
     console.log('erorr:', e, e.response);
-    const status = e.response.request.status;
+    console.log('___________________________________________________________________________________________________')       
+    const status = e && e.response && e.response.request && e.response.request.status;
+     
     if (status === 401) {
       // @HACK
       /* eslint-disable no-underscore-dangle */
@@ -190,13 +192,14 @@ export default async function mrequest(
       router.push('/exception/404');
       return 0;
     }
+  
     notification.error({
       message: `Error ${status}`,
       description: "Undefined Error",
       });  
     router.push('/exception/404'); 
     console.log('___________________________________________',window.location.href)
-          return 0;
+    return Promise.resolve("ERROR");
   }
   return 1;
 }

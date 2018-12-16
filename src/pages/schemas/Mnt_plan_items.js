@@ -56,6 +56,7 @@ const mnt_plan_items = {
     "resource_name": {
       "dataIndex":"resource_name",
       "inputMethod": "select",
+      "link" : '/router/resources',       
       "chooser": "resources",      
       "sorter": true,
       "inputRules": [

@@ -213,13 +213,8 @@ export default [
             name: 'mnt_plans',            
             component: './List/MainList',
             params: { entity: 'mnt_plans' },             
-          },
-          {
-            path: '/maint/mnt_plan_items',
-            name: 'mnt_plan_items',
-            component: './List/MainList',
-            params: { entity: 'mnt_plan_items' },              
-          },          
+          }
+         
         ],
       },
 
@@ -542,6 +537,11 @@ export default [
             component: './List/MainList',
             params: { entity: 'mnt_plan_items' },              
           },
+          {
+            path: '/router/tags',
+            name: 'Tag Search',
+            component: './List/Tags'
+          },          
         ]
       },      
       {
