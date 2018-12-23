@@ -180,11 +180,6 @@ export default [
             params: { entity: 'equipment' },
           },
           {
-            path: '/maint/care',
-            name: 'care',
-            component: './Result/Success',
-          },
-          {
             path: '/maint/malfunctions',
             name: 'malfunctions',
             component: './List/MainList',
@@ -384,13 +379,9 @@ export default [
           {
             path: '/admin/roles',
             name: 'roles',
-            component: './Result/Success',
-          },
-          {
-            path: '/admin/usergroups',
-            name: 'usergroups',
-            component: './Result/Success',
-          },
+            component: './List/MainList',
+            params: { entity: 'profile' },             
+          }
         ],
       },
 
@@ -462,6 +453,11 @@ export default [
             component: './List/MainList',
             params: { entity: 'user' },             
           },
+          {
+            path: '/router/profiles',
+            component: './List/MainList',
+            params: { entity: 'profile' },             
+          },          
           {
             path: '/router/employees',
             component: './List/MainList',

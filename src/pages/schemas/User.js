@@ -145,8 +145,6 @@ const user = {
       ]
     }, 
     "currentAuthority": {
-      "updateable": true,
-      "insertable": true,
       "dataIndex": "currentAuthority",
       "order": 7,
       "type": "text",
