@@ -18,7 +18,7 @@ export function fetch(params) {
 export async function insert(params) {
   console.log('in insert:', params);
   const entity = params.entity
-  const ret = await mrequest(`http://192.9.200.101/mymes/insert/${entity}`, {
+  const ret = await mrequest(`http://192.9.200.101/mymes/insert`, {
     method: 'POST',
     data: {
       ...params,
@@ -28,10 +28,23 @@ export async function insert(params) {
   return ret;
 }
 
+export async function remove(params) {
+  console.log('in remove api:', params);
+  const entity = params.entity
+  const ret = await mrequest(`http://192.9.200.101/mymes/remove`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+  console.log('ret remove api:',ret)
+  return ret;
+}
+
 export async function update(params) {
   console.log('********in update*********:', params);
   const entity = params.entity  
-  return await mrequest(`http://192.9.200.101/mymes/update/${entity}`, {
+  return await mrequest(`http://192.9.200.101/mymes/update`, {
     method: 'POST',
     data: {
       ...params,
