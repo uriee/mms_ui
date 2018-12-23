@@ -74,7 +74,7 @@ class TagView extends PureComponent {
       dept: {link :'departments', color : 'cyan'},
       availability_profile: {link :'availability_profiles', color : 'lime'},      
       malfunction: {link :'malfunctions', color : 'red'},      
-      repair: {link :'repairs', color : 'red-1'},      
+      repair: {link :'repairs', color : 'lime'},      
       mnt_plan: {link :'mnt_plans', color : 'magenta'}     
     }
 console.log('_________+_______________+_____________+_',x,z,j)

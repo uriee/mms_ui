@@ -113,6 +113,8 @@ export default {
   'menu.account.settings': 'הגדרות',
   'menu.account.trigger': 'Trigger Error',
   'menu.account.logout': 'יציאה',
+  'pages.profile_name' : 'שם פרופיל',  
+  'pages.mnt_plan_name' : 'תוכנית תחזוקה',
   'pages.start_date' : 'תאריך התחלה',
   'pages.end_date' : "תאריך סיום",
   'pages.details' : 'פרטים',

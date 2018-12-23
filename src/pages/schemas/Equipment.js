@@ -100,11 +100,19 @@ const equipment = {
                 "width": "80%",
               }
             },
+            {
+              "field": "calibrated",
+            },
+            {
+              "field": "last_calibration",
+              "placeholder": "Last Calibration",
+            }            
           ],
           "format": [
             [0,1],
             [2],
-            [3]
+            [3],
+            [4,5]
           ]
         }
       ]
@@ -141,7 +149,7 @@ const equipment = {
               "style": {
                 "width": "100%"
               }
-            }                         
+            },                       
           ],
           "format": [
             [0],
@@ -197,12 +205,19 @@ const equipment = {
                 "width": "80%",
               }
             },
+            {
+              "field": "calibrated",
+            },
+            {
+              "field": "last_calibration",
+              "placeholder": "Last Calibration",
+            }              
           ],
           "format": [
             [0,1],
             [2],
-            [3]
-          ]
+            [3],
+            [4,5]          ]
         }
       ]
     }
@@ -294,11 +309,22 @@ const equipment = {
     "equipment_type": {
       "type": "text",
       "inputMethod": "select",
-      "selectValues" : ['tool','machine'],
+      "selectValues" : ['Tool','Machine','Machine accessory'],
       "defaultValue": true,
       "sorter": true,
       "align": "right",
     }, 
+    "calibrated": {
+      "dataIndex":"calibrated",      
+      "inputMethod": "bool",
+      "sorter": true,
+    },
+    "last_calibration": {
+      "dataIndex":"last_calibration",      
+      "inputMethod": "timestamp",
+      "defaultValue": null,
+      "sorter": true,
+    },
     "dept_name": {
       "dataIndex": "dept_name",
       "link" : '/router/departments',      
