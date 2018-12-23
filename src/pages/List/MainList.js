@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import Link from 'umi/link';
 import router from 'umi/router';
 import moment from 'moment';
+import { BugReporter } from 'simple-bug-reporter';
 import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
 import {
   Row,
@@ -35,6 +36,7 @@ import {emp} from '../schemas/Emp.js';
 import {part} from '../schemas/Part.js';
 import {dept} from '../schemas/Departments.js';
 import {user} from '../schemas/User.js';
+import {profile} from '../schemas/Profile.js';
 import {equipment} from '../schemas/Equipment.js';
 import {resourceGroup} from '../schemas/ResourceGroup.js';
 import {resource} from '../schemas/Resource.js';
@@ -47,12 +49,13 @@ import {repair_types} from '../schemas/Repair_Types.js';
 import {mnt_plans} from '../schemas/Mnt_plans.js';
 import {mnt_plan_items} from '../schemas/Mnt_plan_items.js';
 
-const lang = { 'he-IL': {id:2, align:'right'}, 'en-US': {id:1, align:'left'}};
+const lang = { 'he-IL': {id:2, align:'right'}, 'en-US': {id:1, align:'left'},'de-DE': {id:3, align:'left'}};
 const schemas = {
   emp : emp,
   part: part,
   dept: dept,
   user: user,
+  profile: profile,
   equipment: equipment,
   resourceGroup : resourceGroup,
   resource : resource,
@@ -114,7 +117,8 @@ class TableList extends PureComponent {
       expandForm: false,
       selectedRows: [],
       formValues: {...this.props.location.query, ...this.props.route.params }, //get the entity and filters from router
-      stepFormValues: {}
+      stepFormValues: {},
+      showBugReporter: false
     };
     const { dispatch } = this.props;
 
@@ -228,8 +232,13 @@ return 1;
     });
   };
 
+  flipShowBugReporter = () =>{
+    console.log("-----------,",this.state.showBugReporter)
+    this.setState({showBugReporter : !this.state.showBugReporter})
+  }
+
   /*--- Refreshes the view After an update or insert ---*/ 
-  handleFormAfterIU = () => {
+  handleFormAfterIUD = () => {
     const { form, dispatch } = this.props;
     dispatch({
       type: 'action/fetch',
@@ -253,18 +262,7 @@ return 1;
     if (!selectedRows) return;
     switch (e.key) {
       case 'remove':
-        dispatch({
-          type: 'action/fetch',
-          payload: {
-            key: selectedRows.map(row => row.key),
-            entity: this.entity
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
-            });
-          },
-        });
+        this.handleDelete(selectedRows)
         break;
       default:
         break;
@@ -324,7 +322,7 @@ return 1;
     dispatch({
       type: 'action/add',
       payload: Object.assign(values,{lang_id: lang_id, entity: this.entity}),
-      callback: this.handleFormAfterIU,
+      callback: this.handleFormAfterIUD,
     });
 
     this.insertKey = {}
@@ -347,12 +345,53 @@ return 1;
     dispatch({
       type: 'action/update',
       payload: Object.assign(fields,{lang_id: lang_id,entity: this.entity}),
-      callback: this.handleFormAfterIU,
+      callback: this.handleFormAfterIUD,
     });
 
     message.success('Raw was Updated Successfully');
     this.handleUpdateModalVisible();
   };
+
+  // handled item update event
+  remove = (rows) => {
+    console.log('in Remove:',rows)
+    const handleFormAfterIUD = this.handleFormAfterIUD
+    const { dispatch } = this.props;    
+        dispatch({
+          type: 'action/remove',
+          payload: {
+            keys: rows.map(row => row.id),
+            entity: this.entity
+          },
+          callback: (test) => {
+            console.log('test:',test)
+            this.setState({
+              selectedRows: [],
+            });
+            console.log('in onOK 2')
+            return handleFormAfterIUD()
+          },
+        });
+  };
+
+// handled item delete event
+  handleDelete = rows => {
+    console.log("this",this)
+    const remove = this.remove
+    console.log('11111111111111:', rows)
+    Modal.confirm({
+      title: 'Warning, You are about to delete data!!',
+      content: rows.map(x=> `delete ${x.name}？\n`).join(),
+      okText: 'Yes',
+      cancelText: 'No',
+      onOk: () => {
+        remove(rows)
+        message.success('Raw was Deleted');
+        return 
+      }
+    });
+  }
+
 
 // states the pagination attributes
    listPaginationProps = {
@@ -487,7 +526,7 @@ return 1;
                 <span>
                   <Dropdown overlay={menu}>
                     <Button>
-                      Function <Icon type="down" />
+                      {menu.key} <Icon type="down" />
                     </Button>
                   </Dropdown>
                 </span>
@@ -495,6 +534,7 @@ return 1;
             </div>
             {( data.list[0] === undefined ? '' : window.innerWidth < 1000 ? this.myList(data.list) :this.myTable(selectedRows,loading,data))}
           </div>
+         <a onClick={() => this.flipShowBugReporter()}><Icon type="exclamation-circle" /></a>          
         </Card>
         <MainForm
           {...parentMethods}
@@ -521,6 +561,7 @@ return 1;
             formType='update'
           />
         ) : null}
+         {this.state.showBugReporter ? <BugReporter name={JSON.stringify({...this.props,...this.state})}  serverURL="http://192.9.200.101/mymes/bug" /> : <span/>}
       </PageHeaderWrapper>
     );
   }
