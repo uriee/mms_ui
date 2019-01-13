@@ -1,4 +1,4 @@
-import { queryNotices } from '@/services/api';
+import { queryNotices,fetchRoutes } from '@/services/api';
 
 export default {
   namespace: 'global',
@@ -6,9 +6,21 @@ export default {
   state: {
     collapsed: false,
     notices: [],
+    routes: []
   },
 
   effects: {
+
+
+    *fetchRoutes(_, { call, put }) {
+      const response = yield call(fetchRoutes);
+      const ret = response
+        yield put({
+          type: 'saveRoutes',
+          payload: ret,
+        });        
+    }, 
+
     *fetchNotices(_, { call, put }) {
       const data = yield call(queryNotices);
       yield put({
@@ -40,6 +52,12 @@ export default {
         collapsed: payload,
       };
     },
+    saveRoutes(state, action) {
+      return {
+        ...state,
+        routes: action.payload,
+      };
+    },    
     saveNotices(state, { payload }) {
       return {
         ...state,

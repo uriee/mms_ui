@@ -48,6 +48,12 @@ import {repairs} from '../schemas/Repairs.js';
 import {repair_types} from '../schemas/Repair_Types.js';
 import {mnt_plans} from '../schemas/Mnt_plans.js';
 import {mnt_plan_items} from '../schemas/Mnt_plan_items.js';
+import {serials} from '../schemas/Serials.js';
+import {serialStatuses} from '../schemas/SerialStatuses.js';
+import {actions} from '../schemas/Actions.js';
+import {process} from '../schemas/Process.js';
+import {proc_act} from '../schemas/ProcAct.js';
+import {locations} from '../schemas/Locations.js';
 
 const lang = { 'he-IL': {id:2, align:'right'}, 'en-US': {id:1, align:'left'},'de-DE': {id:3, align:'left'}};
 const schemas = {
@@ -66,7 +72,13 @@ const schemas = {
   repairs : repairs,
   repair_types : repair_types,
   mnt_plans : mnt_plans,
-  mnt_plan_items : mnt_plan_items 
+  mnt_plan_items : mnt_plan_items ,
+  serials: serials,
+  serial_statuses : serialStatuses,
+  actions: actions,
+  process : process,
+  locations : locations,
+  proc_act : proc_act
 }
 
 const FormItem = Form.Item;
@@ -104,12 +116,7 @@ class TableList extends PureComponent {
     super(props);
     console.log("IN CONSTRUCTOR",this.props)
     this.entity = this.props.route.params.entity
-    this.schemaChange()    
-    if(!this.schema  || !this.schema.fields.id) throw new Error("The schema does not have an id field!")
-    const params = this.props.location ? this.props.location.query : {}      
 
-    this.insertKey = {} //this.insetrKey passes to the inset form in order to allow insertion of new child rows in parent-child entities
-    if(this.schema.defaultKey){this.insertKey[this.schema.defaultKey] = params.name}
 
     this.state = {
       modalVisible: false,
@@ -120,6 +127,15 @@ class TableList extends PureComponent {
       stepFormValues: {},
       showBugReporter: false
     };
+
+        this.schemaChange()    
+    if(!this.schema  || !this.schema.fields.id) throw new Error("The schema does not have an id field!")
+    const params = this.props.location ? this.props.location.query : {}      
+
+    this.insertKey = {} //this.insetrKey passes to the inset form in order to allow insertion of new child rows in parent-child entities
+    console.log('2222222222222222222222',params)
+    if(this.schema.defaultKey){this.insertKey[this.schema.defaultKey] = params.name}
+
     const { dispatch } = this.props;
 
     dispatch({
@@ -132,6 +148,7 @@ class TableList extends PureComponent {
   console.log('0000000000000000000000:',this.entity,schemas[this.entity] )
     this.schema = schemas[this.entity]  
     this.fields = pushKey(this.schema.fields)
+  console.log('111111111111111111:',this.state && this.state.formValues )    
     this.columns = this.fields
                       .filter(field => field.required !== false) /* field ont need to be shown in the table it is needded for input forms only */
                       .sort((a,b) => a.order > b.order)
@@ -142,8 +159,8 @@ class TableList extends PureComponent {
                         sorter: (field.sorter ? field.sorter : false), /*if the table can be sotrted by this field*/
                         link:  (field.link ? field.link : false), /*goto link when clicked upon*/
                         selectValues: (field.selectValues ? field.selectValues : null), /*in case you need to choose from constants in the schema*/
-                        render: (x,z) => ( !x ? <span key={fi}/> : 
-                          field.link ?  <a onClick={() => router.push(`${field.link}?name=${x}`)}>{x.toString()}</a> :
+                        render: (x,z) => ( !x  && !field.dataIndex ? <span key={fi}>p</span> : 
+                          field.link ?  <a onClick={() => router.push(`${field.link}?name=${x || z.name}`)}>{x ? x.toString() : <Icon type="double-right" color='mgenta'/>}</a> :
                           field.dataIndex === 'tags' && x ? this.tagsRender(x,fi) :/*(
                             <span key={`tags-${fi}`}>
                               {x.map((tag,i) => <Tag color="blue" key={`${tag}-${fi}-${i}`}>{tag}</Tag>)}

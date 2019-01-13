@@ -17,7 +17,8 @@ import Footer from './Footer';
 import Header from './Header';
 import Context from './MenuContext';
 import Exception403 from '../pages/Exception/403';
-
+//import { cloneDeep } from 'lodash';
+import FetchRoutes from '../wrappers/FetchRoutes';
 const { Content } = Layout;
 
 // Conversion router to menu.
@@ -70,7 +71,7 @@ const query = {
     minWidth: 1600,
   },
 };
-
+@FetchRoutes
 class BasicLayout extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -79,7 +80,7 @@ class BasicLayout extends React.PureComponent {
     this.breadcrumbNameMap = this.getBreadcrumbNameMap();
     this.matchParamsPath = memoizeOne(this.matchParamsPath, isEqual);
   }
-
+  
   state = {
     rendering: true,
     isMobile: false,
@@ -87,12 +88,14 @@ class BasicLayout extends React.PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
+ 
     dispatch({
       type: 'user/fetchCurrent',
     });
     dispatch({
       type: 'setting/getSetting',
     });
+    
     this.renderRef = requestAnimationFrame(() => {
       this.setState({
         rendering: false,
@@ -114,9 +117,9 @@ class BasicLayout extends React.PureComponent {
     this.breadcrumbNameMap = this.getBreadcrumbNameMap();
     const { isMobile } = this.state;
     const { collapsed } = this.props;
-    if (isMobile && !preProps.isMobile && !collapsed) {
+    /*if (isMobile && !preProps.isMobile && !collapsed) {
       this.handleMenuCollapse(false);
-    }
+    }*/
   }
 
   componentWillUnmount() {
@@ -133,15 +136,16 @@ class BasicLayout extends React.PureComponent {
   }
 
   getMenuData() {
+      
     const {
       route: { routes },
     } = this.props;
+   
     return formatter(routes);
   }
 
   /**
-   * 获取面包屑映射
-   * @param {Object} menuData 菜单配置
+   * @param {Object} menuData 
    */
   getBreadcrumbNameMap() {
     const routerMap = {};
@@ -155,7 +159,6 @@ class BasicLayout extends React.PureComponent {
       });
     };
     mergeMenuAndRouter(this.getMenuData());
-    console.log('oooo:',this.getMenuData(),this.props)
     return routerMap;
   }
 
@@ -237,6 +240,7 @@ class BasicLayout extends React.PureComponent {
             onCollapse={this.handleMenuCollapse}
             menuData={menuData}
             isMobile={isMobile}
+            route={this.props.route}
             {...this.props}
           />
         )}
@@ -251,6 +255,7 @@ class BasicLayout extends React.PureComponent {
             handleMenuCollapse={this.handleMenuCollapse}
             logo={logo}
             isMobile={isMobile}
+            route={this.state.route}
             {...this.props}
           />
           <Content style={this.getContentStyle()}>

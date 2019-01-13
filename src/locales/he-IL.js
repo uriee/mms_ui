@@ -82,6 +82,7 @@ export default {
   'menu.admin.users': 'משתמשים',
   'menu.admin.roles': 'פרופילים',
   'menu.admin.usergroups': 'קבוצות משתמשים',
+  'menu.admin.permissions': 'ניהול הרשאות',    
   'menu.form': 'טופס',
   'menu.form.basicform': 'טופס בסיסי',
   'menu.form.stepform': 'Step Form',

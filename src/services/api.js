@@ -1,6 +1,7 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
 import mrequest from '@/utils/mrequest';
+import axios from 'axios';
 
 export function fetch(params) {
   console.log("in fetch api",params)
@@ -41,6 +42,20 @@ export async function remove(params) {
   return ret;
 }
 
+export async function fetchRoutes() {
+  var ret
+  try {
+    ret = await axios.get('http://192.9.200.101/mymes/routes',{
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  return await JSON.parse(ret.data.main[0].routes)
+}
+
 export async function update(params) {
   console.log('********in update*********:', params);
   const entity = params.entity  
@@ -52,6 +67,21 @@ export async function update(params) {
   });
 }
 
+export async function updatePermissions(params) {
+  console.log('********in update Permissions*********:', params);
+  var ret  
+  try {
+    const routes = JSON.stringify(params.routes)
+    ret = await mrequest(`http://192.9.200.101/mymes/updateroutes`, {
+      method: 'POST',
+      data: {
+        routes,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }  
+}
 
 export async function accountLogin(params) {
   let x = { currenrAuthority: 'guest' };
@@ -122,32 +152,7 @@ const myGet = async (url,entity) => {
 
 /*---*/
 
-export function myPost(method, url, data, row, res) {
-  switch (method) {
-    case 'delete':
-      break;
-    case 'update':
-      //call api to make a db update
-      const newrow = mrequest(method, url, row).data;
-      // update in memory
-      const i = data.findIndex((val => e => e.a == val)(row.id));
-      data[i] = newraw;
-      break;
-    default:
-      break;
-  }
-
-  const result = {
-    list: data,
-    pagination: {
-      total: data.length,
-    },
-  };
-
-  return res.json(result);
-}
-
-
+/*
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
@@ -271,3 +276,4 @@ export async function queryNotices() {
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
 }
+*/

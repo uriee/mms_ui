@@ -53,6 +53,7 @@ export function getTimeDistance(type) {
 }
 
 export function getPlainNode(nodeList, parentPath = '') {
+  console.log("getPlainNode(nodeList, parentPath = '')")
   const arr = [];
   nodeList.forEach(node => {
     const item = node;
@@ -90,6 +91,7 @@ function getRelation(str1, str2) {
 }
 
 function getRenderArr(routes) {
+  console.log("in getRenderArr(routes)",routes)
   let renderArr = [];
   renderArr.push(routes[0]);
   for (let i = 1; i < routes.length; i += 1) {
