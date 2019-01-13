@@ -38,7 +38,7 @@ const codeMessage = {
   402: 'Payment Required',
   403: '403',
   404: 'Not Found',
-  406: '406',
+  406: 'Data been rejected by DB',
   410: '410',
   422: '422',
   500: '500',
@@ -167,8 +167,9 @@ export default async function mrequest(
     return resp.data;
   } catch (e) {
     console.log('erorr:', e, e.response);
-    console.log('___________________________________________________________________________________________________')       
-    const status = e && e.response && e.response.request && e.response.request.status;
+    console.log('___________________________________________________________________________________________________', e.response)       
+    const status = e && e.response && e.response.status;
+    const error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.detail || "Unknown Error";
      
     if (status === 401) {
       // @HACK
@@ -188,6 +189,16 @@ export default async function mrequest(
       router.push('/exception/500');
       return 0;
     }
+
+    if (status === 406 ) {
+      notification.error({
+        message: `Error ${status}`,
+        description: error,
+      });  
+      router.push('/exception/404');      
+      return 0;
+    }
+
     if (status >= 404 && status < 422) {
       router.push('/exception/404');
       return 0;
