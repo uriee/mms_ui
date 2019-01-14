@@ -647,17 +647,6 @@ export default [
           },
           {
             "component": "./List/MainList",
-            "path": "/router/serial_statuses",
-            "params": {
-              "entity": "serial_statuses"
-            },
-            "name": "serial_statuses",
-            "authority": [
-              "admin"
-            ]
-          },
-          {
-            "component": "./List/MainList",
             "path": "/router/kit",
             "params": {
               "entity": "kit"
@@ -699,7 +688,18 @@ export default [
             "authority": [
               "admin"
             ]
-          }, 
+          },
+          {
+            "component": "./List/MainList",
+            "path": "/router/serial_act",
+            "params": {
+              "entity": "serial_act"
+            },
+            "name": "serial_act",
+            "authority": [
+              "admin"
+            ]
+          },            
           {
             "component": "./List/MainList",
             "path": "/router/serial_status",
