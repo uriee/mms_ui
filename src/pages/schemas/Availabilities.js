@@ -11,6 +11,13 @@ const availabilities = {
           "title": "Availability",
           "fields": [
             {
+              "field": "weekday",
+              "placeholder": "Week Day",
+              "style": {
+                "width": "80%",
+              }
+            },          
+            {
               "field": "from_time",
               "placeholder": "from time",
               "style": {
@@ -26,7 +33,7 @@ const availabilities = {
             }            
           ],
           "format": [
-            [0,1]
+            [0,1,2]
           ]
         },
       ]
@@ -69,18 +76,18 @@ const availabilities = {
     },    
     "from_time": {
       "inputMethod": "time",
-      "defaultValue": 0,
+      "defaultValue": '00:00:00',
       "sorter": true,
       "align": "right",
     }, 
     "to_time": {
       "inputMethod": "time",
-      "defaultValue": 0,
+      "defaultValue": '00:00:00',
       "sorter": true,
       "align": "right",
     },
     "weekday": {
-      "inputMethod": "input",
+      "inputMethod": "number",
       "defaultValue": 0,
       "sorter": true,
       "align": "right",

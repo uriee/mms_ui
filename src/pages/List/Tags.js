@@ -70,7 +70,7 @@ class TagView extends PureComponent {
       equipment: {link :'equipments',color : 'orange'},
       resource_group : {link :'resource_groups',color : 'blue'},
       place: {link :'places',color : 'geekblue'},
-      part: {link :'parts', color : 'gold'},
+      part: {link :'part', color : 'gold'},
       dept: {link :'departments', color : 'cyan'},
       availability_profile: {link :'availability_profiles', color : 'lime'},      
       malfunction: {link :'malfunctions', color : 'red'},      

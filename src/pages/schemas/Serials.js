@@ -239,7 +239,7 @@ const serials = {
     },
     "status": {
       "dataIndex": "status",
-      "link" : '/router/serial_statuses',      
+      "link" : '/router/serial_status',      
       "sorter": true,
       "inputMethod": "select",
       "chooser" : "status",
@@ -280,13 +280,13 @@ const serials = {
     "tags": {
       "inputMethod": "tags"
     },
-    "Kit Items": {
+    "kit_items": {
       "link" : '/router/kit',      
     },
-    "Actions": {
-      "link" : '/router/seract',      
+    "actions": {
+      "link" : '/router/serial_act',      
     },    
-    "Locations": {
+    "location": {
       "link" : '/router/locations',      
     },    
   }

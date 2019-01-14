@@ -53,6 +53,7 @@ import {serialStatuses} from '../schemas/SerialStatuses.js';
 import {actions} from '../schemas/Actions.js';
 import {process} from '../schemas/Process.js';
 import {proc_act} from '../schemas/ProcAct.js';
+import {serial_act} from '../schemas/SerAct.js';
 import {locations} from '../schemas/Locations.js';
 
 const lang = { 'he-IL': {id:2, align:'right'}, 'en-US': {id:1, align:'left'},'de-DE': {id:3, align:'left'}};
@@ -78,7 +79,8 @@ const schemas = {
   actions: actions,
   process : process,
   locations : locations,
-  proc_act : proc_act
+  proc_act : proc_act,
+  serial_act : serial_act  
 }
 
 const FormItem = Form.Item;
