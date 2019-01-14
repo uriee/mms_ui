@@ -140,6 +140,8 @@ export default async function mrequest(
 
   const expirys = options.expirys || 60;
   // options.expirys !== false, return the cache,
+  //  Disabled CACHE
+  /*
   if (options.expirys !== false) {
     const cached = sessionStorage.getItem(hashcode);
     const whenCached = sessionStorage.getItem(`${hashcode}:timestamp`);
@@ -153,6 +155,7 @@ export default async function mrequest(
       sessionStorage.removeItem(`${hashcode}:timestamp`);
     }
   }
+  */
   console.log('before fetch', { url: url, ...newOptions });
   try {
     const resp = await axios({ url: url, ...newOptions })/*.catch(e => {
