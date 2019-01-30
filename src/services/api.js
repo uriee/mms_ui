@@ -30,7 +30,6 @@ export async function insert(params) {
 }
 
 export async function remove(params) {
-  console.log('in remove api:', params);
   const entity = params.entity
   const ret = await mrequest(`http://192.9.200.101/mymes/remove`, {
     method: 'POST',
@@ -39,6 +38,19 @@ export async function remove(params) {
     },
   });
   console.log('ret remove api:',ret)
+  return ret;
+}
+
+export async function sendFunction(params) {
+  const entity = params.entity
+  console.log('_---_-____-:',params)
+  const ret = await mrequest(`http://192.9.200.101/mymes/func`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+  console.log('ret sendFunction api:',ret)
   return ret;
 }
 

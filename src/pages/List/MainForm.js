@@ -24,8 +24,16 @@ import {
   Tag,
   Checkbox,
   TimePicker,
-  notification
+  notification,
+  Cascader
 } from 'antd';
+
+const groupBy = function(xs, key) {
+  return xs.reduce(function(rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
 
 
 const FormItem = Form.Item;
@@ -63,7 +71,7 @@ class CreateForm extends PureComponent {
 
   handleNext = currentStep => {
     const numOfSteps = this.props.formLayout.steps.length-1  
-    const { form, handler, choosers, handleModal } = this.props;
+    const { form, handler, choosers, cascaders, handleModal } = this.props;
     const { formVals: oldValue } = this.state;
 
     form.validateFields((err, fieldsValue) => {
@@ -109,7 +117,6 @@ class CreateForm extends PureComponent {
     const fieldStyle = fieldData.style
     const { form, fields } = this.props;
     const field = fields[fieldName]
-    //console.log('~~~~~~~~~~~~~~~~~:',field,fieldData)
     //if (field.inputMethod === "select" && !this.props.hasOwnProperty('choosers')) return <span/> //a bug that need to be fixed
     const placeHolder = fieldData.placeholder || field.title
     const formVals = this.state.formVals
@@ -184,6 +191,25 @@ class CreateForm extends PureComponent {
           )
         layout = this.formLayout
         break
+
+      case 'cascader':
+        const cascadeMap = this.props.cascaders && this.props.cascaders[field.chooser]
+        var cascadeData = groupBy(this.props.choosers[field.chooser],cascadeMap[0])
+        cascadeData = Object.keys(cascadeData)
+          .map(x => 
+            ({
+              value :x,
+              label : x,
+              children: cascadeData[x]
+                .map(x1 => ({
+                  value : `${x}:${x1[cascadeMap[1]]}`,
+                  label : x1[cascadeMap[1]]
+                }))
+            })
+          )     
+        formField = ( <Cascader key={`cascade_${field.dataIndex}`} options={cascadeData}  placeholder="Please select" /> )
+        break        
+
       default : formField = (<Input placeholder={field.title} style={field.style} />)
     }
     return (

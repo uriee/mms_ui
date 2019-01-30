@@ -21,9 +21,16 @@ const serials = {
               "field": "active",
               "placeholder": "Active?",
               "style": {
-                "width": "80%",
+                "width": "60%",
               }
             },
+            {
+              "field": "quant",
+              "placeholder": "Quantity",
+              "style": {
+                "width": "60%",
+              }
+            },            
             {
               "field": "partname",
               "placeholder": "End Date",
@@ -54,9 +61,9 @@ const serials = {
             },            
           ],
           "format": [
-            [0,1],
-            [2,3],
-            [4,5]
+            [0,1,2],
+            [3,4],
+            [5,6]
           ]
         },
         {
@@ -112,6 +119,13 @@ const serials = {
               }
             },
             {
+              "field": "quant",
+              "placeholder": "Quantity",
+              "style": {
+                "width": "60%",
+              }
+            },             
+            {
               "field": "partname",
               "placeholder": "End Date",
               "style": {
@@ -141,9 +155,9 @@ const serials = {
             },            
           ],
           "format": [
-            [0,1],
-            [2,3],
-            [4,5]
+            [0,1,2],
+            [3,4],
+            [5,6]
           ]
         },
         {
@@ -237,6 +251,11 @@ const serials = {
       "inputMethod": "bool",
       "sorter": true
     },
+    "quant": {
+      "dataIndex":"quant",
+      "inputMethod": "number",
+      "sorter": true
+    },    
     "status": {
       "dataIndex": "status",
       "link" : '/router/serial_status',      
@@ -281,14 +300,17 @@ const serials = {
       "inputMethod": "tags"
     },
     "kit_items": {
-      "link" : '/router/kit',      
+      "link" : '/router/kit',
+      "son"  : true
     },
     "actions": {
       "link" : '/router/serial_act',      
-    },    
-    "location": {
-      "link" : '/router/locations',      
-    },    
+      "son" : true
+    },
+    "work_reports": {
+      "link" : '/router/work_report',      
+      "son" : true
+    }, 
   }
 }
 export {serials}

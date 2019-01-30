@@ -70,7 +70,7 @@ const proc_act = {
     },    
     "pos": {
       "dataIndex":"pos",
-      "inputMethod": "input",
+      "inputMethod": "number",
       "sorter": true,
       "inputRules": [
         {

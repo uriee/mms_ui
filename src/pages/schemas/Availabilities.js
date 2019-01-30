@@ -72,7 +72,7 @@ const availabilities = {
     "availability_profile_name": {
       "dataIndex":"name",
       "sorter": true,
-      "align": "right",
+      "required": false      
     },    
     "from_time": {
       "inputMethod": "time",
@@ -91,7 +91,7 @@ const availabilities = {
       "defaultValue": 0,
       "sorter": true,
       "align": "right",
-    },                
+    }, 
   }
 
 }

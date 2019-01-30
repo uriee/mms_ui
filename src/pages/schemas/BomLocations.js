@@ -1,10 +1,10 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
-const locations = { 
-  "entity": "locations",
-  "title" :"Locations",
-  'defaultKey' : 'parent',    
+const bom_locations = { 
+  "entity": "bom_locations",
+  "title" :"Bom Locations",
+  'defaultKey' : 'name',    
   "forms": {
     "insert": {
       "steps": [
@@ -46,7 +46,7 @@ const locations = {
           ]
         },
           {
-          "title": "Locations",
+          "title": "Bom_locations",
           "fields": [
             {
               "field": "x",
@@ -116,7 +116,7 @@ const locations = {
           ]
         },
           {
-          "title": "Locations",
+          "title": "Bom_locations",
           "fields": [
             {
               "field": "x",
@@ -151,7 +151,20 @@ const locations = {
     "id": {
       "required": false
     },
-   
+    "name": {
+      "dataIndex":"name",
+      "sorter": true,
+      "inputRules": [
+        {
+          "required": true,
+          "message": "This field is required"
+        },
+        {
+          "min": 2,
+          "message": " minimum 2 character"
+        }
+      ]
+    },    
     "location": {
       "dataIndex":"location",
       "inputMethod": "input",
@@ -215,4 +228,4 @@ const locations = {
     },    
   }
 }
-export {locations}
+export {bom_locations}

@@ -140,6 +140,7 @@ export default async function mrequest(
 
   const expirys = options.expirys || 60;
   // options.expirys !== false, return the cache,
+  
   //  Disabled CACHE
   /*
   if (options.expirys !== false) {
@@ -198,7 +199,7 @@ export default async function mrequest(
         message: `Error ${status}`,
         description: error,
       });  
-      router.push('/exception/404');      
+      //router.push('/exception/404');      
       return 0;
     }
 

@@ -120,15 +120,10 @@ const user = {
   },
   "fields": {
     "id": {
-      "updateable": false,
-      "insertable": false,
       "required": false
     },  	
     "user_name": {
       "dataIndex":"name",
-      "updateable": false,
-      "insertable": true,
-      "order": 2,
       "type": "text",
       "inputMethod": "input",
       "sorter": true,
@@ -146,7 +141,6 @@ const user = {
     }, 
     "currentAuthority": {
       "dataIndex": "currentAuthority",
-      "order": 7,
       "type": "text",
       "sorter": true,
       "inputMethod": "select",
@@ -177,8 +171,6 @@ const user = {
       ]
     },
     "title": {
-      "updateable": false,
-      "insertable": true,
       "inputMethod": "input",
       "sorter": true,
       "align": "right",
@@ -215,7 +207,7 @@ const user = {
         },
         {
           "min": 6,
-          "message": " minimum 6 character"
+          "message": " minimum 4 character"
         }
       ]
     } ,
@@ -229,7 +221,7 @@ const user = {
         },
         {
           "min": 2,
-          "message": " minimum 2 character"
+          "message": " minimum 4 character"
         }
       ]
     }     

@@ -1,11 +1,10 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
-const serial_act = { 
-  "entity": "serial_act",
-  "title" :"Serial Actions",
-  'defaultKey' : 'name',
-  'defaultSort' : 'pos',
+const kit = { 
+  "entity": "kit",
+  "title" :"Kit",
+  'defaultKey' : 'name',    
   "forms": {
     "insert": {
       "steps": [
@@ -13,15 +12,15 @@ const serial_act = {
           "title": "Details",
           "fields": [
             {
-              "field": "pos",
-              "placeholder": "Positiion",
+              "field": "partname",
+              "placeholder": "End Date",
               "style": {
                 "width": "80%",
               }
-            },
+            },          
             {
-              "field": "act_name",
-              "placeholder": "Act Name",
+              "field": "lot",
+              "placeholder": "lot",
               "style": {
                 "width": "80%",
               }
@@ -29,41 +28,50 @@ const serial_act = {
             {
               "field": "quant",
               "placeholder": "Quant",
-            },
-            {
-              "field": "balance",
-              "placeholder": "Balance",
-            },                                   
+              "style": {
+                "width": "80%",
+              }
+            }
           ],
           "format": [
-            [0,1],
-            [2,3]
+            [0],
+            [1],
+            [2]
           ]
         },       
       ]
     },
-    "update": {
+    "update":{
       "steps": [
         {
           "title": "Details",
           "fields": [
             {
-              "field": "pos",
-              "placeholder": "Position",
+              "field": "partname",
+              "placeholder": "End Date",
               "style": {
                 "width": "80%",
               }
-            },
+            },          
             {
-              "field": "act_name",
-              "placeholder": "Act Name",
+              "field": "lot",
+              "placeholder": "lot",
               "style": {
                 "width": "80%",
               }
-            },            
+            }, 
+            {
+              "field": "balance",
+              "placeholder": "balance",
+              "style": {
+                "width": "80%",
+              }
+            }
           ],
           "format": [
-            [0,1],
+            [0],
+            [1],
+            [2]
           ]
         },       
       ]
@@ -76,11 +84,25 @@ const serial_act = {
     "name": {
       "dataIndex":"name",
       "sorter": true,
-      required:false
+      "inputRules": [
+        {
+          "required": true,
+          "message": "This field is required"
+        },
+        {
+          "min": 2,
+          "message": " minimum 2 character"
+        }
+      ]
     },    
-    "pos": {
-      "dataIndex":"pos",
-      "inputMethod": "number",
+    "lot": {
+      "dataIndex":"lot",
+      "inputMethod": "input",
+      "sorter": true,
+    },
+    "partname": {
+      "dataIndex":"partname",
+      "inputMethod": "input",
       "sorter": true,
       "inputRules": [
         {
@@ -88,20 +110,7 @@ const serial_act = {
           "message": "This field is required"
         },
       ]
-    },           
-    "act_name": {
-      "dataIndex": "act_name",
-      "link" : '/router/actions',      
-      "sorter": true,
-      "inputMethod": "select",
-      "chooser" : "actions",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        }
-      ]
-    },
+    }, 
     "quant": {
       "dataIndex":"quant",
       "inputMethod": "number",
@@ -112,12 +121,12 @@ const serial_act = {
           "message": "This field is required"
         },
       ]
-    },
+    }, 
     "balance": {
       "dataIndex":"balance",
       "inputMethod": "number",
-      "sorter": true,
+      "sorter": true
     }, 
   }
 }
-export {serial_act}
+export {kit}

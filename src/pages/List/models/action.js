@@ -1,4 +1,4 @@
-import {update,fetch, insert,remove} from '@/services/api';
+import {update,fetch, insert,remove, sendFunction} from '@/services/api';
 
 export default {
   namespace: 'action',
@@ -32,6 +32,11 @@ export default {
       const response = yield call(remove, payload);
       if (callback) callback();
     },    
+
+    *sendFunction({ payload, callback }, { call }) {
+      const response = yield call(sendFunction, payload);
+      if (callback) callback();
+    },       
 
     *update({ payload, callback }, { call }) {
       const response = yield call(update, payload);

@@ -4,6 +4,14 @@ The label in forms is determents by <FormattedMessage id=forms+entity+field /> f
 const part = { 
   "entity": "part",
   "title" :"Parts",
+
+  "functions" : [
+    {
+      "name": "Clone",
+      "function" : "clone"
+    }
+  ],
+
   "forms": {
     "insert": {
       "steps": [
@@ -18,8 +26,15 @@ const part = {
               }
             },
             {
-              "field": "type",
-              "placeholder": "Type",
+              "field": "revision",
+              "placeholder": "Revision",
+              "style": {
+                "width": "80%",
+              }
+            },            
+            {
+              "field": "active",
+              "placeholder": "Active?",
               "style": {
                 "width": "80%",
               }
@@ -40,9 +55,9 @@ const part = {
             } 
           ],
           "format": [
-            [0],
-            [1,2],
-            [3]            
+            [0,1],
+            [2,3],
+            [4]            
           ]
         },
         {
@@ -83,6 +98,13 @@ const part = {
               }
             },
             {
+              "field": "revision",
+              "placeholder": "Revision",
+              "style": {
+                "width": "80%",
+              }
+            },            
+            {
               "field": "description",
               "placeholder": "Description",
               "style": {
@@ -90,8 +112,8 @@ const part = {
               }
             },
             {
-              "field": "type",
-              "placeholder": "Type",
+              "field": "active",
+              "placeholder": "Active?",
               "style": {
                 "width": "80%",
               }
@@ -112,10 +134,10 @@ const part = {
             } 
           ],
           "format": [
-            [0],
-            [1],
-            [2,3],
-            [4]
+            [0,1],
+            [2],
+            [3,4],
+            [5]
           ]
         },
       ]
@@ -130,11 +152,8 @@ const part = {
 
     "part_name": {
       "dataIndex":"name",
-      "updateable": false,
-      "insertable": true,
       "inputMethod": "input",
       "sorter": true,
-      "align": "right",
       "inputRules": [
         {
           "required": true,
@@ -145,7 +164,18 @@ const part = {
           "message": " minimum 2 character"
         }
       ]
-    },    
+    },   
+    "revision": {
+      "dataIndex":"revision",
+      "inputMethod": "input",
+      "sorter": true,
+      "inputRules": [
+        {
+          "required": true,
+          "message": "This field is required"
+        },
+      ]
+    }, 
     "description": {
       "updateable": false,
       "dataIndex": "description",
@@ -183,19 +213,10 @@ const part = {
       ]
     },    
 
-    "type": {
-      "dataIndex":"type",
-      "updateable": false,
-      "insertable": true,
-      "inputMethod": "input",
+    "active": {
+      "dataIndex":"active",
+      "inputMethod": "bool",
       "sorter": true,
-      "align": "right",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-      ]
     },
     "part_status": {
       "updateable": true,
@@ -213,7 +234,14 @@ const part = {
     },
     "tags": {
       "inputMethod": "tags",
-    }    
+    },
+    "bom": {
+      "link" : '/router/bom',      
+    },
+    "locations": {
+      "link" : '/router/locations',      
+      "son" : true
+    },    
   }
 }
 export {part}

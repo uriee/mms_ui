@@ -2,7 +2,8 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import Link from 'umi/link';
 import router from 'umi/router';
-import moment from 'moment';
+//import moment from 'moment';
+import moment from 'moment-timezone'
 import { BugReporter } from 'simple-bug-reporter';
 import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
 import {
@@ -51,10 +52,15 @@ import {mnt_plan_items} from '../schemas/Mnt_plan_items.js';
 import {serials} from '../schemas/Serials.js';
 import {serialStatuses} from '../schemas/SerialStatuses.js';
 import {actions} from '../schemas/Actions.js';
+import {work_report} from '../schemas/WorkReport.js';
 import {process} from '../schemas/Process.js';
 import {proc_act} from '../schemas/ProcAct.js';
 import {serial_act} from '../schemas/SerAct.js';
 import {locations} from '../schemas/Locations.js';
+import {kit} from '../schemas/Kit.js';
+import {bom} from '../schemas/Bom.js';
+import {iden} from '../schemas/Iden.js';
+import {identifier} from '../schemas/Identifier.js';
 
 const lang = { 'he-IL': {id:2, align:'right'}, 'en-US': {id:1, align:'left'},'de-DE': {id:3, align:'left'}};
 const schemas = {
@@ -62,6 +68,9 @@ const schemas = {
   part: part,
   dept: dept,
   user: user,
+  kit: kit,
+  bom: bom,
+  iden : iden,
   profile: profile,
   equipment: equipment,
   resourceGroup : resourceGroup,
@@ -80,7 +89,9 @@ const schemas = {
   process : process,
   locations : locations,
   proc_act : proc_act,
-  serial_act : serial_act  
+  serial_act : serial_act,
+  work_report : work_report,  
+  identifier : identifier,
 }
 
 const FormItem = Form.Item;
@@ -135,7 +146,6 @@ class TableList extends PureComponent {
     const params = this.props.location ? this.props.location.query : {}      
 
     this.insertKey = {} //this.insetrKey passes to the inset form in order to allow insertion of new child rows in parent-child entities
-    console.log('2222222222222222222222',params)
     if(this.schema.defaultKey){this.insertKey[this.schema.defaultKey] = params.name}
 
     const { dispatch } = this.props;
@@ -147,10 +157,9 @@ class TableList extends PureComponent {
   }
 /*---  change the schema in page loading ---*/
  schemaChange = () => {
-  console.log('0000000000000000000000:',this.entity,schemas[this.entity] )
+//  console.log('0000000000000000000000:',this.entity,schemas[this.entity] )
     this.schema = schemas[this.entity]  
-    this.fields = pushKey(this.schema.fields)
-  console.log('111111111111111111:',this.state && this.state.formValues )    
+    this.fields = pushKey(this.schema.fields)  
     this.columns = this.fields
                       .filter(field => field.required !== false) /* field ont need to be shown in the table it is needded for input forms only */
                       .sort((a,b) => a.order > b.order)
@@ -162,7 +171,7 @@ class TableList extends PureComponent {
                         link:  (field.link ? field.link : false), /*goto link when clicked upon*/
                         selectValues: (field.selectValues ? field.selectValues : null), /*in case you need to choose from constants in the schema*/
                         render: (x,z) => ( !x  && !field.dataIndex ? <span key={fi}>p</span> : 
-                          field.link ?  <a onClick={() => router.push(`${field.link}?name=${x || z.name}`)}>{x ? x.toString() : <Icon type="double-right" color='mgenta'/>}</a> :
+                          field.link ?  <a onClick={() => x ? router.push(`${field.link}?name=${x || z.name}`) : router.push(`${field.link}?parent=${z.id}`)}>{x ? x.toString() : <Icon type="double-right" color='mgenta'/>}</a> :
                           field.dataIndex === 'tags' && x ? this.tagsRender(x,fi) :/*(
                             <span key={`tags-${fi}`}>
                               {x.map((tag,i) => <Tag color="blue" key={`${tag}-${fi}-${i}`}>{tag}</Tag>)}
@@ -173,7 +182,7 @@ class TableList extends PureComponent {
                           x ),
                         align: lang[getLocale()].align
                       }))
-    this.columns.push({
+     this.schema.forms.update && this.columns.push({
         title: '',
         render: (text, record) => (
           <Fragment>
@@ -182,7 +191,6 @@ class TableList extends PureComponent {
         ),
       }) 
     if(lang[getLocale()].align === 'right') this.columns.reverse()
-      console.log("~~~~~~~",this.columns)
 return 1;  
  }
 
@@ -252,7 +260,6 @@ return 1;
   };
 
   flipShowBugReporter = () =>{
-    console.log("-----------,",this.state.showBugReporter)
     this.setState({showBugReporter : !this.state.showBugReporter})
   }
 
@@ -284,6 +291,7 @@ return 1;
         this.handleDelete(selectedRows)
         break;
       default:
+        this.handleFunction(e.key,selectedRows)
         break;
     }
   };
@@ -336,20 +344,28 @@ return 1;
 //handles item add event
   handleAdd = values => {
     const { dispatch } = this.props;
+   
+    this.schema.cascaders && Object.keys(this.schema.cascaders).forEach(x => {  
+      values[this.schema.cascaders[x][1]] = values[this.schema.cascaders[x][0]][1].split(':')[1]
+      values[this.schema.cascaders[x][0]] = values[this.schema.cascaders[x][0]][0]
+    })
+  
     let lang_id = lang[getLocale()].id;
-
-    dispatch({
-      type: 'action/add',
-      payload: Object.assign(values,{lang_id: lang_id, entity: this.entity}),
-      callback: this.handleFormAfterIUD,
-    });
+    values.name = values.name || this.state.formValues.name
+    values.sig_date = moment().tz('Asia/Jerusalem').format()
+    values.sig_user = JSON.parse(localStorage.getItem('user')).username
+    values.parent = this.state.formValues.parent 
+      dispatch({
+        type: 'action/add',
+        payload: Object.assign(values,{lang_id: lang_id, entity: this.entity}),
+        callback: this.handleFormAfterIUD,
+      });
 
     this.insertKey = {}
     let params = this.props.location ? this.props.location.query : {}
-    if(this.schema.defaultKey){this.insertKey[this.schema.defaultKey] = params.name}
-    console.log('_+_+_+_+_+_+_+2:',this.insertKey,this.schema.defaultKey)    
-
-    message.success('Raw was Added Successfully');
+    if(this.schema.defaultKey){this.insertKey[this.schema.defaultKey] = params.name}  
+    if(params.name) {this.handleFormReset}
+    message.success('Raw sent to DB');
     this.handleModalVisible();
   };
 
@@ -371,33 +387,48 @@ return 1;
     this.handleUpdateModalVisible();
   };
 
-  // handled item update event
+  // handled item delete event
   remove = (rows) => {
-    console.log('in Remove:',rows)
+    const handleFormAfterIUD = this.handleFormAfterIUD
+    const { dispatch } = this.props;  
+    dispatch({
+      type: 'action/remove',
+      payload: {
+        keys: rows.map(row => row.id),
+        entity: this.entity
+      },
+      callback: (test) => {
+        this.setState({
+          selectedRows: [],
+        });
+        return handleFormAfterIUD()
+      },
+    });
+  };
+
+  // handled functions from schema
+  sendFunction = (funcName,rows) => {
     const handleFormAfterIUD = this.handleFormAfterIUD
     const { dispatch } = this.props;    
         dispatch({
-          type: 'action/remove',
+          type: 'action/sendFunction',
           payload: {
+            funcName : funcName,
             keys: rows.map(row => row.id),
             entity: this.entity
           },
           callback: (test) => {
-            console.log('test:',test)
             this.setState({
               selectedRows: [],
             });
-            console.log('in onOK 2')
             return handleFormAfterIUD()
           },
         });
-  };
+  };  
 
 // handled item delete event
   handleDelete = rows => {
-    console.log("this",this)
     const remove = this.remove
-    console.log('11111111111111:', rows)
     Modal.confirm({
       title: 'Warning, You are about to delete data!!',
       content: rows.map(x=> `delete ${x.name}？\n`).join(),
@@ -410,6 +441,22 @@ return 1;
       }
     });
   }
+
+  handleFunction = (funcName,rows) => {
+    const sendFunction = this.sendFunction
+    Modal.confirm({
+      title: `You are about to ${funcName} the flowing entities:`,
+      content: rows.map(x=> `${x.name}？\n`).join(),
+      okText: 'Yes',
+      cancelText: 'No',
+      onOk: () => {
+        sendFunction(funcName,rows)
+        message.success('Successfull');
+        return 
+      }
+    });
+  }
+
 
 
 // states the pagination attributes
@@ -473,12 +520,13 @@ return 1;
       renderItem={item => (
         <List.Item>
           <Card title={item.name} key={item.name}>
-              {Object.keys(item)
+              { //renders fields and values
+                Object.keys(item)
                 .filter(x => this.schema.fields.hasOwnProperty(x) && x!== 'id' && item[x])
                 .map((x,i) =>{
                   var schema = this.columns.filter(col => col.dataIndex === x)[0]
                   if (!schema) return (<span/>)
-                  var link = schema.link
+                  var link = schema.link               
                   var render = schema.render ? schema.render(item[x],item) : null
                   link = link ? `${link}?name=${item[x]}` : link
                   return (
@@ -486,11 +534,32 @@ return 1;
                       <span> {formatMessage({ id: `pages.${x}` })} : </span>
                       <span> {render}</span>
                     </div>
-                )}
-              )}
+                  )
+                })
+              }
+
+              { 
+                //renders son relation links 
+                Object.keys(this.schema.fields).filter(x => this.schema.fields[x].son)
+                .map((x,i) =>{
+                  const obj = this.schema.fields[x]
+                  if (!obj.link) return (<span/>)  
+                  var link = `${obj.link}?parent=${item.id}` 
+                  return (
+                    <Button color='#fa8c16' key={item.name + 'div' + i} onClick={() => router.push(`${link}`)}>
+                      <span> {formatMessage({ id: `pages.${x}` })}  </span>
+                      <span>                     
+                              <Icon type="double-right"/>
+                      </span>
+                    </Button>
+                  )
+                })
+              }
+              {this.schema.forms.update &&
               <Button key={`bt_update_${item.name}`} style={{ float: 'right' }} onClick={() => this.handleUpdateModalVisible(true, item) }>
                 Update
               </Button>
+            }
           </Card>
         </List.Item>
       )}
@@ -521,7 +590,7 @@ return 1;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">Delete</Menu.Item>
-        <Menu.Item key="approval">Approve</Menu.Item>
+        {this.schema.functions && this.schema.functions.map(x => <Menu.Item key={x.function}>{x.name}</Menu.Item>)}
       </Menu>
     );
 
@@ -555,24 +624,28 @@ return 1;
           </div>
          <a onClick={() => this.flipShowBugReporter()}><Icon type="exclamation-circle" /></a>          
         </Card>
-        <MainForm
-          {...parentMethods}
-          ModalVisible={modalVisible}
-          values={this.insertKey}
-          choosers={data.choosers}
-          fields={this.formFields}
-          formLayout={this.schema.forms.insert}
-          handler={this.handleAdd}
-          handleModal={this.handleModalVisible}
-          insertKey = {this.insertKey}
-          formType='insert'
-        />
-        {stepFormValues && Object.keys(stepFormValues).length ? (
+         {this.schema.forms.insert ? (
+          <MainForm
+            {...parentMethods}
+            ModalVisible={modalVisible}
+            values={this.insertKey}
+            choosers={data.choosers}
+            cascaders={this.schema.cascaders}
+            fields={this.formFields}
+            formLayout={this.schema.forms.insert}
+            handler={this.handleAdd}
+            handleModal={this.handleModalVisible}
+            insertKey = {this.insertKey}
+            formType='insert'
+          />
+        ) : null}          
+        {this.schema.forms.update && stepFormValues && Object.keys(stepFormValues).length ? (
           <MainForm
             {...updateMethods}
             ModalVisible={updateModalVisible}
             values={stepFormValues}
             choosers={data.choosers}
+            cascaders={this.schema.cascaders}            
             fields={this.formFields}
             formLayout={this.schema.forms.update}
             handler={this.handleUpdate}

@@ -85,9 +85,28 @@ export default [
           },
           {
             "path": "/production/work-report",
+            "component": "./List/MainList",
+            "params": {
+              "entity": "work_report"
+            },
             "name": "report",
-            "component": "./Result/Success"
+            "authority": [
+              "admin",
+              "user"
+            ]
           },
+          {
+            "path": "/production/identifiers",
+            "name": "serials",
+            "component": "./List/MainList",
+            "params": {
+              "entity": "iden"
+            },
+            "authority": [
+              "admin",
+              "user"
+            ]
+          },          
           {
             "path": "/production/work-plan",
             "name": "plan",
@@ -647,6 +666,17 @@ export default [
           },
           {
             "component": "./List/MainList",
+            "path": "/router/identifiers",
+            "params": {
+              "entity": "identifiers"
+            },
+            "name": "identifiers",
+            "authority": [
+              "admin"
+            ]
+          },          
+          {
+            "component": "./List/MainList",
             "path": "/router/kit",
             "params": {
               "entity": "kit"
@@ -655,7 +685,29 @@ export default [
             "authority": [
               "admin"
             ]
-          }, 
+          },
+          {
+            "component": "./List/MainList",
+            "path": "/router/bom",
+            "params": {
+              "entity": "bom"
+            },
+            "name": "bom",
+            "authority": [
+              "admin"
+            ]
+          },
+                                {
+            "component": "./List/MainList",
+            "path": "/router/bom_locations",
+            "params": {
+              "entity": "bom_locations"
+            },
+            "name": "bom_locations",
+            "authority": [
+              "admin"
+            ]
+          },
           {
             "component": "./List/MainList",
             "path": "/router/locations",
@@ -667,6 +719,39 @@ export default [
               "admin"
             ]
           },
+          {
+            "component": "./List/MainList",
+            "path": "/router/identifier",
+            "params": {
+              "entity": "identifier"
+            },
+            "name": "identifier",
+            "authority": [
+              "admin"
+            ]
+          },          
+          {
+            "component": "./List/MainList",
+            "path": "/router/iden",
+            "params": {
+              "entity": "iden"
+            },
+            "name": "serials",
+            "authority": [
+              "admin"
+            ]
+          }, 
+          {
+            "component": "./List/MainList",
+            "path": "/router/work_report",
+            "params": {
+              "entity": "work_report"
+            },
+            "name": "work_report",
+            "authority": [
+              "admin"
+            ]
+          }, 
           {
             "component": "./List/MainList",
             "path": "/router/process",
