@@ -38,9 +38,9 @@ export default [
         "icon": "dashboard",
         "routes": [
           {
-            "path": "/dashboard/analysis",
-            "name": "analysis",
-            "component": "./Result/Success"
+            path: '/dashboard/analysis',
+            name: 'analysis',
+            component: './Dashboard/Analysis',
           },
           {
             "path": "/dashboard/monitor",
@@ -455,6 +455,14 @@ export default [
               "entity": "profile"
             }
           },
+          {
+            "path": "/admin/preferences",
+            "name": "preferences",
+            "component": "./List/MainList",
+            "params": {
+              "entity": "preferences"
+            }
+          }, 
           {
             "path": "/admin/permissions",
             "name": "Edit Permissions",

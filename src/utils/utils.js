@@ -19,7 +19,7 @@ export function getTimeDistance(type) {
   }
 
   if (type === 'week') {
-    let day = now.getDay();
+    let day = now.getDay()+1;
     now.setHours(0);
     now.setMinutes(0);
     now.setSeconds(0);

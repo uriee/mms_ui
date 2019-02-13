@@ -170,12 +170,18 @@ export default async function mrequest(
     console.log('mrequset after chseckstatus and cach:', resp);
     return resp.data;
   } catch (e) {
-    console.log('erorr:', e, e.response);
-    console.log('___________________________________________________________________________________________________', e.response)       
-    const status = e && e.response && e.response.status;
-    const error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.detail || "Unknown Error";
+    console.log('___________________________________________________________________________________________________', e)       
+    const status = e && e.response && e.response.status
+    let etitle = e && e.response && e.response.data && e.response.data.error && e.response.data.error.split(':').reverse()[0] || "Unknown Error"
+    const error = e && e.response && e.response.data && e.response.data.error && e.response.data.error || ""
+    if(!e.response) {
+      etitle = e
+      router.push('/exception/404'); 
+      return 0
+    } 
      
-    if (status === 401) {
+
+    if (status === 401 || e === undefined) {
       // @HACK
       /* eslint-disable no-underscore-dangle */
       window.g_app._store.dispatch({
@@ -196,7 +202,7 @@ export default async function mrequest(
 
     if (status === 406 ) {
       notification.error({
-        message: `Error ${status}`,
+        message: `Error ${etitle}`,
         description: error,
       });  
       //router.push('/exception/404');      

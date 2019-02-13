@@ -61,6 +61,7 @@ import {kit} from '../schemas/Kit.js';
 import {bom} from '../schemas/Bom.js';
 import {iden} from '../schemas/Iden.js';
 import {identifier} from '../schemas/Identifier.js';
+import {preferences} from '../schemas/Preferences.js';
 
 const lang = { 'he-IL': {id:2, align:'right'}, 'en-US': {id:1, align:'left'},'de-DE': {id:3, align:'left'}};
 const schemas = {
@@ -92,6 +93,7 @@ const schemas = {
   serial_act : serial_act,
   work_report : work_report,  
   identifier : identifier,
+  preferences : preferences,
 }
 
 const FormItem = Form.Item;
@@ -171,7 +173,7 @@ class TableList extends PureComponent {
                         link:  (field.link ? field.link : false), /*goto link when clicked upon*/
                         selectValues: (field.selectValues ? field.selectValues : null), /*in case you need to choose from constants in the schema*/
                         render: (x,z) => ( !x  && !field.dataIndex ? <span key={fi}>p</span> : 
-                          field.link ?  <a onClick={() => x ? router.push(`${field.link}?name=${x || z.name}`) : router.push(`${field.link}?parent=${z.id}`)}>{x ? x.toString() : <Icon type="double-right" color='mgenta'/>}</a> :
+                          field.link ?  <a onClick={() => x ? router.push(`${field.link}?name=${x.split(':')[0] || z.name}`) : router.push(`${field.link}?parent=${z.id}`)}>{x ? x.toString() : <Icon type="double-right" color='mgenta'/>}</a> :
                           field.dataIndex === 'tags' && x ? this.tagsRender(x,fi) :/*(
                             <span key={`tags-${fi}`}>
                               {x.map((tag,i) => <Tag color="blue" key={`${tag}-${fi}-${i}`}>{tag}</Tag>)}
@@ -528,7 +530,7 @@ return 1;
                   if (!schema) return (<span/>)
                   var link = schema.link               
                   var render = schema.render ? schema.render(item[x],item) : null
-                  link = link ? `${link}?name=${item[x]}` : link
+                  link = link ? `${link}?name=${item[x].split(':')[0]}` : link
                   return (
                     <div key={item.name + 'div' + i}>
                       <span> {formatMessage({ id: `pages.${x}` })} : </span>
@@ -571,6 +573,7 @@ return 1;
         selectedRows={selectedRows}
         loading={loading}
         data={data}
+        key='uid'
         columns={this.columns}
         onSelectRow={this.handleSelectRows}
         onChange={this.handleStandardTableChange}
