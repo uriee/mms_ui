@@ -2,7 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import Link from 'umi/link';
 import router from 'umi/router';
-//import moment from 'moment';
+import {Logic} from '@/defaultSettings'
 import moment from 'moment-timezone'
 import { BugReporter } from 'simple-bug-reporter';
 import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
@@ -35,6 +35,7 @@ import MainForm from './MainForm.js'
 /*import the schemas*/
 import {emp} from '../schemas/Emp.js';
 import {part} from '../schemas/Part.js';
+import {partStatus} from '../schemas/PartStatus.js';
 import {dept} from '../schemas/Departments.js';
 import {user} from '../schemas/User.js';
 import {profile} from '../schemas/Profile.js';
@@ -86,6 +87,7 @@ const schemas = {
   mnt_plan_items : mnt_plan_items ,
   serials: serials,
   serial_statuses : serialStatuses,
+  part_status : partStatus,  
   actions: actions,
   process : process,
   locations : locations,
@@ -656,7 +658,7 @@ return 1;
             formType='update'
           />
         ) : null}
-         {this.state.showBugReporter ? <BugReporter name={JSON.stringify({...this.props,...this.state})}  serverURL="http://192.9.200.101/mymes/bug" /> : <span/>}
+         {this.state.showBugReporter ? <BugReporter name={JSON.stringify({...this.props,...this.state})}  serverURL={`${Logic}mymes/bug`} /> : <span/>}
       </PageHeaderWrapper>
     );
   }

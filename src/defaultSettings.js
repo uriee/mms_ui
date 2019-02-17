@@ -6,4 +6,5 @@ module.exports = {
   fixedHeader: false, // sticky header
   autoHideHeader: false, // auto hide header
   fixSiderbar: false, // sticky siderbar
+  Logic : 'http://192.9.200.101/' // 'http://3.16.188.229/'
 };

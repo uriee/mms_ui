@@ -2,8 +2,9 @@ import { stringify } from 'qs';
 import request from '@/utils/request';
 import mrequest from '@/utils/mrequest';
 import axios from 'axios';
-const Logic = 'http://3.16.188.229/'
-
+import {Logic} from '@/defaultSettings'
+//const Logic = 'http://3.16.188.229/'
+//const Logic = 'http://192.9.200.101/'
 const timeChartify = (data,interval) => data.map(x=> ({
     /*x: Date(dateString.replace(' ', 'T'))*/
   x: (interval === 'day' || interval === 'week' ? x.x.slice(5,10) :
@@ -119,8 +120,9 @@ export async function updatePermissions(params) {
 
 export async function accountLogin(params) {
   let x = { currenrAuthority: 'guest' };
+  console.log('accountLogin',params)
   try {
-    x = await mrequest('${Logic}mymes/signin', {
+    x = await mrequest(`${Logic}mymes/signin`, {
       method: 'POST',
       data: params,
     });
