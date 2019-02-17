@@ -157,7 +157,7 @@ export default async function mrequest(
     }
   }
   */
-  console.log('before fetch', { url: url, ...newOptions });
+  console.log('before fetch', { url: url, ...newOptions })
   try {
     const resp = await axios({ url: url, ...newOptions })/*.catch(e => {
       console.log('Error in mrequest axios call', e.response);
@@ -167,16 +167,21 @@ export default async function mrequest(
     console.log('mrequest after axios call: ', resp);
     await checkStatus(resp);
     await cachedSave(resp, hashcode);
-    console.log('mrequset after chseckstatus and cach:', resp);
+    console.log('mrequset after chseckstatus and cach:', resp)
     return resp.data;
   } catch (e) {
-    console.log('___________________________________________________________________________________________________', e)       
+    console.log('___________________________________________4_______________________________________________________', e)       
     const status = e && e.response && e.response.status
-    let etitle = e && e.response && e.response.data && e.response.data.error && e.response.data.error.split(':').reverse()[0] || "Unknown Error"
-    const error = e && e.response && e.response.data && e.response.data.error && e.response.data.error || ""
+    let etitle = e && e.response && e.response.data && e.response.data.error && typeof(e.response.data.error) === 'string' && e.response.data.error.split(':').reverse()[0] || "DB Script Error"    
+    const error = e && e.response && e.response.data && typeof(e.response.data.error) === 'string' && e.response.data.error || ""
+    console.log('___________________________________________5_______________________________________________________', status,etitle,error)     
     if(!e.response) {
       etitle = e
-      router.push('/exception/404'); 
+      notification.error({
+        message: `Error ${etitle}`,
+        description: error,
+      })      
+      router.push('/exception/404')
       return 0
     } 
      
@@ -192,17 +197,25 @@ export default async function mrequest(
 
     // environment should not be used
     if (status === 403) {
+      notification.error({
+        message: `${etitle}`,
+        description: error,
+      });       
       router.push('/exception/403');
       return 0;
     }
     if (status <= 504 && status >= 500) {
+      notification.error({
+        message: `${etitle}`,
+        description: error,
+      });       
       router.push('/exception/500');
       return 0;
     }
 
     if (status === 406 ) {
       notification.error({
-        message: `Error ${etitle}`,
+        message: `${etitle}`,
         description: error,
       });  
       //router.push('/exception/404');      
@@ -210,16 +223,20 @@ export default async function mrequest(
     }
 
     if (status >= 404 && status < 422) {
+      notification.error({
+        message: `${etitle}`,
+        description: error,
+      });       
       router.push('/exception/404');
       return 0;
     }
   
     notification.error({
-      message: `Error ${status}`,
+      message: `${status}`,
       description: "Undefined Error",
       });  
     router.push('/exception/404'); 
-    console.log('___________________________________________',window.location.href)
+    console.log('mrequest debug end :',window.location.href)
     return Promise.resolve("ERROR");
   }
   return 1;

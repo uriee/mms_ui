@@ -30,7 +30,7 @@ export default [
     "routes": [
       {
         "path": "/",
-        "redirect": "/model/part"
+        "redirect": "/dashboard/analysis"
       },
       {
         "path": "/dashboard",
@@ -417,10 +417,13 @@ export default [
             }
           },
           {
-            "path": "/model/partarc",
-            "name": "partarc",
-            "component": "./Result/Success"
-          },
+            "path": "/model/part_status",
+            "name": "part_status",
+            "component": "./List/MainList",
+            "params": {
+              "entity": "part_status"
+            }
+          },          
           {
             "path": "/model/process",
             "name": "process",
@@ -804,6 +807,17 @@ export default [
               "admin"
             ]
           },
+          {
+            "component": "./List/MainList",
+            "path": "/router/part_status",
+            "params": {
+              "entity": "part_status"
+            },
+            "name": "part_status",
+            "authority": [
+              "admin"
+            ]
+          },          
           {
             "path": "/router/tags",
             "name": "Tag Search",
