@@ -50,7 +50,7 @@ const equipment = {
           "fields": [
             {
               "field": "description",
-              "placeholder": "Description",
+              "placeholder": "Description in Other languages",
               "style": {
                 "width": "80%",
               }
@@ -64,7 +64,7 @@ const equipment = {
             }            
           ],
           "format": [
-            [0],[1]
+            [1],[0]
           ]
         },
         {
@@ -249,14 +249,6 @@ const equipment = {
       "sorter": true,
       "align": "right",
       "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 2,
-          "message": " minimum 2 character"
-        }
       ]
     },
     "description_t": {

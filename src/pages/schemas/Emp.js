@@ -377,7 +377,7 @@ const emp = {
     },    
     "ap_name": {
       "dataIndex": "ap_name",
-      "link" : '/router/ap',      
+      "link" : '/router/availability_profiles',      
       "type": "text",
       "sorter": true,
       "inputMethod": "select",
