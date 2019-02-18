@@ -4,6 +4,7 @@ The label in forms is determents by <FormattedMessage id=forms+entity+field /> f
 const availabilities = { 
   "entity": "availabilities",
   "title": "Availabilities",  
+  'defaultKey' : 'name',   
   "forms": {
     "insert": {
       "steps": [

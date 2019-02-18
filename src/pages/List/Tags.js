@@ -79,9 +79,10 @@ class TagView extends PureComponent {
       serial_status: {link :'serial_status', color : 'lime'}, 
       action: {link :'actions', color : 'magenta'},    
       process: {link :'process', color : 'geekblue'},     
-      mnt_plan: {link :'mnt_plans', color : 'magenta'}     
+      mnt_plan: {link :'mnt_plans', color : 'magenta'},
+      part_status: {link :'part_status', color : 'magenta'} 
     }
-//console.log('_________+_______________+_____________+_',x,z,j)
+console.log('_________+_______________+_____________+_',x,z,j)
     const color = typeMap[z.row_type].color
     const link = typeMap[z.row_type].link
       return (<a key={`stag-${x}-${j}`} onClick={() => router.push(`/router/${link}?name=${x}`)}><Tag color={color} key={`stag2-${x}-${j}`}>{x}</Tag></a>)  

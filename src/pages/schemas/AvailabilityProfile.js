@@ -3,7 +3,8 @@ The label in forms is determents by <FormattedMessage id=forms+entity+field /> f
 */
 const availabilityProfile = { 
   "entity": "availability_profile",
-  "title": "Availability_profiles",  
+  "title": "Availability_profiles",
+
   "forms": {
     "insert": {
       "steps": [
@@ -117,8 +118,7 @@ const availabilityProfile = {
       "required": false
     },  	
     "availability_profile_name": {
-      "dataIndex":"name",
-      "link" : '/router/availabilities',      
+      "dataIndex":"name", 
       "inputMethod": "input",
       "sorter": true,
       "align": "right",
@@ -176,7 +176,11 @@ const availabilityProfile = {
     "tags": {
       "inputMethod": "tags",
       "align": "right",
-    } 
+    },
+    "availabilities": {
+      "link" : '/router/availabilities',      
+      "son" : true
+    },
   }
 }
 export {availabilityProfile}
