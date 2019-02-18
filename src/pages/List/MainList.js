@@ -64,7 +64,7 @@ import {iden} from '../schemas/Iden.js';
 import {identifier} from '../schemas/Identifier.js';
 import {preferences} from '../schemas/Preferences.js';
 
-const lang = { 'he-IL': {id:2, align:'right'}, 'en-US': {id:1, align:'left'},'de-DE': {id:3, align:'left'}};
+const lang = {'en-US': {id:1, align:'left'},'he-IL': {id:2, align:'right'},'de-DE': {id:3, align:'left'}};
 const schemas = {
   emp : emp,
   part: part,
@@ -353,11 +353,15 @@ return 1;
       values[this.schema.cascaders[x][1]] = values[this.schema.cascaders[x][0]][1].split(':')[1]
       values[this.schema.cascaders[x][0]] = values[this.schema.cascaders[x][0]][0]
     })
-  
+    
+    //put value in X when only X_t has value
+    const val_t = Object.keys(values).filter(x => x.endsWith('_t'))
+    val_t.forEach(x=>  values[x.split('_t')[0]] = values[x.split('_t')[0]] || values[x])
+
     let lang_id = lang[getLocale()].id;
     values.name = values.name || this.state.formValues.name
     values.sig_date = moment().tz('Asia/Jerusalem').format()
-    values.sig_user = JSON.parse(localStorage.getItem('user')).username
+    values.sig_user = JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username
     values.parent = this.state.formValues.parent 
       dispatch({
         type: 'action/add',
@@ -377,7 +381,6 @@ return 1;
   handleUpdate = fields => {
     const { dispatch } = this.props;
     let lang_id = lang[getLocale()].id;
-    /*console.log('fields 1111111111111111111111111111111111111:', fields)*/
     Object.keys(fields).forEach(field => {
       fields[field] = fields[field] instanceof moment ? moment(fields[field]._d).format(fields[field]._f) : fields[field]
     })
