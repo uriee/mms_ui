@@ -230,21 +230,14 @@ class Analysis extends Component {
     );
 
     const WOStats = (serial_stats) => (
-        <Card
-          loading={loading}
-          className={styles.offlineCard}
-          bordered={false}
-          bodyStyle={{ padding: '8px 8px 8px 8px' }}
-          style={{ marginTop: 32 }}
-        >
         <Row key='WoRow' gutter={24}>
           {serial_stats.map(wo => (
-          <Col key={'WoCol'+wo.name} {...serialStatsProps}>
+          <Col key={'WoCol'+wo.name} {...serialStatsProps}  >
             <ChartCard
               loading={loading}
-              bordered={true}
-          style={{ margin: 8 }}              
+              bordered={true}         
               title='Work Order Stats'
+              style={{ marginTop: 24 }}
               action={
                 <Tooltip   title={<FormattedMessage id="app.analysis.introduce" defaultMessage="introduce" /> } >
                   <Icon type="info-circle-o" />
@@ -265,8 +258,7 @@ class Analysis extends Component {
             </ChartCard>
           </Col>
           ))}
-        </Row> 
-      </Card>       
+        </Row>     
     );    
 
 
