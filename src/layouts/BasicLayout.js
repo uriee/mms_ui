@@ -19,6 +19,7 @@ import Context from './MenuContext';
 import Exception403 from '../pages/Exception/403';
 //import { cloneDeep } from 'lodash';
 import FetchRoutes from '../wrappers/FetchRoutes';
+import router from 'umi/router';
 const { Content } = Layout;
 
 // Conversion router to menu.
@@ -109,6 +110,8 @@ class BasicLayout extends React.PureComponent {
         });
       }
     });
+     // user need to login in order to escape login screen
+     if(!localStorage.getItem('user') || !JSON.parse(localStorage.getItem('user')).username) router.push('/user/login')
   }
 
   componentDidUpdate(preProps) {
