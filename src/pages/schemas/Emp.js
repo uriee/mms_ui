@@ -268,33 +268,13 @@ const emp = {
       "type": "text",
       "inputMethod": "input",
       "sorter": true,
-      "align": "right",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 2,
-          "message": " minimum 2 character"
-        }
-      ]
+      "align": "right"
     },
     "sname": {
       "type": "text",
       "inputMethod": "input",
       "sorter": true,
-      "align": "right",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 2,
-          "message": " minimum 2 character"
-        }
-      ]
+      "align": "right"
     },
     "fname_t": {
       "type": "text",

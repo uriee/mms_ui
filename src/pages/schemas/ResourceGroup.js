@@ -203,17 +203,7 @@ const resourceGroup = {
       "dataIndex":"description",
       "inputMethod": "input",
       "sorter": true,
-      "align": "right",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 2,
-          "message": " minimum 2 character"
-        }
-      ]
+      "align": "right"
     },
     "description_t": {
       "inputMethod": "textArea",
@@ -224,10 +214,6 @@ const resourceGroup = {
         {
           "required": true,
           "message": "This field is required"
-        },
-        {
-          "min": 5,
-          "message": " minimum 5 character"
         }
       ]
     },    

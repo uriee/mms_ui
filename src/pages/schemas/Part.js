@@ -65,7 +65,7 @@ const part = {
           "fields": [
             {
               "field": "description",
-              "placeholder": "Description in English",
+              "placeholder": "Description in Other languages",
               "style": {
                 "width": "80%",
               }
@@ -79,8 +79,8 @@ const part = {
             }
           ],
           "format": [
-            [0],
             [1],
+            [0],
           ]
         }        
       ]
@@ -175,24 +175,6 @@ const part = {
           "message": "This field is required"
         },
       ]
-    }, 
-    "description": {
-      "updateable": false,
-      "dataIndex": "description",
-      "insertable": true,
-      "inputMethod": "textArea",
-      "sorter": true,
-      "align": "right",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 5,
-          "message": " minimum 5 character"
-        }
-      ]
     },
     "description_t": {
       "updateable": false,
@@ -207,11 +189,19 @@ const part = {
           "message": "This field is required"
         },
         {
-          "min": 5,
-          "message": " minimum 5 character"
+          "min": 2,
+          "message": " minimum 2 character"
         }
       ]
-    },    
+    }, 
+    "description": {
+      "updateable": false,
+      "dataIndex": "description",
+      "insertable": true,
+      "inputMethod": "textArea",
+      "sorter": true,
+      "align": "right",
+    },  
 
     "active": {
       "dataIndex":"active",
@@ -233,10 +223,11 @@ const part = {
       ]
     },
     "tags": {
-      "inputMethod": "tags",
+      "inputMethod": "tags",      
     },
     "bom": {
-      "link" : '/router/bom',      
+      "link" : '/router/bom',
+      "son" : true            
     },
     "locations": {
       "link" : '/router/locations',      

@@ -181,17 +181,7 @@ const mnt_plans = {
     "description": {
       "dataIndex": "description",
       "inputMethod": "textArea",
-      "sorter": true,
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 5,
-          "message": " minimum 5 character"
-        }
-      ]
+      "sorter": true
     },
     "description_t": {
       "inputMethod": "textArea",
@@ -203,8 +193,8 @@ const mnt_plans = {
           "message": "This field is required"
         },
         {
-          "min": 5,
-          "message": " minimum 5 character"
+          "min": 2,
+          "message": " minimum 2 character"
         }
       ]
     },    

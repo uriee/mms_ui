@@ -139,16 +139,6 @@ const availabilityProfile = {
       "inputMethod": "input",
       "sorter": true,
       "align": "right",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 2,
-          "message": " minimum 2 character"
-        }
-      ]
     },
     "description_t": {
       "inputMethod": "textArea",

@@ -35,7 +35,7 @@ const dept = {
           "fields": [
             {
               "field": "description",
-              "placeholder": "Description in English",
+              "placeholder": "Description in Other languages",
               "style": {
                 "width": "80%",
               }
@@ -49,8 +49,8 @@ const dept = {
             }
           ],
           "format": [
-            [0],
             [1],
+            [0],
           ]
         }        
       ]

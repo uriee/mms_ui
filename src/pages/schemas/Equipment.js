@@ -248,8 +248,6 @@ const equipment = {
       "inputMethod": "input",
       "sorter": true,
       "align": "right",
-      "inputRules": [
-      ]
     },
     "description_t": {
       "inputMethod": "textArea",

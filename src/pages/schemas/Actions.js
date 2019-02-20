@@ -153,16 +153,6 @@ const actions = {
       "dataIndex": "description",
       "inputMethod": "textArea",
       "sorter": true,
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 5,
-          "message": " minimum 5 character"
-        }
-      ]
     },
     "description_t": {
       "inputMethod": "textArea",
@@ -174,7 +164,7 @@ const actions = {
           "message": "This field is required"
         },
         {
-          "min": 5,
+          "min": 1,
           "message": " minimum 5 character"
         }
       ]

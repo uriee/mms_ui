@@ -92,17 +92,7 @@ const repair_types = {
       "dataIndex":"description",
       "inputMethod": "input",
       "sorter": true,
-      "align": "right",
-      "inputRules": [
-        {
-          "required": true,
-          "message": "This field is required"
-        },
-        {
-          "min": 2,
-          "message": " minimum 2 character"
-        }
-      ]
+      "align": "right"
     },
     "description_t": {
       "inputMethod": "textArea",
@@ -113,10 +103,6 @@ const repair_types = {
         {
           "required": true,
           "message": "This field is required"
-        },
-        {
-          "min": 5,
-          "message": " minimum 5 character"
         }
       ]
     },    
