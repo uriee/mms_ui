@@ -36,7 +36,7 @@ const codeMessage = {
   400: '205',
   401: 'Not authorized',
   402: 'Payment Required',
-  403: '403',
+  403: 'UnAuthorized',
   404: 'Not Found',
   406: 'Data been rejected by DB',
   410: '410',
@@ -227,7 +227,7 @@ export default async function mrequest(
         message: `${etitle}`,
         description: error,
       });       
-      router.push('/exception/404');
+      //router.push('/exception/404');
       return 0;
     }
   

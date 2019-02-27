@@ -16,7 +16,7 @@ export default [
         "component": "./User/Register"
       },
       {
-        "path": "/user/register-result",
+        "path": "/user/register_result",
         "component": "./User/RegisterResult"
       }
     ]
@@ -35,7 +35,6 @@ export default [
       {
         "path": "/dashboard",
         "name": "dashboard",
-        "icon": "dashboard",
         "routes": [
           {
             path: '/dashboard/analysis',
@@ -56,11 +55,10 @@ export default [
       },
       {
         "path": "/production",
-        "icon": "robot",
         "name": "production",
         "routes": [
           {
-            "path": "/production/work-orders",
+            "path": "/production/work_orders",
             "name": "workorders",
             "component": "./List/MainList",
             "params": {
@@ -68,7 +66,7 @@ export default [
             }
           },
           {
-            "path": "/production/work-orders-statuses",
+            "path": "/production/work_orders_statuses",
             "name": "workOrdersStatuses",
             "component": "./List/MainList",
             "params": {
@@ -84,7 +82,7 @@ export default [
             }
           },
           {
-            "path": "/production/work-report",
+            "path": "/production/work_report",
             "component": "./List/MainList",
             "params": {
               "entity": "work_report"
@@ -108,9 +106,8 @@ export default [
             ]
           },          
           {
-            "path": "/production/work-plan",
+            "path": "/production/work_plan",
             "name": "plan",
-            "icon": "schedule",
             "authority": [
               "admin"
             ],
@@ -136,7 +133,6 @@ export default [
       },
       {
         "path": "/service",
-        "icon": "table",
         "name": "service",
         "routes": [
           {
@@ -159,7 +155,6 @@ export default [
       {
         "path": "/kcenter",
         "name": "kcenter",
-        "icon": "profile",
         "routes": [
           {
             "path": "/kcenter/instructions",
@@ -175,7 +170,6 @@ export default [
       },
       {
         "name": "report",
-        "icon": "check-circle-o",
         "path": "/report",
         "routes": [
           {
@@ -197,7 +191,6 @@ export default [
       },
       {
         "name": "lean",
-        "icon": "check-circle-o",
         "path": "/lean",
         "routes": [
           {
@@ -219,7 +212,6 @@ export default [
       },
       {
         "name": "maint",
-        "icon": "check-circle-o",
         "path": "/maint",
         "routes": [
           {
@@ -274,7 +266,6 @@ export default [
       },
       {
         "name": "plan",
-        "icon": "check-circle-o",
         "path": "/plan",
         "routes": [
           {
@@ -315,7 +306,6 @@ export default [
       },
       {
         "name": "ctrl",
-        "icon": "check-circle-o",
         "path": "/ctrl",
         "routes": [
           {
@@ -342,7 +332,6 @@ export default [
       },
       {
         "name": "hr",
-        "icon": "check-circle-o",
         "path": "/hr",
         "authority": [
           "admin"
@@ -383,7 +372,6 @@ export default [
       },
       {
         "name": "qa",
-        "icon": "check-circle-o",
         "path": "/qa",
         "routes": [
           {
@@ -405,7 +393,6 @@ export default [
       },
       {
         "name": "model",
-        "icon": "check-circle-o",
         "path": "/model",
         "routes": [
           {
@@ -436,7 +423,6 @@ export default [
       },
       {
         "name": "admin",
-        "icon": "user",
         "path": "/admin",
         "authority": [
           "admin"
@@ -470,64 +456,6 @@ export default [
             "path": "/admin/permissions",
             "name": "Edit Permissions",
             "component": "./List/Permissions"
-          }
-        ]
-      },
-      {
-        "name": "account",
-        "icon": "user",
-        "path": "/account",
-        "hideInMenu": true,
-        "routes": [
-          {
-            "path": "/account/center",
-            "name": "center",
-            "component": "./Result/Success",
-            "routes": [
-              {
-                "path": "/account/center",
-                "redirect": "./Result/Success"
-              },
-              {
-                "path": "/account/center/articles",
-                "component": "./Result/Success"
-              },
-              {
-                "path": "/account/center/applications",
-                "component": "./Result/Success"
-              },
-              {
-                "path": "/account/center/projects",
-                "component": "./Result/Success"
-              }
-            ]
-          },
-          {
-            "path": "/account/settings",
-            "name": "settings",
-            "component": "./Result/Success",
-            "routes": [
-              {
-                "path": "/account/settings",
-                "redirect": "./Result/Success"
-              },
-              {
-                "path": "/account/settings/base",
-                "component": "./Result/Success"
-              },
-              {
-                "path": "/account/settings/security",
-                "component": "./Result/Success"
-              },
-              {
-                "path": "/account/settings/binding",
-                "component": "./Result/Success"
-              },
-              {
-                "path": "/account/settings/notification",
-                "component": "./Result/Success"
-              }
-            ]
           }
         ]
       },
@@ -606,6 +534,13 @@ export default [
               "entity": "availabilities"
             }
           },
+          {
+            "component": "./List/MainList",
+            "path": "/router/resource_timeoff",
+            "params": {
+              "entity": "resource_timeoff"
+            }
+          },           
           {
             "path": "/router/malfunctions",
             "component": "./List/MainList",
