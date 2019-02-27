@@ -234,6 +234,7 @@ class Analysis extends Component {
           {serial_stats.map(wo => (
           <Col key={'WoCol'+wo.name} {...serialStatsProps}  >
             <ChartCard
+              key={'WoCard'+wo.name} 
               loading={loading}
               bordered={true}         
               title='Work Order Stats'
