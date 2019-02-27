@@ -17,7 +17,13 @@ const availabilities = {
               "style": {
                 "width": "80%",
               }
-            },          
+            }, 
+            {
+              "field": "flag_o",
+              "style": {
+                "width": "80%",
+              }
+            },                      
             {
               "field": "from_time",
               "placeholder": "from time",
@@ -34,7 +40,8 @@ const availabilities = {
             }            
           ],
           "format": [
-            [0,1,2]
+            [0,1],
+            [2,3]
           ]
         },
       ]
@@ -57,10 +64,16 @@ const availabilities = {
               "style": {
                 "width": "80%",
               }
-            }            
+            },
+            {
+              "field": "flag_o",
+              "style": {
+                "width": "80%",
+              }
+            }                   
           ],
           "format": [
-            [0,1]
+            [0,1,2]
           ]
         },
       ]
@@ -77,22 +90,40 @@ const availabilities = {
     },    
     "from_time": {
       "inputMethod": "time",
-      "defaultValue": '00:00:00',
       "sorter": true,
-      "align": "right",
+      "inputRules": [
+        {
+          "required": true,
+          "message": "This field is required"
+        }
+      ]       
     }, 
     "to_time": {
       "inputMethod": "time",
-      "defaultValue": '00:00:00',
       "sorter": true,
-      "align": "right",
+      "inputRules": [
+        {
+          "required": true,
+          "message": "This field is required"
+        }
+      ]       
     },
     "weekday": {
       "inputMethod": "number",
       "defaultValue": 0,
       "sorter": true,
-      "align": "right",
-    }, 
+      "inputRules": [
+        {
+          "required": true,
+          "message": "This field is required"
+        }
+      ]      
+    },
+    "flag_o": {
+      "inputMethod": "bool",
+      "defaultValue": false,
+      "sorter": true,
+    },
   }
 
 }

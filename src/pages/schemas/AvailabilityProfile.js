@@ -45,7 +45,7 @@ const availabilityProfile = {
               "field": "description",
               "placeholder": "Description",
               "style": {
-                "width": "80%",
+                "width": "40%",
               }
             },
             {
@@ -170,7 +170,7 @@ const availabilityProfile = {
     "availabilities": {
       "link" : '/router/availabilities',      
       "son" : true
-    },
+    }    
   }
 }
 export {availabilityProfile}
