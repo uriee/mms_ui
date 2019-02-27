@@ -176,8 +176,8 @@ class TableList extends PureComponent {
                         sorter: (field.sorter ? field.sorter : false), /*if the table can be sotrted by this field*/
                         link:  (field.link ? field.link : false), /*goto link when clicked upon*/
                         selectValues: (field.selectValues ? field.selectValues : null), /*in case you need to choose from constants in the schema*/
-                        fixed: (field.dataIndex === "name" ? 'left' : /*field.son ? 'right' */'none'),
-                        width : /*field.son ? formatMessage({ id: `pages.${field.name}` }).length * 7 :*/ field.dataIndex === "name" ? 100 : 0,
+                        fixed: fi === 0 ? 'left' : /*field.son ? 'right' */'none',
+                        width:  200,
                         render: (x,z) => ( !x  && !field.dataIndex ? <span key={fi}>p</span> : 
                           field.link ?  <a onClick={() => {
                             localStorage.setItem('lastEntity', z.name) 
@@ -195,9 +195,18 @@ class TableList extends PureComponent {
                           x ),
                         align: lang[getLocale()].align
                       }))
+    //adding empty column in order to fix some inherent bugs in the table componant
+     this.columns.push({
+        title: '',
+        render: ()=> (<Fragment>          
+                  </Fragment>
+                ),
+            })                          
+     //adding the Edit Button
      this.schema.forms.update && this.columns.push({
         title: '',
-        fixed : 'right',width: 50,
+        fixed : 'right',width:50,
+
         render: (text, record) => (
           <Fragment>
             <a onClick={() => this.handleUpdateModalVisible(true, record)}> <Icon type="edit"  /></a>
@@ -205,6 +214,7 @@ class TableList extends PureComponent {
         ),
       }) 
     //if(lang[getLocale()].align === 'right') this.columns.reverse()
+
 return 1;  
  }
 
