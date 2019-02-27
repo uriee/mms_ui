@@ -25,7 +25,7 @@ import {
   Tag,
   Checkbox,
   List,
-  notification
+  notification,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -44,6 +44,7 @@ import {resourceGroup} from '../schemas/ResourceGroup.js';
 import {resource} from '../schemas/Resource.js';
 import {availabilityProfile} from '../schemas/AvailabilityProfile.js';
 import {availabilities} from '../schemas/Availabilities.js';
+import {resource_timeoff} from '../schemas/Resource_timeoff.js';
 import {malfunctions} from '../schemas/Malfunctions.js';
 import {malfunction_types} from '../schemas/Malfunction_Types.js';
 import {repairs} from '../schemas/Repairs.js';
@@ -79,6 +80,7 @@ const schemas = {
   resource : resource,
   availabilityProfile : availabilityProfile,
   availabilities : availabilities,
+  resource_timeoff : resource_timeoff,  
   malfunctions : malfunctions,
   malfunction_types : malfunction_types,
   repairs : repairs,
@@ -149,7 +151,7 @@ class TableList extends PureComponent {
     if(!this.schema  || !this.schema.fields.id) throw new Error("The schema does not have an id field!")
     const params = this.props.location ? this.props.location.query : {}      
 
-    this.insertKey = {} //this.insetrKey passes to the inset form in order to allow insertion of new child rows in parent-child entities
+    this.insertKey = {} //this.insetrKey passes to the insert form in order to allow insertion of new child rows in parent-child entities
     if(this.schema.defaultKey){this.insertKey[this.schema.defaultKey] = params.name}
 
     const { dispatch } = this.props;
@@ -174,27 +176,35 @@ class TableList extends PureComponent {
                         sorter: (field.sorter ? field.sorter : false), /*if the table can be sotrted by this field*/
                         link:  (field.link ? field.link : false), /*goto link when clicked upon*/
                         selectValues: (field.selectValues ? field.selectValues : null), /*in case you need to choose from constants in the schema*/
+                        fixed: (field.dataIndex === "name" ? 'left' : /*field.son ? 'right' */'none'),
+                        width : /*field.son ? formatMessage({ id: `pages.${field.name}` }).length * 7 :*/ field.dataIndex === "name" ? 100 : 0,
                         render: (x,z) => ( !x  && !field.dataIndex ? <span key={fi}>p</span> : 
-                          field.link ?  <a onClick={() => x ? router.push(`${field.link}?name=${x.split(':')[0] || z.name}`) : router.push(`${field.link}?parent=${z.id}`)}>{x ? x.toString() : <Icon type="double-right" color='mgenta'/>}</a> :
+                          field.link ?  <a onClick={() => {
+                            localStorage.setItem('lastEntity', z.name) 
+                            x ? router.push(`${field.link}?name=${x.split(':')[0] || z.name}`) : router.push(`${field.link}?parent=${z.id}`)}
+                            }>{x ? x.toString() : <Icon type="double-right" color='mgenta'/>}</a> :
                           field.dataIndex === 'tags' && x ? this.tagsRender(x,fi) :/*(
                             <span key={`tags-${fi}`}>
                               {x.map((tag,i) => <Tag color="blue" key={`${tag}-${fi}-${i}`}>{tag}</Tag>)}
                             </span>
                           ) :*/
                           field.dataIndex === 'resource_names' && x ? this.resourcesRender(x,z) :
-                          field.inputMethod === 'bool' ? <Checkbox key={`check-${fi}`} checked={x} disabled /> :
+                          x && field.inputMethod === 'bool' ? <Checkbox key={`check-${fi}`} checked={x} disabled /> :
+                          x && field.inputMethod === "timestamp_r" ? x.replace('[','').replace(/"/g,'').replace(',',' . . . ').replace(')','') :
+                          x && field.inputMethod === "timestamp" ? x.replace('T',' ').split('.')[0] :
                           x ),
                         align: lang[getLocale()].align
                       }))
      this.schema.forms.update && this.columns.push({
         title: '',
+        fixed : 'right',width: 50,
         render: (text, record) => (
           <Fragment>
             <a onClick={() => this.handleUpdateModalVisible(true, record)}> <Icon type="edit"  /></a>
           </Fragment>
         ),
       }) 
-    if(lang[getLocale()].align === 'right') this.columns.reverse()
+    //if(lang[getLocale()].align === 'right') this.columns.reverse()
 return 1;  
  }
 
@@ -301,6 +311,7 @@ return 1;
   };
 
   handleSelectRows = rows => {
+    console.log("!@#!@#: c ",rows)
     this.setState({
       selectedRows: rows,
     });
@@ -355,8 +366,9 @@ return 1;
     })
     
     //put value in X when only X_t has value
-    const val_t = Object.keys(values).filter(x => x.endsWith('_t'))
-    val_t.forEach(x=>  values[x.split('_t')[0]] = values[x.split('_t')[0]] || values[x])
+    Object.keys(values).filter(x => x.endsWith('_t')).forEach(x=>  values[x.split('_t')[0]] = values[x.split('_t')[0]] || values[x])
+    //any time field is been converted to string
+    Object.keys(values).filter(x=> x.includes('time')).forEach(x=> values[x] = moment(values[x]).format('HH:mm'))
 
     let lang_id = lang[getLocale()].id;
     values.name = values.name || this.state.formValues.name
@@ -381,9 +393,12 @@ return 1;
   handleUpdate = fields => {
     const { dispatch } = this.props;
     let lang_id = lang[getLocale()].id;
-    Object.keys(fields).forEach(field => {
+    //any time field is been converted to string
+    Object.keys(fields).filter(x=> x.includes('_time')).forEach(x=> fields[x] = moment(fields[x]).format('HH:mm'))
+
+    /*Object.keys(fields).forEach(field => {
       fields[field] = fields[field] instanceof moment ? moment(fields[field]._d).format(fields[field]._f) : fields[field]
-    })
+    })*/   
     dispatch({
       type: 'action/update',
       payload: Object.assign(fields,{lang_id: lang_id,entity: this.entity}),
@@ -438,7 +453,7 @@ return 1;
     const remove = this.remove
     Modal.confirm({
       title: 'Warning, You are about to delete data!!',
-      content: rows.map(x=> `delete ${x.name}？\n`).join(),
+      content: rows.filter(x=> x.name).map(x=> `delete ${x.name}？\n`).join(),
       okText: 'Yes',
       cancelText: 'No',
       onOk: () => {
@@ -467,12 +482,14 @@ return 1;
 
 
 // states the pagination attributes
+/*
    listPaginationProps = {
-      showSizeChanger: false,
+      showSizeChanger: true,
       showQuickJumper: false,
-      pageSize: 10,
+      pageSize: 20,
       total: 50,
    };
+*/
 
   renderMainForm(from,to) {
     const {
@@ -523,7 +540,7 @@ return 1;
     <List key='list'
       grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 5 }}
       dataSource={data}
-      pagination={this.listPaginationProps}
+      pagination={false}//{this.listPaginationProps}
       renderItem={item => (
         <List.Item>
           <Card title={item.name} key={item.name}>
@@ -537,7 +554,7 @@ return 1;
                   var render = schema.render ? schema.render(item[x],item) : null
                   link = link ? `${link}?name=${item[x].split(':')[0]}` : link
                   return (
-                    <div key={item.name + 'div' + i}>
+                    <div key={item.name + 'div' + i} className={styles.tableList}>
                       <span> {formatMessage({ id: `pages.${x}` })} : </span>
                       <span> {render}</span>
                     </div>
@@ -553,7 +570,7 @@ return 1;
                   if (!obj.link) return (<span/>)  
                   var link = `${obj.link}?parent=${item.id}` 
                   return (
-                    <Button color='#fa8c16' key={item.name + 'div' + i} onClick={() => router.push(`${link}`)}>
+                    <Button  style={{ marginTop: 12 ,marginLeft: 8 ,color:'#fa8c16'}} color='#fa8c16' key={item.name + 'div' + i} onClick={() => router.push(`${link}`)}>
                       <span> {formatMessage({ id: `pages.${x}` })}  </span>
                       <span>                     
                               <Icon type="double-right"/>
@@ -563,7 +580,7 @@ return 1;
                 })
               }
               {this.schema.forms.update &&
-              <Button key={`bt_update_${item.name}`} style={{ float: 'right' }} onClick={() => this.handleUpdateModalVisible(true, item) }>
+              <Button key={`bt_update_${item.name}`} style={{marginTop: 12, float: 'right' }} onClick={() => this.handleUpdateModalVisible(true, item) }>
                 Update
               </Button>
             }
@@ -590,7 +607,7 @@ return 1;
       action: { data },
       loading,
     } = this.props;
-    console.log("DATA",data,this.entity,this.state,this.insertKey)
+    console.log("DATA",data,this.entity,this.state,this.insertKey,localStorage.getItem('lastEntity'))
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
     this.formFields = formFields(this.schema.fields)  
     if(data.entity !== this.entity) return <span/>  
@@ -601,7 +618,6 @@ return 1;
         {this.schema.functions && this.schema.functions.map(x => <Menu.Item key={x.function}>{x.name}</Menu.Item>)}
       </Menu>
     );
-
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
@@ -627,6 +643,7 @@ return 1;
                   </Dropdown>
                 </span>
               )}
+             {(this.insertKey.hasOwnProperty('name') || this.insertKey.hasOwnProperty('parent') )&& (<h2 style={{ textAlign: 'center' }}> {localStorage.getItem('lastEntity') } </h2>)}
             </div>
             {( data.list[0] === undefined ? '' : window.innerWidth < 1000 ? this.myList(data.list) :this.myTable(selectedRows,loading,data))}
           </div>

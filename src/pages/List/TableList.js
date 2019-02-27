@@ -372,11 +372,12 @@ class TableList extends PureComponent {
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
-
+/*
     dispatch({
       type: 'rule/fetch',
       payload: params,
     });
+    */
   };
 
   handleFormReset = () => {

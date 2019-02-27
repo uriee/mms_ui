@@ -70,10 +70,12 @@ class StandardTable extends PureComponent {
       columns,
       rowKey,
     } = this.props;
+
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
-      ...pagination,
+      pageSize : 10,
+      ...pagination,     
     };
 
     const rowSelection = {
@@ -115,8 +117,9 @@ class StandardTable extends PureComponent {
           rowSelection={rowSelection}
           dataSource={list}
           columns={columns}
-          pagination={paginationProps}
+          pagination={false}
           onChange={this.handleTableChange}
+          scroll={{ x: columns.length *130,y:440 } } 
         />
       </div>
     );
