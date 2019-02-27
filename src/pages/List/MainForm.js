@@ -58,7 +58,7 @@ class CreateForm extends PureComponent {
         var value = this.props.values[this.props.fields[key].dataIndex]
         value = this.props.fields[key].inputMethod === 'time' ? value ? moment(value, 'HH:mm') : null : value
         value = this.props.fields[key].inputMethod === 'timestamp' ? value ? moment(value, 'YYYY-MM-DD HH:mm:ss') : null : value  
-        value = this.props.fields[key].inputMethod === 'timestamp' ? value ? [moment(value[0], 'YYYY-MM-DD HH:mm:ss'),moment(value[1], 'YYYY-MM-DD HH:mm:ss')] : null : value
+        value = this.props.fields[key].inputMethod === 'timestamp_r' ? value ? [moment(value[0], 'YYYY-MM-DD HH:mm:ss'),moment(value[1], 'YYYY-MM-DD HH:mm:ss')] : null : value
         const fieldName = this.props.fields[key].dataIndex
         obj[fieldName] = value
         return obj
