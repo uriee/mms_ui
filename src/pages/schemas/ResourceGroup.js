@@ -275,7 +275,11 @@ const resourceGroup = {
     "resource_types": {
       "dataIndex": "resource_types",
       "required": false,
-    } 
+    },
+    "resource_timeoff": {
+      "link" : '/router/resource_timeoff',      
+      "son" : true
+    }
   }
 }
 export {resourceGroup}

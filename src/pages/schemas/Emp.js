@@ -290,9 +290,7 @@ const emp = {
         }
       ],
       "required": false,
-      "defaultValue":{
-      	"field": ["fname"]
-      }
+
     },
     "sname_t": {
       "type": "text",
@@ -308,9 +306,7 @@ const emp = {
         }
       ],
       "required": false,
-      "defaultValue":{
-      	"field": ["sname"]
-      }      
+    
     },
     "active": {
       "type": "text",
@@ -372,7 +368,11 @@ const emp = {
     "tags": {
       "inputMethod": "tags",
       "align": "right",
-    }
+    },
+    "resource_timeoff": {
+      "link" : '/router/resource_timeoff',      
+      "son" : true
+    }    
   }
 }
 export {emp}

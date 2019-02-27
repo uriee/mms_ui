@@ -271,7 +271,7 @@ const equipment = {
       "inputMethod": "input",
       "defaultValue": "00:00:00:00:00:00",
       "sorter": true,
-      "align": "right",
+      "align": "right",   
       "inputRules": [
         {
           "required": true,
@@ -346,7 +346,11 @@ const equipment = {
     "tags": {
       "inputMethod": "tags",
       "align": "right",
-    }     
+    },
+    "resource_timeoff": {
+      "link" : '/router/resource_timeoff',      
+      "son" : true
+    }
   }
 }
 export {equipment}

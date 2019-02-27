@@ -65,7 +65,11 @@ const resource = {
           "message": "This field is required"
         }
       ]
-    }
+    },
+    "resource_timeoff": {
+      "link" : '/router/resource_timeoff',      
+      "son" : true
+    }    
   }
 }
 export {resource}
