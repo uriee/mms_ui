@@ -66,10 +66,30 @@ class BasicLayout extends React.Component {
   }
 
   getContext() {
-    const { location, breadcrumbNameMap } = this.props;
+    const { location, breadcrumbNameMap, history } = this.props;
+    const next = location.pathname && location.pathname.split('/')[1];
+    const current = localStorage.getItem('bread') ? JSON.parse(localStorage.getItem('bread')) : [];
+    const query = location.query.name ? `(${location.query.name})` : '';
+    const title =
+      breadcrumbNameMap[location.pathname] && breadcrumbNameMap[location.pathname].name + query;
+    const obj = location.pathname &&
+      breadcrumbNameMap[location.pathname] && {
+        key: location.pathname,
+        href: location.pathname + location.search,
+        title: title,
+      };
+    const bread =
+      history.action === 'POP'
+        ? current.slice(0, current.length - 1)
+        : next === 'router'
+        ? [...current, obj]
+        : [obj];
+    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~ next,current,obj,bread: ', this.props);
+    localStorage.setItem('bread', JSON.stringify(bread));
     return {
       location,
       breadcrumbNameMap,
+      bread,
     };
   }
 

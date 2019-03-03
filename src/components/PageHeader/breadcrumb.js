@@ -56,12 +56,24 @@ export default class BreadcrumbView extends PureComponent {
   // Generated according to props
   conversionFromProps = () => {
     const { breadcrumbList, breadcrumbSeparator, itemRender, linkElement = 'a' } = this.props;
+    console.log('conversionFromProps ', breadcrumbList);
+    const test = x => {
+      console.log('1234:', x.target, localStorage.getItem('bread'));
+      const href = '/router/' + x.target.toString().split('/')[4];
+      const crumbs = JSON.parse(localStorage.getItem('bread'));
+      console.log('123:', href);
+      let index = 0;
+      crumbs.forEach((x, i) => {
+        if (x.href === href) index = i;
+      });
+      localStorage.setItem('bread', JSON.stringify(crumbs.slice(0, index)));
+    };
     return (
       <Breadcrumb className={styles.breadcrumb} separator={breadcrumbSeparator}>
         {breadcrumbList.map(item => {
           const title = itemRender ? itemRender(item) : item.title;
           return (
-            <Breadcrumb.Item key={item.title}>
+            <Breadcrumb.Item key={item.title} onClick={test}>
               {item.href
                 ? createElement(
                     linkElement,
@@ -122,16 +134,15 @@ export default class BreadcrumbView extends PureComponent {
   };
 
   /**
-   * 将参数转化为面包屑
    * Convert parameters into breadcrumbs
    */
+
   conversionBreadcrumbList = () => {
     const { breadcrumbList, breadcrumbSeparator } = this.props;
     const { routes, params, routerLocation, breadcrumbNameMap } = this.getBreadcrumbProps();
     if (breadcrumbList && breadcrumbList.length) {
-      return this.conversionFromProps();
+      return this.conversionFromProps(breadcrumbList);
     }
-    // 如果传入 routes 和 params 属性
     // If pass routes and params attributes
     if (routes && params) {
       return (
@@ -144,7 +155,6 @@ export default class BreadcrumbView extends PureComponent {
         />
       );
     }
-    // 根据 location 生成 面包屑
     // Generate breadcrumbs based on location
     if (routerLocation && routerLocation.pathname) {
       return this.conversionFromLocation(routerLocation, breadcrumbNameMap);

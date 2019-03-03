@@ -32,6 +32,8 @@ export default class PageHeader extends PureComponent {
 
     const clsString = classNames(styles.pageHeader, className);
     const activeKeyProps = {};
+    const routes = JSON.parse(localStorage.getItem('bread'));
+    console.log('routes:', routes);
     if (tabDefaultActiveKey !== undefined) {
       activeKeyProps.defaultActiveKey = tabDefaultActiveKey;
     }
@@ -48,7 +50,7 @@ export default class PageHeader extends PureComponent {
             paragraph={{ rows: 3 }}
             avatar={{ size: 'large', shape: 'circle' }}
           >
-            {hiddenBreadcrumb ? null : <BreadcrumbView {...this.props} />}
+            {hiddenBreadcrumb ? null : <BreadcrumbView {...this.props} breadcrumbList={routes} />}
             <div className={styles.detail}>
               {logo && <div className={styles.logo}>{logo}</div>}
               <div className={styles.main}>
