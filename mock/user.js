@@ -3,7 +3,7 @@ export default {
   // 支持值为 Object 和 Array
   'GET /api/currentUser': {
     name: 'Serati Ma',
-    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+    avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
     userid: '00000001',
     email: 'antdesign@alipay.com',
     signature: '海纳百川，有容乃大',
@@ -36,6 +36,7 @@ export default {
       },
     ],
     notifyCount: 12,
+    unreadCount: 11,
     country: 'China',
     geographic: {
       province: {
@@ -73,7 +74,7 @@ export default {
   ],
   'POST /api/login/account': (req, res) => {
     const { password, userName, type } = req.body;
-    if (password === '888888' && userName === 'admin') {
+    if (password === 'ant.design' && userName === 'admin') {
       res.send({
         status: 'ok',
         type,
@@ -81,7 +82,7 @@ export default {
       });
       return;
     }
-    if (password === '123456' && userName === 'user') {
+    if (password === 'ant.design' && userName === 'user') {
       res.send({
         status: 'ok',
         type,

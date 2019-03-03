@@ -2,22 +2,29 @@ import { stringify } from 'qs';
 import request from '@/utils/request';
 import mrequest from '@/utils/mrequest';
 import axios from 'axios';
-import {Logic} from '@/defaultSettings'
+import { Logic } from '@/defaultSettings';
 //const Logic = 'http://3.16.188.229/'
 //const Logic = 'http://192.9.200.101/'
-const timeChartify = (data,interval) => data.map(x=> ({
+const timeChartify = (data, interval) =>
+  data.map(x => ({
     /*x: Date(dateString.replace(' ', 'T'))*/
-  x: (interval === 'day' || interval === 'week' ? x.x.slice(5,10) :
-     (interval === 'month' || interval === 'year' ? x.x.slice(0,7) :
-     (interval === 'hour' ?  x.x.slice(8,13) : x.x.slice(11,16))))
-  , y: parseInt(x.y) || 0}))
+    x:
+      interval === 'day' || interval === 'week'
+        ? x.x.slice(5, 10)
+        : interval === 'month' || interval === 'year'
+        ? x.x.slice(0, 7)
+        : interval === 'hour'
+        ? x.x.slice(8, 13)
+        : x.x.slice(11, 16),
+    y: parseInt(x.y) || 0,
+  }));
 
 export function fetch(params) {
-  console.log("in fetch api",params)
+  console.log('in fetch api', params);
   let x;
-  const entity = params.entity
+  const entity = params.entity;
   try {
-    x = myGet(`${Logic}mymes/${entity}?${stringify(params)}`,entity);
+    x = myGet(`${Logic}mymes/${entity}?${stringify(params)}`, entity);
   } catch (e) {
     console.log(e);
   }
@@ -27,73 +34,75 @@ export function fetch(params) {
 
 export async function fetch_dash(params) {
   let x;
-  const data = params.data
+  const data = params.data;
   try {
     x = await axios.get(`${Logic}mymes/dash/?${stringify(params)}`);
   } catch (e) {
     console.log(e);
   }
-  console.log('fetch dash',x)
-  x.data['work_report_placements'] = timeChartify( x.data['work_report_placements'],params.interval)
-  x.data['work_report_products'] = timeChartify( x.data['work_report_products'],params.interval)  
+  console.log('fetch dash', x);
+  x.data['work_report_placements'] = timeChartify(
+    x.data['work_report_placements'],
+    params.interval
+  );
+  x.data['work_report_products'] = timeChartify(x.data['work_report_products'], params.interval);
   return x.data;
 }
 
 export async function insert(params) {
   console.log('in insert:', params);
-  const entity = params.entity
+  const entity = params.entity;
   const ret = await mrequest(`${Logic}mymes/insert`, {
     method: 'POST',
     data: {
       ...params,
     },
   });
-  console.log('retRETert:',ret)
+  console.log('retRETert:', ret);
   return ret;
 }
 
 export async function remove(params) {
-  const entity = params.entity
+  const entity = params.entity;
   const ret = await mrequest(`${Logic}mymes/remove`, {
     method: 'POST',
     data: {
       ...params,
     },
   });
-  console.log('ret remove api:',ret)
+  console.log('ret remove api:', ret);
   return ret;
 }
 
 export async function sendFunction(params) {
-  const entity = params.entity
-  console.log('_---_-____-:',params)
+  const entity = params.entity;
+  console.log('_---_-____-:', params);
   const ret = await mrequest(`${Logic}/mymes/func`, {
     method: 'POST',
     data: {
       ...params,
     },
   });
-  console.log('ret sendFunction api:',ret)
+  console.log('ret sendFunction api:', ret);
   return ret;
 }
 
 export async function fetchRoutes() {
-  var ret
+  var ret;
+  console.log('xxxxx1:', ret, Logic);
   try {
-    ret = await axios.get(`${Logic}mymes/routes`,{
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
+    ret = await axios.get(`${Logic}mymes/routes`);
+    console.log('xxxxx2:', ret);
   } catch (error) {
-    console.error(error);
+    console.error('ppppp', error);
   }
-  return await JSON.parse(ret.data.main[0].routes)
+  console.log('xxxxx:', ret);
+  return await JSON.parse(ret.data.main[0].routes);
 }
 
 export async function update(params) {
   console.log('********in update*********:', params);
-  const entity = params.entity  
+  const entity = params.entity;
   return await mrequest(`${Logic}mymes/update`, {
     method: 'POST',
     data: {
@@ -104,9 +113,9 @@ export async function update(params) {
 
 export async function updatePermissions(params) {
   console.log('********in update Permissions*********:', params);
-  var ret  
+  var ret;
   try {
-    const routes = JSON.stringify(params.routes)
+    const routes = JSON.stringify(params.routes);
     ret = await mrequest(`${Logic}mymes/updateroutes`, {
       method: 'POST',
       data: {
@@ -115,12 +124,12 @@ export async function updatePermissions(params) {
     });
   } catch (error) {
     console.error(error);
-  }  
+  }
 }
 
 export async function accountLogin(params) {
   let x = { currenrAuthority: 'guest' };
-  console.log('accountLogin',params)
+  console.log('accountLogin', params);
   try {
     x = await mrequest(`${Logic}mymes/signin`, {
       method: 'POST',
@@ -135,37 +144,54 @@ export async function accountLogin(params) {
 
 import { parse } from 'url';
 
-const myGet = async (url,entity) => {
-  console.log('in myGet1', url,entity);
+const myGet = async (url, entity) => {
+  console.log('in myGet1', url, entity);
 
   let dataSource = await mrequest(url, {
     method: 'GET',
   });
-  console.log("DATSOURCE",dataSource)
+  console.log('DATSOURCE', dataSource);
   let choosers = dataSource.choosers;
   dataSource = dataSource.main;
   const params = parse(url, true).query;
-  if (dataSource === undefined ) return 0  
+  if (dataSource === undefined) return 0;
   console.log('in myGet2', dataSource, params);
   if (params.sorter) {
     let s = params.sorter.split('_');
-    let direction = s[s.length-1]
-    let field = s.slice(0,s.length-1).join('_')
+    let direction = s[s.length - 1];
+    let field = s.slice(0, s.length - 1).join('_');
     dataSource = dataSource.sort((prev, next) => {
       if (direction == 'descend') {
-        return next[field] && next[field].toString().toUpperCase() < prev[field] && prev[field].toString().toUpperCase() ? -1 : 1
+        return next[field] &&
+          next[field].toString().toUpperCase() < prev[field] &&
+          prev[field].toString().toUpperCase()
+          ? -1
+          : 1;
       }
-       return next[field] && next[field].toString().toUpperCase() > prev[field] && prev[field].toString().toUpperCase() ? -1 : 1
+      return next[field] &&
+        next[field].toString().toUpperCase() > prev[field] &&
+        prev[field].toString().toUpperCase()
+        ? -1
+        : 1;
     });
   }
 
   let filterDataSource = dataSource;
-  Object.keys(params).filter(param => {
-    return dataSource[0] && dataSource[0].hasOwnProperty(param)}).forEach(param => { 
-    filterDataSource =  filterDataSource.filter(data => !data[param] ?  false : data[param].toString().toUpperCase().indexOf(params[param].toString().toUpperCase()) > -1)
-  })
-  dataSource = (filterDataSource.length  ? filterDataSource : dataSource)
-
+  Object.keys(params)
+    .filter(param => {
+      return dataSource[0] && dataSource[0].hasOwnProperty(param);
+    })
+    .forEach(param => {
+      filterDataSource = filterDataSource.filter(data =>
+        !data[param]
+          ? false
+          : data[param]
+              .toString()
+              .toUpperCase()
+              .indexOf(params[param].toString().toUpperCase()) > -1
+      );
+    });
+  dataSource = filterDataSource.length ? filterDataSource : dataSource;
 
   let pageSize = 10;
   if (params.pageSize) {
@@ -186,9 +212,6 @@ const myGet = async (url,entity) => {
   return result;
 };
 
-/*---*/
-
-/*
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
@@ -221,11 +244,11 @@ export async function addRule(params) {
   });
 }
 
-export async function updateRule(params) {
-  return request('/api/rule', {
+export async function updateRule(params = {}) {
+  return request(`/api/rule?${stringify(params.query)}`, {
     method: 'POST',
     body: {
-      ...params,
+      ...params.body,
       method: 'update',
     },
   });
@@ -246,8 +269,8 @@ export async function queryTags() {
   return request('/api/tags');
 }
 
-export async function queryBasicProfile() {
-  return request('/api/profile/basic');
+export async function queryBasicProfile(id) {
+  return request(`/api/profile/basic?id=${id}`);
 }
 
 export async function queryAdvancedProfile() {
@@ -305,11 +328,10 @@ export async function fakeRegister(params) {
   });
 }
 
-export async function queryNotices() {
-  return request('/api/notices');
+export async function queryNotices(params = {}) {
+  return request(`/api/notices?${stringify(params)}`);
 }
 
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
 }
-*/

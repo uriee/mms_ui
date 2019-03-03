@@ -40,6 +40,7 @@ class TableForm extends PureComponent {
     const newData = data.map(item => ({ ...item }));
     const target = this.getRowByKey(key, newData);
     if (target) {
+      // 进入编辑状态时保存原始数据
       if (!target.editable) {
         this.cacheOriginData[key] = { ...target };
       }
@@ -135,7 +136,7 @@ class TableForm extends PureComponent {
   render() {
     const columns = [
       {
-        title: 'Name',
+        title: '成员姓名',
         dataIndex: 'name',
         key: 'name',
         width: '20%',
@@ -147,7 +148,7 @@ class TableForm extends PureComponent {
                 autoFocus
                 onChange={e => this.handleFieldChange(e, 'name', record.key)}
                 onKeyPress={e => this.handleKeyPress(e, record.key)}
-                placeholder="Name"
+                placeholder="成员姓名"
               />
             );
           }
@@ -155,7 +156,7 @@ class TableForm extends PureComponent {
         },
       },
       {
-        title: '#',
+        title: '工号',
         dataIndex: 'workId',
         key: 'workId',
         width: '20%',
@@ -166,7 +167,7 @@ class TableForm extends PureComponent {
                 value={text}
                 onChange={e => this.handleFieldChange(e, 'workId', record.key)}
                 onKeyPress={e => this.handleKeyPress(e, record.key)}
-                placeholder="#"
+                placeholder="工号"
               />
             );
           }
@@ -174,7 +175,7 @@ class TableForm extends PureComponent {
         },
       },
       {
-        title: 'Address',
+        title: '所属部门',
         dataIndex: 'department',
         key: 'department',
         width: '40%',
@@ -185,7 +186,7 @@ class TableForm extends PureComponent {
                 value={text}
                 onChange={e => this.handleFieldChange(e, 'department', record.key)}
                 onKeyPress={e => this.handleKeyPress(e, record.key)}
-                placeholder="Address"
+                placeholder="所属部门"
               />
             );
           }
@@ -193,7 +194,7 @@ class TableForm extends PureComponent {
         },
       },
       {
-        title: 'Operation',
+        title: '操作',
         key: 'action',
         render: (text, record) => {
           const { loading } = this.state;
@@ -204,28 +205,28 @@ class TableForm extends PureComponent {
             if (record.isNew) {
               return (
                 <span>
-                  <a onClick={e => this.saveRow(e, record.key)}>Add To</a>
+                  <a onClick={e => this.saveRow(e, record.key)}>添加</a>
                   <Divider type="vertical" />
-                  <Popconfirm title="Are you sure？" onConfirm={() => this.remove(record.key)}>
-                    <a>Delete</a>
+                  <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.key)}>
+                    <a>删除</a>
                   </Popconfirm>
                 </span>
               );
             }
             return (
               <span>
-                <a onClick={e => this.saveRow(e, record.key)}>Save</a>
+                <a onClick={e => this.saveRow(e, record.key)}>保存</a>
                 <Divider type="vertical" />
-                <a onClick={e => this.cancel(e, record.key)}>Cancel</a>
+                <a onClick={e => this.cancel(e, record.key)}>取消</a>
               </span>
             );
           }
           return (
             <span>
-              <a onClick={e => this.toggleEditable(e, record.key)}>Edit</a>
+              <a onClick={e => this.toggleEditable(e, record.key)}>编辑</a>
               <Divider type="vertical" />
-              <Popconfirm title="Are you sure？" onConfirm={() => this.remove(record.key)}>
-                <a>Delete</a>
+              <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.key)}>
+                <a>删除</a>
               </Popconfirm>
             </span>
           );
@@ -250,7 +251,7 @@ class TableForm extends PureComponent {
           onClick={this.newMember}
           icon="plus"
         >
-          New
+          新增成员
         </Button>
       </Fragment>
     );

@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
-import moment from 'moment';
 import { connect } from 'dva';
-import { Form, Card, Select, List, Tag, Icon, Avatar, Row, Col, Button } from 'antd';
+import { Form, Card, Select, List, Tag, Icon, Row, Col, Button } from 'antd';
+import { FormattedMessage } from 'umi/locale';
 
 import TagSelect from '@/components/TagSelect';
 import StandardFormRow from '@/components/StandardFormRow';
+import ArticleListContent from '@/components/ArticleListContent';
 import styles from './Articles.less';
 
 const { Option } = Select;
@@ -96,24 +97,20 @@ class SearchList extends Component {
       </span>
     );
 
-    const ListContent = ({ data: { content, updatedAt, avatar, owner, href } }) => (
-      <div className={styles.listContent}>
-        <div className={styles.description}>{content}</div>
-        <div className={styles.extra}>
-          <Avatar src={avatar} size="small" />
-          <a href={href}>{owner}</a> 发布在
-          <a href={href}>{href}</a>
-          <em>{moment(updatedAt).format('YYYY-MM-DD HH:mm')}</em>
-        </div>
-      </div>
-    );
-
     const formItemLayout = {
       wrapperCol: {
         xs: { span: 24 },
         sm: { span: 24 },
         md: { span: 12 },
       },
+    };
+
+    const actionsTextMap = {
+      expandText: <FormattedMessage id="component.tagSelect.expand" defaultMessage="Expand" />,
+      collapseText: (
+        <FormattedMessage id="component.tagSelect.collapse" defaultMessage="Collapse" />
+      ),
+      selectAllText: <FormattedMessage id="component.tagSelect.all" defaultMessage="All" />,
     };
 
     const loadMore =
@@ -138,7 +135,7 @@ class SearchList extends Component {
             <StandardFormRow title="所属类目" block style={{ paddingBottom: 11 }}>
               <FormItem>
                 {getFieldDecorator('category')(
-                  <TagSelect expandable>
+                  <TagSelect expandable actionsText={actionsTextMap}>
                     <TagSelect.Option value="cat1">类目一</TagSelect.Option>
                     <TagSelect.Option value="cat2">类目二</TagSelect.Option>
                     <TagSelect.Option value="cat3">类目三</TagSelect.Option>
@@ -157,8 +154,8 @@ class SearchList extends Component {
             </StandardFormRow>
             <StandardFormRow title="owner" grid>
               <Row>
-                <Col lg={16} md={24} sm={24} xs={24}>
-                  <FormItem>
+                <Col>
+                  <FormItem {...formItemLayout}>
                     {getFieldDecorator('owner', {
                       initialValue: ['wjh', 'zxx'],
                     })(
@@ -186,10 +183,7 @@ class SearchList extends Component {
                 <Col xl={8} lg={10} md={12} sm={24} xs={24}>
                   <FormItem {...formItemLayout} label="活跃用户">
                     {getFieldDecorator('user', {})(
-                      <Select
-                        placeholder="不限"
-                        style={{ maxWidth: 200, width: '100%' }}
-                      >
+                      <Select placeholder="不限" style={{ maxWidth: 200, width: '100%' }}>
                         <Option value="lisa">李三</Option>
                       </Select>
                     )}
@@ -198,10 +192,7 @@ class SearchList extends Component {
                 <Col xl={8} lg={10} md={12} sm={24} xs={24}>
                   <FormItem {...formItemLayout} label="好评度">
                     {getFieldDecorator('rate', {})(
-                      <Select
-                        placeholder="不限"
-                        style={{ maxWidth: 200, width: '100%' }}
-                      >
+                      <Select placeholder="不限" style={{ maxWidth: 200, width: '100%' }}>
                         <Option value="good">优秀</Option>
                       </Select>
                     )}
@@ -247,7 +238,7 @@ class SearchList extends Component {
                     </span>
                   }
                 />
-                <ListContent data={item} />
+                <ArticleListContent data={item} />
               </List.Item>
             )}
           />

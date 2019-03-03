@@ -22,7 +22,7 @@ import {
   Tag,
   Checkbox,
   List,
-  notification
+  notification,
 } from 'antd';
 const FormItem = Form.Item;
 import StandardTable from '@/components/StandardTable';
@@ -38,61 +38,91 @@ import styles from './TableList.less';
 class TagView extends PureComponent {
   constructor(props) {
     super(props);
-    console.log("IN CONSTRUCTOR",this.props)
- 
-  this.columns = [
-    {title: formatMessage({ id: `pages.type` }), dataIndex: 'row_type', sorter : true, render:(x) => x },
-    {title: formatMessage({ id: `pages.name` }), dataIndex: 'name', sorter : true, render:(x,z,j) => this.nameRender(x,z,j)},
-    {title: formatMessage({ id: `pages.tags` }), dataIndex: 'tags', sorter : true, render:(x,z,j) => this.tagsRender(x,z,j)},
-    ]
+    console.log('IN CONSTRUCTOR', this.props);
+
+    this.columns = [
+      {
+        title: formatMessage({ id: `pages.type` }),
+        dataIndex: 'row_type',
+        sorter: true,
+        render: x => x,
+      },
+      {
+        title: formatMessage({ id: `pages.name` }),
+        dataIndex: 'name',
+        sorter: true,
+        render: (x, z, j) => this.nameRender(x, z, j),
+      },
+      {
+        title: formatMessage({ id: `pages.tags` }),
+        dataIndex: 'tags',
+        sorter: true,
+        render: (x, z, j) => this.tagsRender(x, z, j),
+      },
+    ];
 
     this.state = {
-      formValues: {...this.props.location.query, ...this.props.route.params }, //get the entity and filters from router
+      formValues: { ...this.props.location.query, ...this.props.route.params }, //get the entity and filters from router
     };
     const { dispatch } = this.props;
     dispatch({
       type: 'action/fetch',
-      payload: {entity : 'tags', ...this.props.location.query },
+      payload: { entity: 'tags', ...this.props.location.query },
     });
-
   }
 
-  tagsRender = (x,j) => (<span key={`tags-${j}`}>
-                              {x.map((tag,i) => (<a key={`${tag}a-${j}-${i}`} onClick={() => { router.push(`/router/tags?tags=${tag}`);
-                                                                     router.go(`/router/tags?tags=${tag}`)}}>
-                                                    <Tag color="blue" key={`${tag}-${j}-${i}`}>{tag}</Tag>
-                                                </a>))}
-                              </span>)
+  tagsRender = (x, j) => (
+    <span key={`tags-${j}`}>
+      {x.map((tag, i) => (
+        <a
+          key={`${tag}a-${j}-${i}`}
+          onClick={() => {
+            router.push(`/router/tags?tags=${tag}`);
+            router.go(`/router/tags?tags=${tag}`);
+          }}
+        >
+          <Tag color="blue" key={`${tag}-${j}-${i}`}>
+            {tag}
+          </Tag>
+        </a>
+      ))}
+    </span>
+  );
 
-  nameRender = (x,z,j) => {
+  nameRender = (x, z, j) => {
     const typeMap = {
-      employee : {link :'employees',color : 'green'},
-      equipment: {link :'equipments',color : 'orange'},
-      resource_group : {link :'resource_groups',color : 'blue'},
-      place: {link :'places',color : 'geekblue'},
-      part: {link :'part', color : 'gold'},
-      dept: {link :'departments', color : 'cyan'},
-      availability_profile: {link :'availability_profiles', color : 'lime'},      
-      malfunction: {link :'malfunctions', color : 'red'},      
-      repair: {link :'repairs', color : 'pink'},  
-      serial: {link :'serials', color : 'blue'},
-      serial_status: {link :'serial_status', color : 'lime'}, 
-      action: {link :'actions', color : 'magenta'},    
-      process: {link :'process', color : 'geekblue'},     
-      mnt_plan: {link :'mnt_plans', color : 'magenta'},
-      part_status: {link :'part_status', color : 'magenta'} 
-    }
-console.log('_________+_______________+_____________+_',x,z,j)
-    const color = typeMap[z.row_type].color
-    const link = typeMap[z.row_type].link
-      return (<a key={`stag-${x}-${j}`} onClick={() => router.push(`/router/${link}?name=${x}`)}><Tag color={color} key={`stag2-${x}-${j}`}>{x}</Tag></a>)  
-  }  
+      employee: { link: 'employees', color: 'green' },
+      equipment: { link: 'equipments', color: 'orange' },
+      resource_group: { link: 'resource_groups', color: 'blue' },
+      place: { link: 'places', color: 'geekblue' },
+      part: { link: 'part', color: 'gold' },
+      dept: { link: 'departments', color: 'cyan' },
+      availability_profile: { link: 'availability_profiles', color: 'lime' },
+      malfunction: { link: 'malfunctions', color: 'red' },
+      repair: { link: 'repairs', color: 'pink' },
+      serial: { link: 'serials', color: 'blue' },
+      serial_status: { link: 'serial_status', color: 'lime' },
+      action: { link: 'actions', color: 'magenta' },
+      process: { link: 'process', color: 'geekblue' },
+      mnt_plan: { link: 'mnt_plans', color: 'magenta' },
+      part_status: { link: 'part_status', color: 'magenta' },
+    };
+    console.log('_________+_______________+_____________+_', x, z, j);
+    const color = typeMap[z.row_type].color;
+    const link = typeMap[z.row_type].link;
+    return (
+      <a key={`stag-${x}-${j}`} onClick={() => router.push(`/router/${link}?name=${x}`)}>
+        <Tag color={color} key={`stag2-${x}-${j}`}>
+          {x}
+        </Tag>
+      </a>
+    );
+  };
 
   /*--- HandleTable Pagination and sorting  ----*/
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-
 
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
@@ -112,7 +142,7 @@ console.log('_________+_______________+_____________+_',x,z,j)
 
     dispatch({
       type: 'action/fetch',
-      payload: { entity : 'tags', ...this.props.location.query }
+      payload: { entity: 'tags', ...this.props.location.query },
     });
   };
 
@@ -125,7 +155,7 @@ console.log('_________+_______________+_____________+_',x,z,j)
     });
     dispatch({
       type: 'action/fetch',
-      payload: {entity: 'tags'},
+      payload: { entity: 'tags' },
     });
   };
 
@@ -141,99 +171,101 @@ console.log('_________+_______________+_____________+_',x,z,j)
         ...fieldsValue,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
-      const filterString = Object.keys(values).filter(x => values[x]).reduce((o,x) => o + `${x}=${values[x]}&`,'')
-      router.push(`${this.props.route.path}?${filterString}`)
+      const filterString = Object.keys(values)
+        .filter(x => values[x])
+        .reduce((o, x) => o + `${x}=${values[x]}&`, '');
+      router.push(`${this.props.route.path}?${filterString}`);
 
       dispatch({
         type: 'action/fetch',
-        payload: { ...values, entity: 'tags'}
+        payload: { ...values, entity: 'tags' },
       });
-     
     });
   };
 
-// states the pagination attributes
-   listPaginationProps = {
-      showSizeChanger: false,
-      showQuickJumper: false,
-      pageSize: 10,
-      total: 50,
-   };
-
+  // states the pagination attributes
+  listPaginationProps = {
+    showSizeChanger: false,
+    showQuickJumper: false,
+    pageSize: 10,
+    total: 50,
+  };
 
   renderMainForm() {
     const {
       form: { getFieldDecorator },
     } = this.props;
-     console.log('=========================:',this.props,this.columns)     
-      return (
+    console.log('=========================:', this.props, this.columns);
+    return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }} >
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           {this.columns.map(col => (
-                  <Col md={8} sm={24} key={'mainform'+col.dataIndex}>
-                    <FormItem label={col.title}>
-                      {getFieldDecorator(col.dataIndex)(
-                      <Input placeholder={col.title}/>
-                      )}
-                    </FormItem>
-                  </Col>
-                ))}   
-          </Row>
+            <Col md={8} sm={24} key={'mainform' + col.dataIndex}>
+              <FormItem label={col.title}>
+                {getFieldDecorator(col.dataIndex)(<Input placeholder={col.title} />)}
+              </FormItem>
+            </Col>
+          ))}
+        </Row>
       </Form>
     );
   }
 
-  myList = (data) => (
-    <List key='list'
+  myList = data => (
+    <List
+      key="list"
       grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 5 }}
       dataSource={data}
       pagination={this.listPaginationProps}
       renderItem={item => (
         <List.Item>
           <Card title={item.name} key={item.name}>
-              {Object.keys(item)
-                .map((x,i) =>{
-                  var schema = this.columns.filter(col => col.dataIndex === x)[0]
-                  if (!schema) return (<span/>)
-                  var link = schema.link
-                  var render = schema.render ? schema.render(item[x],item) : null
-                  link = link ? `${link}?name=${item[x]}` : link
-                  return (
-                    <div key={item.name + 'div' + i}>
-                      <span> {formatMessage({ id: `pages.${x}` })} : </span>
-                      <span> {render}</span>
-                    </div>
-                )}
-              )}
-              <Button key={`bt_update_${item.name}`} style={{ float: 'right' }} onClick={() => this.handleUpdateModalVisible(true, item) }>
-                Update
-              </Button>
+            {Object.keys(item).map((x, i) => {
+              var schema = this.columns.filter(col => col.dataIndex === x)[0];
+              if (!schema) return <span />;
+              var link = schema.link;
+              var render = schema.render ? schema.render(item[x], item) : null;
+              link = link ? `${link}?name=${item[x]}` : link;
+              return (
+                <div key={item.name + 'div' + i}>
+                  <span> {formatMessage({ id: `pages.${x}` })} : </span>
+                  <span> {render}</span>
+                </div>
+              );
+            })}
+            <Button
+              key={`bt_update_${item.name}`}
+              style={{ float: 'right' }}
+              onClick={() => this.handleUpdateModalVisible(true, item)}
+            >
+              Update
+            </Button>
           </Card>
         </List.Item>
       )}
-    />    
-  )  
+    />
+  );
 
-  myTable  = (loading,data) => (
-      <StandardTable
-        selectedRows={1}
-        loading={loading}
-        data={data}
-        columns={this.columns}
-        onSelectRow={this.handleSelectRows}
-        onChange={this.handleStandardTableChange}
-      />
-    )
+  myTable = (loading, data) => (
+    <StandardTable
+      selectedRows={1}
+      loading={loading}
+      data={data}
+      columns={this.columns}
+      onSelectRow={this.handleSelectRows}
+      onChange={this.handleStandardTableChange}
+    />
+  );
 
   render() {
     const {
       action: { data },
       loading,
     } = this.props;
-    console.log("DATA",data)
+    console.log('DATA', data);
 
-    if (data.entity !== 'tags') return <span/>
- 
+    if (data.entity !== 'tags') return <span />;
+
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">Delete</Menu.Item>
@@ -241,17 +273,20 @@ console.log('_________+_______________+_____________+_',x,z,j)
       </Menu>
     );
 
-     return (
-      <PageHeaderWrapper title='Tag Search'>
+    return (
+      <PageHeaderWrapper title="Tag Search">
         <Card bordered={true}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderMainForm()}</div>
-            {( data.list[0] === undefined ? '' : window.innerWidth < 1000 ? this.myList(data.list) :this.myTable(loading,data))}
+            {data.list[0] === undefined
+              ? ''
+              : window.innerWidth < 1000
+              ? this.myList(data.list)
+              : this.myTable(loading, data)}
           </div>
         </Card>
-         
       </PageHeaderWrapper>
-    )
+    );
   }
 }
 

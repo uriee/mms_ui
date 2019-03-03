@@ -19,17 +19,17 @@ export function getTimeDistance(type) {
   }
 
   if (type === 'week') {
-    let day = now.getDay()+1;
+    let day = now.getDay();
     now.setHours(0);
     now.setMinutes(0);
     now.setSeconds(0);
 
-    if (day === 0) {
-      day = 6;
+    /* if (day === 0) {
+      day = 7;
     } else {
       day -= 1;
     }
-
+*/
     const beginTime = now.getTime() - day * oneDay;
 
     return [moment(beginTime), moment(beginTime + (7 * oneDay - 1000))];
@@ -53,7 +53,6 @@ export function getTimeDistance(type) {
 }
 
 export function getPlainNode(nodeList, parentPath = '') {
-  console.log("getPlainNode(nodeList, parentPath = '')")
   const arr = [];
   nodeList.forEach(node => {
     const item = node;
@@ -91,7 +90,6 @@ function getRelation(str1, str2) {
 }
 
 function getRenderArr(routes) {
-  console.log("in getRenderArr(routes)",routes)
   let renderArr = [];
   renderArr.push(routes[0]);
   for (let i = 1; i < routes.length; i += 1) {
@@ -163,12 +161,11 @@ export function formatWan(val) {
       <span>
         {result}
         <span
-          styles={{
+          style={{
             position: 'relative',
             top: -2,
             fontSize: 14,
             fontStyle: 'normal',
-            lineHeight: 20,
             marginLeft: 2,
           }}
         >
@@ -180,6 +177,18 @@ export function formatWan(val) {
   return result;
 }
 
+// 给官方演示站点用，用于关闭真实开发环境不需要使用的特性
 export function isAntdPro() {
   return window.location.hostname === 'preview.pro.ant.design';
 }
+
+export const importCDN = (url, name) =>
+  new Promise(resolve => {
+    const dom = document.createElement('script');
+    dom.src = url;
+    dom.type = 'text/javascript';
+    dom.onload = () => {
+      resolve(window[name]);
+    };
+    document.head.appendChild(dom);
+  });

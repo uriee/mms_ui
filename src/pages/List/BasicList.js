@@ -125,10 +125,10 @@ class BasicList extends PureComponent {
       if (key === 'edit') this.showEditModal(currentItem);
       else if (key === 'delete') {
         Modal.confirm({
-          title: 'Title',
-          content: 'Content',
-          okText: 'ok',
-          cancelText: 'Cancel',
+          title: '删除任务',
+          content: '确定删除该任务吗？',
+          okText: '确认',
+          cancelText: '取消',
           onOk: () => this.deleteItem(currentItem.id),
         });
       }
@@ -136,7 +136,7 @@ class BasicList extends PureComponent {
 
     const modalFooter = done
       ? { footer: null, onCancel: this.handleDone }
-      : { okText: 'ok', onOk: this.handleSubmit, onCancel: this.handleCancel };
+      : { okText: '保存', onOk: this.handleSubmit, onCancel: this.handleCancel };
 
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
@@ -149,11 +149,11 @@ class BasicList extends PureComponent {
     const extraContent = (
       <div className={styles.extraContent}>
         <RadioGroup defaultValue="all">
-          <RadioButton value="all">all</RadioButton>
-          <RadioButton value="progress">progress</RadioButton>
-          <RadioButton value="waiting">waiting</RadioButton>
+          <RadioButton value="all">全部</RadioButton>
+          <RadioButton value="progress">进行中</RadioButton>
+          <RadioButton value="waiting">等待中</RadioButton>
         </RadioGroup>
-        <Search className={styles.extraContentSearch} placeholder="Content" onSearch={() => ({})} />
+        <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
       </div>
     );
 
@@ -171,7 +171,7 @@ class BasicList extends PureComponent {
           <p>{owner}</p>
         </div>
         <div className={styles.listContentItem}>
-          <span>date</span>
+          <span>开始时间</span>
           <p>{moment(createdAt).format('YYYY-MM-DD HH:mm')}</p>
         </div>
         <div className={styles.listContentItem}>
@@ -184,13 +184,13 @@ class BasicList extends PureComponent {
       <Dropdown
         overlay={
           <Menu onClick={({ key }) => editAndDelete(key, props.current)}>
-            <Menu.Item key="edit">Edit</Menu.Item>
-            <Menu.Item key="delete">Delete</Menu.Item>
+            <Menu.Item key="edit">编辑</Menu.Item>
+            <Menu.Item key="delete">删除</Menu.Item>
           </Menu>
         }
       >
         <a>
-          Down <Icon type="down" />
+          更多 <Icon type="down" />
         </a>
       </Dropdown>
     );
@@ -200,11 +200,11 @@ class BasicList extends PureComponent {
         return (
           <Result
             type="success"
-            title="success"
-            description="success success"
+            title="操作成功"
+            description="一系列的信息描述，很短同样也可以带标点。"
             actions={
               <Button type="primary" onClick={this.handleDone}>
-                Click
+                知道了
               </Button>
             }
             className={styles.formResult}
@@ -213,41 +213,41 @@ class BasicList extends PureComponent {
       }
       return (
         <Form onSubmit={this.handleSubmit}>
-          <FormItem label="Title" {...this.formLayout}>
+          <FormItem label="任务名称" {...this.formLayout}>
             {getFieldDecorator('title', {
-              rules: [{ required: true, message: 'required' }],
+              rules: [{ required: true, message: '请输入任务名称' }],
               initialValue: current.title,
-            })(<Input placeholder="Title" />)}
+            })(<Input placeholder="请输入" />)}
           </FormItem>
-          <FormItem label="CaretedAt" {...this.formLayout}>
+          <FormItem label="开始时间" {...this.formLayout}>
             {getFieldDecorator('createdAt', {
-              rules: [{ required: true, message: 'required' }],
+              rules: [{ required: true, message: '请选择开始时间' }],
               initialValue: current.createdAt ? moment(current.createdAt) : null,
             })(
               <DatePicker
                 showTime
-                placeholder="Enter Date"
+                placeholder="请选择"
                 format="YYYY-MM-DD HH:mm:ss"
                 style={{ width: '100%' }}
               />
             )}
           </FormItem>
-          <FormItem label="Owner" {...this.formLayout}>
+          <FormItem label="任务负责人" {...this.formLayout}>
             {getFieldDecorator('owner', {
-              rules: [{ required: true, message: 'required' }],
+              rules: [{ required: true, message: '请选择任务负责人' }],
               initialValue: current.owner,
             })(
-              <Select placeholder="Owner">
-                <SelectOption value="o1">o1</SelectOption>
-                <SelectOption value="o2">o2</SelectOption>
+              <Select placeholder="请选择">
+                <SelectOption value="付晓晓">付晓晓</SelectOption>
+                <SelectOption value="周毛毛">周毛毛</SelectOption>
               </Select>
             )}
           </FormItem>
-          <FormItem {...this.formLayout} label="subDescription">
+          <FormItem {...this.formLayout} label="产品描述">
             {getFieldDecorator('subDescription', {
-              rules: [{ message: '5!!!', min: 5 }],
+              rules: [{ message: '请输入至少五个字符的产品描述！', min: 5 }],
               initialValue: current.subDescription,
-            })(<TextArea rows={4} placeholder="subDescription" />)}
+            })(<TextArea rows={4} placeholder="请输入至少五个字符" />)}
           </FormItem>
         </Form>
       );
@@ -258,13 +258,13 @@ class BasicList extends PureComponent {
           <Card bordered={false}>
             <Row>
               <Col sm={8} xs={24}>
-                <Info title="aaa" value="aaa" bordered />
+                <Info title="我的待办" value="8个任务" bordered />
               </Col>
               <Col sm={8} xs={24}>
-                <Info title="bbb" value="bbb" bordered />
+                <Info title="本周任务平均处理时间" value="32分钟" bordered />
               </Col>
               <Col sm={8} xs={24}>
-                <Info title="ccc" value="ccc" />
+                <Info title="本周完成任务数" value="24个任务" />
               </Col>
             </Row>
           </Card>
@@ -272,7 +272,7 @@ class BasicList extends PureComponent {
           <Card
             className={styles.listCard}
             bordered={false}
-            title="Title"
+            title="标准列表"
             style={{ marginTop: 24 }}
             bodyStyle={{ padding: '0 32px 40px 32px' }}
             extra={extraContent}
@@ -288,7 +288,7 @@ class BasicList extends PureComponent {
                 /* eslint-enable */
               }}
             >
-              Add
+              添加
             </Button>
             <List
               size="large"
@@ -305,7 +305,7 @@ class BasicList extends PureComponent {
                         this.showEditModal(item);
                       }}
                     >
-                      Edit
+                      编辑
                     </a>,
                     <MoreBtn current={item} />,
                   ]}
@@ -322,7 +322,7 @@ class BasicList extends PureComponent {
           </Card>
         </div>
         <Modal
-          title={done ? null : `aaa${current ? 'bbb' : 'ccc'}`}
+          title={done ? null : `任务${current.id ? '编辑' : '添加'}`}
           className={styles.standardListForm}
           width={640}
           bodyStyle={done ? { padding: '72px 0' } : { padding: '28px 0 0' }}

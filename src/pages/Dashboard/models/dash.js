@@ -5,8 +5,8 @@ export default {
 
   state: {
     work_report_placements: [],
-    work_report_products : [],
-    serial_stats: [],  
+    work_report_products: [],
+    serial_stats: [],
     visitData2: [],
     salesData: [],
     searchData: [],
@@ -21,28 +21,27 @@ export default {
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      console.log("in dash fetch",payload)
+      console.log('in dash fetch', payload);
       const response = yield call(fetch_dash, payload);
       yield put({
         type: 'save',
         payload: response,
       });
-      console.log("in dash fetch after yield ",response)
+      console.log('in dash fetch after yield ', response);
     },
 
     *fetchProdData({ payload }, { call, put }) {
       const response = yield call(fetch_dash, payload);
-      let pl = {}
-      response.funcs && response.funcs.forEach(x => pl[x] = response[x])   
-      console.log("pl:",response,pl)   
+      let pl = {};
+      response.funcs && response.funcs.forEach(x => (pl[x] = response[x]));
+      console.log('pl:', response, pl);
       yield put({
         type: 'save',
-        payload: pl
+        payload: pl,
       });
-      console.log("in dash fetchprodata after yield ",response)
+      console.log('in dash fetchprodata after yield ', response);
     },
 
-   
     *fetchSalesData(_, { call, put }) {
       const response = yield call(fakeChartData);
       yield put({
@@ -64,8 +63,8 @@ export default {
     clear() {
       return {
         work_report_placements: [],
-        work_report_products : [],
-        serial_stats: [],          
+        work_report_products: [],
+        serial_stats: [],
         visitData2: [],
         salesData: [],
         searchData: [],

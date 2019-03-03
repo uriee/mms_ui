@@ -1,4 +1,4 @@
-import {update,fetch, insert,remove, sendFunction} from '@/services/api';
+import { update, fetch, insert, remove, sendFunction } from '@/services/api';
 
 export default {
   namespace: 'action',
@@ -11,38 +11,40 @@ export default {
   },
 
   effects: {
-
     *fetch({ payload }, { call, put }) {
-      console.log("in action fetch",payload)
+      console.log('in action fetch', payload);
       const response = yield call(fetch, payload);
-      console.log('in affects fetche:',response,payload)
-      const ret = (response.list !== undefined ? response :{list: response}) /*, pagination: {total: 48, pageSize: 10, current: 1}})*/
-        yield put({
-          type: 'save',
-          payload: ret,
-        });        
-    },    
+      console.log('in affects fetche:', response, payload);
+      const ret =
+        response.list !== undefined
+          ? response
+          : { list: response }; /*, pagination: {total: 48, pageSize: 10, current: 1}})*/
+      yield put({
+        type: 'save',
+        payload: ret,
+      });
+    },
 
     *add({ payload, callback }, { call }) {
       const response = yield call(insert, payload);
       if (callback) callback();
-    }, 
+    },
 
     *remove({ payload, callback }, { call }) {
       const response = yield call(remove, payload);
       if (callback) callback();
-    },    
+    },
 
     *sendFunction({ payload, callback }, { call }) {
       const response = yield call(sendFunction, payload);
       if (callback) callback();
-    },       
+    },
 
     *update({ payload, callback }, { call }) {
       const response = yield call(update, payload);
       if (callback) callback();
-    },    
-   },
+    },
+  },
 
   reducers: {
     save(state, action) {

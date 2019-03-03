@@ -5,16 +5,15 @@ import hash from 'hash.js';
 import { isAntdPro } from './utils';
 import { getLocale } from 'umi/locale';
 
-
 const getLang = () => {
   const langs = { 'en-US': 1, 'he-IL': 2, 'de-DE': 3 };
   return langs[getLocale()];
 };
 
 const getUser = () => {
-  const user = JSON.parse(localStorage.getItem('user')) || {}
-  return {token: user.token ,username : user.username}
-}
+  const user = JSON.parse(localStorage.getItem('user')) || {};
+  return { token: user.token, username: user.username };
+};
 
 axios.interceptors.response.use(
   function(response) {
@@ -96,13 +95,13 @@ export default async function mrequest(
   console.log('url:', url);
 
   let checkIfUpdated = options.method !== 'POST' && url.split('?')[1].includes('update');
-  const user = getUser()
+  const user = getUser();
   /* strip UI parameters from url in order to use the caching mechanizem, add lang and authentication*/
   url =
     options.method == 'POST'
       ? url
-      : url + `&lang=${getLang()}&token=${user.token}&user=${user.username}`; 
-  //    : url.split('?').shift() + `?lang=${getLang()}&token=${user.token}&user=${user.username}`; 
+      : url + `&lang=${getLang()}&token=${user.token}&user=${user.username}`;
+  //    : url.split('?').shift() + `?lang=${getLang()}&token=${user.token}&user=${user.username}`;
   const fingerprint = url + (options.data ? JSON.stringify(options.data) : '');
   console.log('fingerprint:', fingerprint, options);
   const hashcode = hash
@@ -112,7 +111,7 @@ export default async function mrequest(
   const defaultOptions = {
     credentials: 'include',
   };
-  const newOptions = { ...defaultOptions, ...options ,};
+  const newOptions = { ...defaultOptions, ...options };
 
   if (
     newOptions.method === 'post' ||
@@ -126,9 +125,8 @@ export default async function mrequest(
         ...newOptions.headers,
       };
       newOptions.data = JSON.stringify(newOptions.data);
-      newOptions.data.token = user.token /*add authentication */
-      newOptions.data.token = user.username /*add authentication */
-
+      newOptions.data.token = user.token; /*add authentication */
+      newOptions.data.token = user.username; /*add authentication */
     } else {
       // newOptions.data is FormData
       newOptions.headers = {
@@ -140,7 +138,7 @@ export default async function mrequest(
 
   const expirys = options.expirys || 60;
   // options.expirys !== false, return the cache,
-  
+
   //  Disabled CACHE
   /*
   if (options.expirys !== false) {
@@ -157,9 +155,12 @@ export default async function mrequest(
     }
   }
   */
-  console.log('before fetch', { url: url, ...newOptions })
+  console.log('before fetch', { url: url, ...newOptions });
   try {
-    const resp = await axios({ url: url, ...newOptions })/*.catch(e => {
+    const resp = await axios({
+      url: url,
+      ...newOptions,
+    }); /*.catch(e => {
       console.log('Error in mrequest axios call', e.response);
       checkStatus(e.response)
       throw new Error("Server Error")
@@ -167,24 +168,44 @@ export default async function mrequest(
     console.log('mrequest after axios call: ', resp);
     await checkStatus(resp);
     await cachedSave(resp, hashcode);
-    console.log('mrequset after chseckstatus and cach:', resp)
+    console.log('mrequset after chseckstatus and cach:', resp);
     return resp.data;
   } catch (e) {
-    console.log('___________________________________________4_______________________________________________________', e)       
-    const status = e && e.response && e.response.status
-    let etitle = e && e.response && e.response.data && e.response.data.error && typeof(e.response.data.error) === 'string' && e.response.data.error.split(':').reverse()[0] || "DB Script Error"    
-    const error = e && e.response && e.response.data && typeof(e.response.data.error) === 'string' && e.response.data.error || ""
-    console.log('___________________________________________5_______________________________________________________', status,etitle,error)     
-    if(!e.response) {
-      etitle = e
+    console.log(
+      '___________________________________________4_______________________________________________________',
+      e
+    );
+    const status = e && e.response && e.response.status;
+    let etitle =
+      (e &&
+        e.response &&
+        e.response.data &&
+        e.response.data.error &&
+        typeof e.response.data.error === 'string' &&
+        e.response.data.error.split(':').reverse()[0]) ||
+      'DB Script Error';
+    const error =
+      (e &&
+        e.response &&
+        e.response.data &&
+        typeof e.response.data.error === 'string' &&
+        e.response.data.error) ||
+      '';
+    console.log(
+      '___________________________________________5_______________________________________________________',
+      status,
+      etitle,
+      error
+    );
+    if (!e.response) {
+      etitle = e;
       notification.error({
         message: `Error ${etitle}`,
         description: error,
-      })      
-      router.push('/exception/404')
-      return 0
-    } 
-     
+      });
+      router.push('/exception/404');
+      return 0;
+    }
 
     if (status === 401 || e === undefined) {
       // @HACK
@@ -200,7 +221,7 @@ export default async function mrequest(
       notification.error({
         message: `${etitle}`,
         description: error,
-      });       
+      });
       router.push('/exception/403');
       return 0;
     }
@@ -208,17 +229,17 @@ export default async function mrequest(
       notification.error({
         message: `${etitle}`,
         description: error,
-      });       
+      });
       router.push('/exception/500');
       return 0;
     }
 
-    if (status === 406 ) {
+    if (status === 406) {
       notification.error({
         message: `${etitle}`,
         description: error,
-      });  
-      //router.push('/exception/404');      
+      });
+      //router.push('/exception/404');
       return 0;
     }
 
@@ -226,18 +247,18 @@ export default async function mrequest(
       notification.error({
         message: `${etitle}`,
         description: error,
-      });       
+      });
       //router.push('/exception/404');
       return 0;
     }
-  
+
     notification.error({
       message: `${status}`,
-      description: "Undefined Error",
-      });  
-    router.push('/exception/404'); 
-    console.log('mrequest debug end :',window.location.href)
-    return Promise.resolve("ERROR");
+      description: 'Undefined Error',
+    });
+    router.push('/exception/404');
+    console.log('mrequest debug end :', window.location.href);
+    return Promise.resolve('ERROR');
   }
   return 1;
 }

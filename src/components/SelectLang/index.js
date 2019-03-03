@@ -1,36 +1,47 @@
 import React, { PureComponent } from 'react';
-import { FormattedMessage, setLocale, getLocale } from 'umi/locale';
-import { Menu, Icon, Dropdown } from 'antd';
+import { formatMessage, setLocale, getLocale } from 'umi/locale';
+import { Menu, Icon } from 'antd';
 import classNames from 'classnames';
+import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
 export default class SelectLang extends PureComponent {
-  changLang = ({ key }) => {
+  changeLang = ({ key }) => {
     setLocale(key);
   };
 
   render() {
     const { className } = this.props;
     const selectedLang = getLocale();
+    const locales = ['en-US', 'he-IL', 'de-DE'];
+    const languageLabels = {
+      'en-US': 'English',
+      'he-IL': 'Hebrew',
+      'de-DE': 'German',
+    };
+    const languageIcons = {
+      'en-US': '🇬🇧',
+      'he-IL': '🇮🇱',
+      'de-DE': '🇩🇪',
+    };
     const langMenu = (
-      <Menu className={styles.menu} selectedKeys={[selectedLang]} onClick={this.changLang}>
-        <Menu.Item key="he-IL">
-          <FormattedMessage id="lang.hebrew" />
-        </Menu.Item>
-        <Menu.Item key="de-DE">
-          <FormattedMessage id="lang.german" />
-        </Menu.Item>
-        <Menu.Item key="en-US">
-          <FormattedMessage id="lang.english" />
-        </Menu.Item>
+      <Menu className={styles.menu} selectedKeys={[selectedLang]} onClick={this.changeLang}>
+        {locales.map(locale => (
+          <Menu.Item key={locale}>
+            <span role="img" aria-label={languageLabels[locale]}>
+              {languageIcons[locale]}
+            </span>{' '}
+            {languageLabels[locale]}
+          </Menu.Item>
+        ))}
       </Menu>
     );
     return (
-      <Dropdown overlay={langMenu}>
+      <HeaderDropdown overlay={langMenu} placement="bottomRight">
         <span className={classNames(styles.dropDown, className)}>
-          <FormattedMessage id="navBar.lang" /> <Icon type="down" />
+          <Icon type="global" title={formatMessage({ id: 'navBar.lang' })} />
         </span>
-      </Dropdown>
+      </HeaderDropdown>
     );
   }
 }

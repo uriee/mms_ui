@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
+import { AsyncLoadBizCharts } from '@/components/Charts/AsyncLoadBizCharts';
 import {
   Row,
   Col,
@@ -41,7 +42,6 @@ const { RangePicker } = DatePicker;
   dash,
   loading: loading.effects['dash/fetch'],
 }))
-
 class Analysis extends Component {
   constructor(props) {
     super(props);
@@ -55,15 +55,16 @@ class Analysis extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    
+
     const params = {
-      fromdate : this.state.rangePickerValue[0].format('YYYY-MM-DD'),
+      fromdate: this.state.rangePickerValue[0].format('YYYY-MM-DD'),
       todate: this.state.rangePickerValue[1].format('YYYY-MM-DD'),
-      interval: 'day'}
+      interval: 'day',
+    };
     this.reqRef = requestAnimationFrame(() => {
       dispatch({
         type: 'dash/fetchProdData',
-        payload: {...params},        
+        payload: { ...params },
       });
       this.timeoutId = setTimeout(() => {
         this.setState({
@@ -95,57 +96,58 @@ class Analysis extends Component {
   };
 
   handleRangePickerChange = rangePickerValue => {
-    if(!rangePickerValue.length) return
+    if (!rangePickerValue.length) return;
     const { dispatch } = this.props;
     this.setState({
       rangePickerValue,
     });
     var fdt = rangePickerValue[0].format('YYYY-MM-DD'),
-        tdt = rangePickerValue[1].format('YYYY-MM-DD')     
+      tdt = rangePickerValue[1].format('YYYY-MM-DD');
     const params = {
-      fromdate : fdt,
+      fromdate: fdt,
       todate: tdt,
-      interval: 'day'}
+      interval: 'day',
+    };
 
-      dispatch({
-        type: 'dash/fetchProdData',
-        payload: {...params},        
-      });
-
+    dispatch({
+      type: 'dash/fetchProdData',
+      payload: { ...params },
+    });
   };
 
   selectDate = type => {
     const { dispatch } = this.props;
-    let rangePickerValue = this.state.rangePickerValue
-    console.log("rangePickerValue 1:", rangePickerValue,type)
+    let rangePickerValue = this.state.rangePickerValue;
+    console.log('rangePickerValue 1:', rangePickerValue, type);
 
-    if (type === 'hour') rangePickerValue[1] = rangePickerValue[0].endOf('days')
-    if (type === 'month' ||  type === 'year')  {
-      rangePickerValue[0] = rangePickerValue[0].startOf(type)
+    if (type === 'hour') rangePickerValue[1] = rangePickerValue[0].endOf('days');
+    if (type === 'month' || type === 'year') {
+      rangePickerValue[0] = rangePickerValue[0].startOf(type);
       //rangePickerValue[1] = rangePickerValue[1].endOf(type)
     }
 
     if (type === 'week') {
-      rangePickerValue = getTimeDistance('week')
-      type = 'day'
+      rangePickerValue = getTimeDistance('week');
+      type = 'day';
     }
 
-    console.log("rangePickerValue 2:", rangePickerValue,type)
+    console.log('rangePickerValue 2:', rangePickerValue, type);
 
     this.setState({
       rangePickerValue,
     });
     let fdt = rangePickerValue[0].format('YYYY-MM-DD'),
-        tdt = rangePickerValue[1].format('YYYY-MM-DD')
+      tdt = rangePickerValue[1].format('YYYY-MM-DD');
     const params = {
-      fromdate : fdt,
+      fromdate: fdt,
       todate: tdt,
-      interval: type}     
+      interval: type,
+    };
 
-      dispatch({
-        type: 'dash/fetchProdData',
-        payload: {...params},        
-      });
+    dispatch({
+      type: 'dash/fetchProdData',
+      payload: { ...params },
+    });
   };
 
   isActive(type) {
@@ -207,13 +209,13 @@ class Analysis extends Component {
         <div className={styles.salesExtra}>
           <a className={this.isActive('today')} onClick={() => this.selectDate('hour')}>
             <FormattedMessage id="app.analysis.hour" defaultMessage="Hour" />
-          </a>        
+          </a>
           <a className={this.isActive('today')} onClick={() => this.selectDate('day')}>
             <FormattedMessage id="app.analysis.day" defaultMessage="Day" />
           </a>
           <a className={this.isActive('week')} onClick={() => this.selectDate('week')}>
             <FormattedMessage id="app.analysis.thisweek" defaultMessage="This Week" />
-          </a>          
+          </a>
           <a className={this.isActive('month')} onClick={() => this.selectDate('month')}>
             <FormattedMessage id="app.analysis.month" defaultMessage="Month" />
           </a>
@@ -221,47 +223,52 @@ class Analysis extends Component {
             <FormattedMessage id="app.analysis.year" defaultMessage="Year" />
           </a>
         </div>
-        <RangePicker
-          value={rangePickerValue}
-          onChange={this.handleRangePickerChange}
-          style={{  }}
-        />
+        <RangePicker value={rangePickerValue} onChange={this.handleRangePickerChange} style={{}} />
       </div>
     );
 
-    const WOStats = (serial_stats) => (
-        <Row key='WoRow' gutter={24}>
-          {serial_stats.map(wo => (
-          <Col key={'WoCol'+wo.name} {...serialStatsProps}  >
+    const WOStats = serial_stats => (
+      <Row key="WoRow" gutter={24}>
+        {serial_stats.map(wo => (
+          <Col key={'WoCol' + wo.name} {...serialStatsProps}>
             <ChartCard
-              key={'WoCard'+wo.name} 
+              key={'WoCard' + wo.name}
               loading={loading}
-              bordered={true}         
-              title='Work Order Stats'
+              bordered={true}
+              title="Work Order Stats"
               style={{ marginTop: 24 }}
               action={
-                <Tooltip   title={<FormattedMessage id="app.analysis.introduce" defaultMessage="introduce" /> } >
+                <Tooltip
+                  title={
+                    <FormattedMessage id="app.analysis.introduce" defaultMessage="introduce" />
+                  }
+                >
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
               total={`${wo.name} : ${parseInt(wo.avg * 100)}%`}
               footer={
                 <div style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
-
-                    <FormattedMessage id="app.analysis.wofepPercent" defaultMessage="Finished End Products" />
-                    <span className={styles.trendText}>{parseInt(wo.min*100)}%</span>
-
+                  <FormattedMessage
+                    id="app.analysis.wofepPercent"
+                    defaultMessage="Finished End Products"
+                  />
+                  <span className={styles.trendText}>{parseInt(wo.min * 100)}%</span>
                 </div>
               }
               contentHeight={46}
             >
-              <MiniProgress percent={wo ? wo.avg*100 : 0 } strokeWidth={16} target={100} color="#4372A2" />
+              <MiniProgress
+                percent={wo ? wo.avg * 100 : 0}
+                strokeWidth={16}
+                target={100}
+                color="#4372A2"
+              />
             </ChartCard>
           </Col>
-          ))}
-        </Row>     
-    );    
-
+        ))}
+      </Row>
+    );
 
     const activeKey = currentTabKey || (offlineData[0] && offlineData[0].name);
 
@@ -311,7 +318,7 @@ class Analysis extends Component {
       lg: 12,
       xl: 6,
       style: { marginBottom: 2 },
-    };    
+    };
 
     return (
       <GridContent>
@@ -321,10 +328,7 @@ class Analysis extends Component {
               loading={loading}
               bordered={false}
               title={
-                <FormattedMessage
-                  id="app.analysis.wocp"
-                  defaultMessage="Percentage Of Work Done"
-                />
+                <FormattedMessage id="app.analysis.wocp" defaultMessage="Percentage Of Work Done" />
               }
               action={
                 <Tooltip
@@ -335,7 +339,7 @@ class Analysis extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={wo_percent_total && parseInt(wo_percent_total.avg * 100)  +"%"}
+              total={wo_percent_total && parseInt(wo_percent_total.avg * 100) + '%'}
               footer={
                 <div style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
                   <Trend flag="up" style={{ marginRight: 16 }}>
@@ -350,14 +354,24 @@ class Analysis extends Component {
               }
               contentHeight={46}
             >
-              <MiniProgress percent={wo_percent_total ? wo_percent_total.avg*100 : 0 } strokeWidth={16} target={45} color="#13C2C2" />
+              <MiniProgress
+                percent={wo_percent_total ? wo_percent_total.avg * 100 : 0}
+                strokeWidth={16}
+                target={45}
+                color="#13C2C2"
+              />
             </ChartCard>
-          </Col>        
+          </Col>
           <Col {...topColResponsiveProps}>
             <ChartCard
               bordered={false}
               loading={loading}
-              title={<FormattedMessage id="app.analysis.totalplacements" defaultMessage="Total Placements" />}
+              title={
+                <FormattedMessage
+                  id="app.analysis.totalplacements"
+                  defaultMessage="Total Placements"
+                />
+              }
               action={
                 <Tooltip
                   title={
@@ -367,13 +381,11 @@ class Analysis extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={numeral(work_report_placements.reduce((o,x) => o+x.y , 0)).format('0,0')}
+              total={numeral(work_report_placements.reduce((o, x) => o + x.y, 0)).format('0,0')}
               footer={
                 <Field
-                  label={
-                    <FormattedMessage id="app.analysis.products" defaultMessage="Products" />
-                  }
-                  value={numeral(work_report_placements.reduce((o,x) => o+x.y , 0)).format('0,0')}
+                  label={<FormattedMessage id="app.analysis.products" defaultMessage="Products" />}
+                  value={numeral(work_report_placements.reduce((o, x) => o + x.y, 0)).format('0,0')}
                 />
               }
               contentHeight={46}
@@ -395,7 +407,7 @@ class Analysis extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={numeral(work_report_products.reduce((o,x) => o+x.y , 0)).format('0,0')}
+              total={numeral(work_report_products.reduce((o, x) => o + x.y, 0)).format('0,0')}
               footer={
                 <Field
                   label={
@@ -417,10 +429,7 @@ class Analysis extends Component {
               loading={loading}
               bordered={false}
               title={
-                <FormattedMessage
-                  id="app.analysis.wocp"
-                  defaultMessage="Percentage Of Work Done"
-                />
+                <FormattedMessage id="app.analysis.wocp" defaultMessage="Percentage Of Work Done" />
               }
               action={
                 <Tooltip
@@ -431,7 +440,7 @@ class Analysis extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={wo_percent_total && parseInt(wo_percent_total.avg * 100)  +"%"}
+              total={wo_percent_total && parseInt(wo_percent_total.avg * 100) + '%'}
               footer={
                 <div style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
                   <Trend flag="up" style={{ marginRight: 16 }}>
@@ -446,7 +455,12 @@ class Analysis extends Component {
               }
               contentHeight={46}
             >
-              <MiniProgress percent={wo_percent_total ? wo_percent_total.avg*100 : 0 } strokeWidth={16} target={45} color="#13C2C2" />
+              <MiniProgress
+                percent={wo_percent_total ? wo_percent_total.avg * 100 : 0}
+                strokeWidth={16}
+                target={45}
+                color="#13C2C2"
+              />
             </ChartCard>
           </Col>
         </Row>
@@ -485,7 +499,8 @@ class Analysis extends Component {
                       <Bar
                         height={292}
                         title={
-                          <FormattedMessage id="app.analysis.visits-trend"
+                          <FormattedMessage
+                            id="app.analysis.visits-trend"
                             defaultMessage="Products"
                           />
                         }
@@ -510,10 +525,13 @@ class Analysis extends Component {
         </Card>
 
         {WOStats(serial_stats)}
-
       </GridContent>
     );
   }
 }
 
-export default Analysis;
+export default props => (
+  <AsyncLoadBizCharts>
+    <Analysis {...props} />
+  </AsyncLoadBizCharts>
+);

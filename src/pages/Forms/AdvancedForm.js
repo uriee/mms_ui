@@ -22,18 +22,18 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 const fieldLabels = {
-  name: 'Name',
-  url: 'Url',
-  owner: 'Owner',
-  approver: 'Approver',
-  dateRange: 'Date Range',
-  type: 'Type',
-  name2: 'Name 2',
-  url2: 'Url 2',
-  owner2: 'Owner 2',
-  approver2: 'Approver 2',
-  dateRange2: 'Data Range 2',
-  type2: 'Type 2',
+  name: '仓库名',
+  url: '仓库域名',
+  owner: '仓库管理员',
+  approver: '审批人',
+  dateRange: '生效日期',
+  type: '仓库类型',
+  name2: '任务名',
+  url2: '任务描述',
+  owner2: '执行人',
+  approver2: '责任人',
+  dateRange2: '生效日期',
+  type2: '任务类型',
 };
 
 const tableData = [
@@ -104,7 +104,7 @@ class AdvancedForm extends PureComponent {
     return (
       <span className={styles.errorIcon}>
         <Popover
-          title="Form verification information"
+          title="表单校验信息"
           content={errorList}
           overlayClassName={styles.errorPopover}
           trigger="click"
@@ -155,17 +155,17 @@ class AdvancedForm extends PureComponent {
 
     return (
       <PageHeaderWrapper
-        title="Advanced form"
-        content="Advanced forms are common in scenarios where one-time input and submission of large amounts of data."
+        title="高级表单"
+        content="高级表单常见于一次性输入和提交大批量数据的场景。"
         wrapperClassName={styles.advancedForm}
       >
-        <Card title="Warehouse management" className={styles.card} bordered={false}>
+        <Card title="仓库管理" className={styles.card} bordered={false}>
           <Form layout="vertical" hideRequiredMark>
             <Row gutter={16}>
               <Col lg={6} md={12} sm={24}>
                 <Form.Item label={fieldLabels.name}>
                   {getFieldDecorator('name', {
-                    rules: [{ required: true, message: 'Please enter the name of the warehouse' }],
+                    rules: [{ required: true, message: '请输入仓库名称' }],
                   })(<Input placeholder="请输入仓库名称" />)}
                 </Form.Item>
               </Col>
@@ -269,9 +269,9 @@ class AdvancedForm extends PureComponent {
                   {getFieldDecorator('approver2', {
                     rules: [{ required: true, message: '请选择审批员' }],
                   })(
-                    <Select placeholder="Approver">
-                      <Option value="xiao">uri</Option>
-                      <Option value="mao">richard</Option>
+                    <Select placeholder="请选择审批员">
+                      <Option value="xiao">付晓晓</Option>
+                      <Option value="mao">周毛毛</Option>
                     </Select>
                   )}
                 </Form.Item>
@@ -295,8 +295,8 @@ class AdvancedForm extends PureComponent {
                     rules: [{ required: true, message: '请选择仓库类型' }],
                   })(
                     <Select placeholder="请选择仓库类型">
-                      <Option value="private">Private</Option>
-                      <Option value="public">Public</Option>
+                      <Option value="private">私密</Option>
+                      <Option value="public">公开</Option>
                     </Select>
                   )}
                 </Form.Item>
@@ -304,15 +304,15 @@ class AdvancedForm extends PureComponent {
             </Row>
           </Form>
         </Card>
-        <Card title="title" bordered={false}>
-          {getFieldDecorator('members2', {
+        <Card title="成员管理" bordered={false}>
+          {getFieldDecorator('members', {
             initialValue: tableData,
           })(<TableForm />)}
         </Card>
         <FooterToolbar style={{ width }}>
           {this.getErrorInfo()}
           <Button type="primary" onClick={this.validate} loading={submitting}>
-            Submit
+            提交
           </Button>
         </FooterToolbar>
       </PageHeaderWrapper>

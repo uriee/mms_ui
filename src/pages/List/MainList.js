@@ -2,8 +2,8 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import Link from 'umi/link';
 import router from 'umi/router';
-import {Logic} from '@/defaultSettings'
-import moment from 'moment-timezone'
+import { Logic } from '@/defaultSettings';
+import moment from 'moment-timezone';
 import { BugReporter } from 'simple-bug-reporter';
 import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
 import {
@@ -30,75 +30,79 @@ import {
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './TableList.less';
-import MainForm from './MainForm.js'
+import MainForm from './MainForm.js';
 
 /*import the schemas*/
-import {emp} from '../schemas/Emp.js';
-import {part} from '../schemas/Part.js';
-import {partStatus} from '../schemas/PartStatus.js';
-import {dept} from '../schemas/Departments.js';
-import {user} from '../schemas/User.js';
-import {profile} from '../schemas/Profile.js';
-import {equipment} from '../schemas/Equipment.js';
-import {resourceGroup} from '../schemas/ResourceGroup.js';
-import {resource} from '../schemas/Resource.js';
-import {availabilityProfile} from '../schemas/AvailabilityProfile.js';
-import {availabilities} from '../schemas/Availabilities.js';
-import {resource_timeoff} from '../schemas/Resource_timeoff.js';
-import {malfunctions} from '../schemas/Malfunctions.js';
-import {malfunction_types} from '../schemas/Malfunction_Types.js';
-import {repairs} from '../schemas/Repairs.js';
-import {repair_types} from '../schemas/Repair_Types.js';
-import {mnt_plans} from '../schemas/Mnt_plans.js';
-import {mnt_plan_items} from '../schemas/Mnt_plan_items.js';
-import {serials} from '../schemas/Serials.js';
-import {serialStatuses} from '../schemas/SerialStatuses.js';
-import {actions} from '../schemas/Actions.js';
-import {work_report} from '../schemas/WorkReport.js';
-import {process} from '../schemas/Process.js';
-import {proc_act} from '../schemas/ProcAct.js';
-import {serial_act} from '../schemas/SerAct.js';
-import {locations} from '../schemas/Locations.js';
-import {kit} from '../schemas/Kit.js';
-import {bom} from '../schemas/Bom.js';
-import {iden} from '../schemas/Iden.js';
-import {identifier} from '../schemas/Identifier.js';
-import {preferences} from '../schemas/Preferences.js';
+import { emp } from '../schemas/Emp.js';
+import { part } from '../schemas/Part.js';
+import { partStatus } from '../schemas/PartStatus.js';
+import { dept } from '../schemas/Departments.js';
+import { user } from '../schemas/User.js';
+import { profile } from '../schemas/Profile.js';
+import { equipment } from '../schemas/Equipment.js';
+import { resourceGroup } from '../schemas/ResourceGroup.js';
+import { resource } from '../schemas/Resource.js';
+import { availabilityProfile } from '../schemas/AvailabilityProfile.js';
+import { availabilities } from '../schemas/Availabilities.js';
+import { resource_timeoff } from '../schemas/Resource_timeoff.js';
+import { malfunctions } from '../schemas/Malfunctions.js';
+import { malfunction_types } from '../schemas/Malfunction_Types.js';
+import { repairs } from '../schemas/Repairs.js';
+import { repair_types } from '../schemas/Repair_Types.js';
+import { mnt_plans } from '../schemas/Mnt_plans.js';
+import { mnt_plan_items } from '../schemas/Mnt_plan_items.js';
+import { serials } from '../schemas/Serials.js';
+import { serialStatuses } from '../schemas/SerialStatuses.js';
+import { actions } from '../schemas/Actions.js';
+import { work_report } from '../schemas/WorkReport.js';
+import { process } from '../schemas/Process.js';
+import { proc_act } from '../schemas/ProcAct.js';
+import { serial_act } from '../schemas/SerAct.js';
+import { locations } from '../schemas/Locations.js';
+import { kit } from '../schemas/Kit.js';
+import { bom } from '../schemas/Bom.js';
+import { iden } from '../schemas/Iden.js';
+import { identifier } from '../schemas/Identifier.js';
+import { preferences } from '../schemas/Preferences.js';
 
-const lang = {'en-US': {id:1, align:'left'},'he-IL': {id:2, align:'right'},'de-DE': {id:3, align:'left'}};
+const lang = {
+  'en-US': { id: 1, align: 'left' },
+  'he-IL': { id: 2, align: 'right' },
+  'de-DE': { id: 3, align: 'left' },
+};
 const schemas = {
-  emp : emp,
+  emp: emp,
   part: part,
   dept: dept,
   user: user,
   kit: kit,
   bom: bom,
-  iden : iden,
+  iden: iden,
   profile: profile,
   equipment: equipment,
-  resourceGroup : resourceGroup,
-  resource : resource,
-  availabilityProfile : availabilityProfile,
-  availabilities : availabilities,
-  resource_timeoff : resource_timeoff,  
-  malfunctions : malfunctions,
-  malfunction_types : malfunction_types,
-  repairs : repairs,
-  repair_types : repair_types,
-  mnt_plans : mnt_plans,
-  mnt_plan_items : mnt_plan_items ,
+  resourceGroup: resourceGroup,
+  resource: resource,
+  availabilityProfile: availabilityProfile,
+  availabilities: availabilities,
+  resource_timeoff: resource_timeoff,
+  malfunctions: malfunctions,
+  malfunction_types: malfunction_types,
+  repairs: repairs,
+  repair_types: repair_types,
+  mnt_plans: mnt_plans,
+  mnt_plan_items: mnt_plan_items,
   serials: serials,
-  serial_statuses : serialStatuses,
-  part_status : partStatus,  
+  serial_statuses: serialStatuses,
+  part_status: partStatus,
   actions: actions,
-  process : process,
-  locations : locations,
-  proc_act : proc_act,
-  serial_act : serial_act,
-  work_report : work_report,  
-  identifier : identifier,
-  preferences : preferences,
-}
+  process: process,
+  locations: locations,
+  proc_act: proc_act,
+  serial_act: serial_act,
+  work_report: work_report,
+  identifier: identifier,
+  preferences: preferences,
+};
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -111,18 +115,19 @@ const getValue = obj =>
     .join(',');
 
 /*-if exist value in local language then send it if not use the original -*/
-const pushKey = (obj) =>  Object.keys(obj).map(key => {
-  obj[key].name = key
-  return obj[key]
-})
+const pushKey = obj =>
+  Object.keys(obj).map(key => {
+    obj[key].name = key;
+    return obj[key];
+  });
 
-const formFields = (obj) => {
+const formFields = obj => {
   for (var field in obj) {
-    obj[field].dataIndex = (obj[field].dataIndex > '' ? obj[field].dataIndex : field)
-    obj[field].title = formatMessage({ id: `pages.${obj[field].name}` })
+    obj[field].dataIndex = obj[field].dataIndex > '' ? obj[field].dataIndex : field;
+    obj[field].title = formatMessage({ id: `pages.${obj[field].name}` });
   }
-  return obj
-}
+  return obj;
+};
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ action, loading }) => ({
@@ -133,120 +138,154 @@ const formFields = (obj) => {
 class TableList extends PureComponent {
   constructor(props) {
     super(props);
-    console.log("IN CONSTRUCTOR",this.props)
-    this.entity = this.props.route.params.entity
-
+    console.log('IN CONSTRUCTOR', this.props);
+    this.entity = this.props.route.params.entity;
 
     this.state = {
       modalVisible: false,
       updateModalVisible: false,
       expandForm: false,
       selectedRows: [],
-      formValues: {...this.props.location.query, ...this.props.route.params }, //get the entity and filters from router
+      formValues: { ...this.props.location.query, ...this.props.route.params }, //get the entity and filters from router
       stepFormValues: {},
-      showBugReporter: false
+      showBugReporter: false,
     };
 
-        this.schemaChange()    
-    if(!this.schema  || !this.schema.fields.id) throw new Error("The schema does not have an id field!")
-    const params = this.props.location ? this.props.location.query : {}      
+    this.schemaChange();
+    if (!this.schema || !this.schema.fields.id)
+      throw new Error('The schema does not have an id field!');
+    const params = this.props.location ? this.props.location.query : {};
 
-    this.insertKey = {} //this.insetrKey passes to the insert form in order to allow insertion of new child rows in parent-child entities
-    if(this.schema.defaultKey){this.insertKey[this.schema.defaultKey] = params.name}
+    this.insertKey = {}; //this.insetrKey passes to the insert form in order to allow insertion of new child rows in parent-child entities
+    if (this.schema.defaultKey) {
+      this.insertKey[this.schema.defaultKey] = params.name;
+    }
 
     const { dispatch } = this.props;
 
     dispatch({
       type: 'action/fetch',
-      payload: {...params, entity : this.entity},
+      payload: { ...params, entity: this.entity },
     });
   }
-/*---  change the schema in page loading ---*/
- schemaChange = () => {
-//  console.log('0000000000000000000000:',this.entity,schemas[this.entity] )
-    this.schema = schemas[this.entity]  
-    this.fields = pushKey(this.schema.fields)  
+  /*---  change the schema in page loading ---*/
+  schemaChange = () => {
+    //  console.log('0000000000000000000000:',this.entity,schemas[this.entity] )
+    this.schema = schemas[this.entity];
+    this.fields = pushKey(this.schema.fields);
     this.columns = this.fields
-                      .filter(field => field.required !== false) /* field ont need to be shown in the table it is needded for input forms only */
-                      .sort((a,b) => a.order > b.order)
-                      .map((field,fi) => ({
-                        title: formatMessage({ id: `pages.${field.name}` }), 
-                        dataIndex: (field.dataIndex ? field.dataIndex : field.name),
-                        key: `${(field.dataIndex ? field.dataIndex : field.name)}-${fi}`, 
-                        sorter: (field.sorter ? field.sorter : false), /*if the table can be sotrted by this field*/
-                        link:  (field.link ? field.link : false), /*goto link when clicked upon*/
-                        selectValues: (field.selectValues ? field.selectValues : null), /*in case you need to choose from constants in the schema*/
-                        fixed: fi === 0 ? 'left' : /*field.son ? 'right' */'none',
-                        width:  200,
-                        render: (x,z) => ( !x  && !field.dataIndex ? <span key={fi}>p</span> : 
-                          field.link ?  <a onClick={() => {
-                            localStorage.setItem('lastEntity', z.name) 
-                            x ? router.push(`${field.link}?name=${x.split(':')[0] || z.name}`) : router.push(`${field.link}?parent=${z.id}`)}
-                            }>{x ? x.toString() : <Icon type="double-right" color='mgenta'/>}</a> :
-                          field.dataIndex === 'tags' && x ? this.tagsRender(x,fi) :/*(
-                            <span key={`tags-${fi}`}>
-                              {x.map((tag,i) => <Tag color="blue" key={`${tag}-${fi}-${i}`}>{tag}</Tag>)}
-                            </span>
-                          ) :*/
-                          field.dataIndex === 'resource_names' && x ? this.resourcesRender(x,z) :
-                          x && field.inputMethod === 'bool' ? <Checkbox key={`check-${fi}`} checked={x} disabled /> :
-                          x && field.inputMethod === "timestamp_r" ? x.replace('[','').replace(/"/g,'').replace(',',' . . . ').replace(')','') :
-                          x && field.inputMethod === "timestamp" ? x.replace('T',' ').split('.')[0] :
-                          x ),
-                        align: lang[getLocale()].align
-                      }))
-    //adding empty column in order to fix some inherent bugs in the table componant
-     this.columns.push({
+      .filter(
+        field => field.required !== false
+      ) /* field ont need to be shown in the table it is needded for input forms only */
+      .sort((a, b) => a.order > b.order)
+      .map((field, fi) => ({
+        title: formatMessage({ id: `pages.${field.name}` }),
+        dataIndex: field.dataIndex ? field.dataIndex : field.name,
+        key: `${field.dataIndex ? field.dataIndex : field.name}-${fi}`,
+        sorter: field.sorter ? field.sorter : false /*if the table can be sotrted by this field*/,
+        link: field.link ? field.link : false /*goto link when clicked upon*/,
+        selectValues: field.selectValues
+          ? field.selectValues
+          : null /*in case you need to choose from constants in the schema*/,
+        //fixed: (field.dataIndex === "name" ? 'left' : /*field.son ? 'right' */'none'),
+        width: field.width
+          ? field.width
+          : 200 /*field.son ? formatMessage({ id: `pages.${field.name}` }).length * 7 : field.dataIndex === "name" ? 100 : 0,*/,
+        render: (x, z) =>
+          !x && !field.dataIndex ? (
+            <span key={fi}>p</span>
+          ) : field.link ? (
+            <a
+              onClick={() => {
+                localStorage.setItem('lastEntity', z.name);
+                x
+                  ? router.push(`${field.link}?name=${x.split(':')[0] || z.name}`)
+                  : router.push(`${field.link}?parent=${z.id}`);
+              }}
+            >
+              {x ? x.toString() : <Icon type="double-right" color="mgenta" />}
+            </a>
+          ) : field.dataIndex === 'tags' && x ? (
+            this.tagsRender(x, fi)
+          ) : field.dataIndex === 'resource_names' && x ? (
+            this.resourcesRender(x, z)
+          ) : x && field.inputMethod === 'bool' ? (
+            <Checkbox key={`check-${fi}`} checked={x} disabled />
+          ) : x && field.inputMethod === 'timestamp_r' ? (
+            x
+              .replace('[', '')
+              .replace(/"/g, '')
+              .replace(',', ' . . . ')
+              .replace(')', '')
+          ) : x && field.inputMethod === 'timestamp' ? (
+            x.replace('T', ' ').split('.')[0]
+          ) : (
+            x
+          ),
+        align: lang[getLocale()] ? lang[getLocale()].align : 'left',
+      }));
+    this.columns.push({ title: '' });
+    this.schema.forms.update &&
+      this.columns.push({
         title: '',
-        render: ()=> (<Fragment>          
-                  </Fragment>
-                ),
-            })                          
-     //adding the Edit Button
-     this.schema.forms.update && this.columns.push({
-        title: '',
-        fixed : 'right',width:50,
-
+        //fixed : 'right',
+        width: 50,
         render: (text, record) => (
           <Fragment>
-            <a onClick={() => this.handleUpdateModalVisible(true, record)}> <Icon type="edit"  /></a>
+            <a onClick={() => this.handleUpdateModalVisible(true, record)}>
+              {' '}
+              <Icon type="edit" />
+            </a>
           </Fragment>
         ),
-      }) 
+      });
     //if(lang[getLocale()].align === 'right') this.columns.reverse()
+    return 1;
+  };
 
-return 1;  
- }
-
-  tagsRender = (x,j) => (<span key={`tags-${j}`}>
-                              {x.map((tag,i) => (<a key={`${tag}a-${j}-${i}`} onClick={() => router.push(`/router/tags?tags=${tag}`)}>
-                                                    <Tag color="blue" key={`${tag}-${j}-${i}`}>{tag}</Tag>
-                                                </a>))}
-                              </span>)
-/* Renders the resources */
-  resourcesRender = (x,z) => {
+  tagsRender = (x, j) => (
+    <span key={`tags-${j}`}>
+      {x.map((tag, i) => (
+        <a key={`${tag}a-${j}-${i}`} onClick={() => router.push(`/router/tags?tags=${tag}`)}>
+          <Tag color="blue" key={`${tag}-${j}-${i}`}>
+            {tag}
+          </Tag>
+        </a>
+      ))}
+    </span>
+  );
+  /* Renders the resources */
+  resourcesRender = (x, z) => {
     const resourceTypeMap = {
-      employee : {link :'employees',color : 'green'},
-      equipment: {link :'equipments',color : 'orange'},
-      resource_group : {link :'resource_groups',color : 'blue'},
-      place: {link :'places',color : 'blue'}
-    }    
-    const types = z.resource_types.slice(1,-1).split(',');
-    const colors = types.map(x => resourceTypeMap[x].color)
-    const links =  types.map(x => resourceTypeMap[x].link)
-    
-    return( 
+      employee: { link: 'employees', color: 'green' },
+      equipment: { link: 'equipments', color: 'orange' },
+      resource_group: { link: 'resource_groups', color: 'blue' },
+      place: { link: 'places', color: 'blue' },
+    };
+    const types = z.resource_types.slice(1, -1).split(',');
+    const colors = types.map(x => resourceTypeMap[x].color);
+    const links = types.map(x => resourceTypeMap[x].link);
+
+    return (
       <span>
-        {x.map((tag,i) => <a key={`atag-${z.name}-${tag}-${i}`} onClick={() => router.push(`/router/${links[i]}?name=${tag}`)}><Tag color={colors[i]} key={`rtag-${z.name}-${tag}-${i}`}>{tag}</Tag></a>)}
+        {x.map((tag, i) => (
+          <a
+            key={`atag-${z.name}-${tag}-${i}`}
+            onClick={() => router.push(`/router/${links[i]}?name=${tag}`)}
+          >
+            <Tag color={colors[i]} key={`rtag-${z.name}-${tag}-${i}`}>
+              {tag}
+            </Tag>
+          </a>
+        ))}
       </span>
-    )  
-  }
+    );
+  };
 
   /*--- HandleTable Pagination and sorting  ----*/
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-
 
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
@@ -266,7 +305,7 @@ return 1;
 
     dispatch({
       type: 'action/fetch',
-      payload: { ...params, entity: this.entity }
+      payload: { ...params, entity: this.entity },
     });
   };
 
@@ -279,24 +318,25 @@ return 1;
     });
     dispatch({
       type: 'action/fetch',
-      payload: {entity: this.entity},
+      payload: { entity: this.entity },
     });
   };
 
-  flipShowBugReporter = () =>{
-    this.setState({showBugReporter : !this.state.showBugReporter})
-  }
+  flipShowBugReporter = () => {
+    this.setState({ showBugReporter: !this.state.showBugReporter });
+  };
 
-  /*--- Refreshes the view After an update or insert ---*/ 
+  /*--- Refreshes the view After an update or insert ---*/
+
   handleFormAfterIUD = () => {
     const { form, dispatch } = this.props;
     dispatch({
       type: 'action/fetch',
-      payload: { ...this.state.formValues,update: 'yes' ,entity: this.entity},
+      payload: { ...this.state.formValues, update: 'yes', entity: this.entity },
     });
   };
 
-/*--- Toggels the Fitlters form ---*/
+  /*--- Toggels the Fitlters form ---*/
   toggleForm = () => {
     const { expandForm } = this.state;
     this.setState({
@@ -304,7 +344,7 @@ return 1;
     });
   };
 
-/*--- HANDLE the menu clisks for the cumulative actions for the form selected raws ---*/
+  /*--- HANDLE the menu clisks for the cumulative actions for the form selected raws ---*/
   handleMenuClick = e => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
@@ -312,16 +352,16 @@ return 1;
     if (!selectedRows) return;
     switch (e.key) {
       case 'remove':
-        this.handleDelete(selectedRows)
+        this.handleDelete(selectedRows);
         break;
       default:
-        this.handleFunction(e.key,selectedRows)
+        this.handleFunction(e.key, selectedRows);
         break;
     }
   };
 
   handleSelectRows = rows => {
-    console.log("!@#!@#: c ",rows)
+    console.log('!@#!@#: c ', rows);
     this.setState({
       selectedRows: rows,
     });
@@ -339,26 +379,27 @@ return 1;
         ...fieldsValue,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
-      const filterString = Object.keys(values).filter(x => values[x]).reduce((o,x) => o + `${x}=${values[x]}&`,'')
-      router.push(`${this.props.route.path}?${filterString}`)
+      const filterString = Object.keys(values)
+        .filter(x => values[x])
+        .reduce((o, x) => o + `${x}=${values[x]}&`, '');
+      router.push(`${this.props.route.path}?${filterString}`);
 
       dispatch({
         type: 'action/fetch',
-        payload: { ...values, entity: this.entity}
+        payload: { ...values, entity: this.entity },
       });
-     
     });
   };
 
-// shows the add new item form
+  // shows the add new item form
   handleModalVisible = (flag, record) => {
     this.setState({
       modalVisible: !!flag,
-      stepFormValues: {...record, ...this.state.stepFormValues},
+      stepFormValues: { ...record, ...this.state.stepFormValues },
     });
   };
 
-//shows the update item from
+  //shows the update item from
   handleUpdateModalVisible = (flag, record) => {
     this.setState({
       updateModalVisible: !!flag,
@@ -366,52 +407,67 @@ return 1;
     });
   };
 
-//handles item add event
+  //handles item add event
   handleAdd = values => {
     const { dispatch } = this.props;
-   
-    this.schema.cascaders && Object.keys(this.schema.cascaders).forEach(x => {  
-      values[this.schema.cascaders[x][1]] = values[this.schema.cascaders[x][0]][1].split(':')[1]
-      values[this.schema.cascaders[x][0]] = values[this.schema.cascaders[x][0]][0]
-    })
-    
-    //put value in X when only X_t has value
-    Object.keys(values).filter(x => x.endsWith('_t')).forEach(x=>  values[x.split('_t')[0]] = values[x.split('_t')[0]] || values[x])
-    //any time field is been converted to string
-    Object.keys(values).filter(x=> x.includes('time')).forEach(x=> values[x] = moment(values[x]).format('HH:mm'))
 
-    let lang_id = lang[getLocale()].id;
-    values.name = values.name || this.state.formValues.name
-    values.sig_date = moment().tz('Asia/Jerusalem').format()
-    values.sig_user = JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username
-    values.parent = this.state.formValues.parent 
-      dispatch({
-        type: 'action/add',
-        payload: Object.assign(values,{lang_id: lang_id, entity: this.entity}),
-        callback: this.handleFormAfterIUD,
+    this.schema.cascaders &&
+      Object.keys(this.schema.cascaders).forEach(x => {
+        values[this.schema.cascaders[x][1]] = values[this.schema.cascaders[x][0]][1].split(':')[1];
+        values[this.schema.cascaders[x][0]] = values[this.schema.cascaders[x][0]][0];
       });
 
-    this.insertKey = {}
-    let params = this.props.location ? this.props.location.query : {}
-    if(this.schema.defaultKey){this.insertKey[this.schema.defaultKey] = params.name}  
-    if(params.name) {this.handleFormReset}
+    //put value in X when only X_t has value
+    Object.keys(values)
+      .filter(x => x.endsWith('_t'))
+      .forEach(x => (values[x.split('_t')[0]] = values[x.split('_t')[0]] || values[x]));
+    //any time field is been converted to string
+    Object.keys(values)
+      .filter(x => x.includes('time'))
+      .forEach(x => (values[x] = moment(values[x]).format('HH:mm')));
+
+    let lang_id = lang[getLocale()].id;
+    values.name = values.name || this.state.formValues.name;
+    values.sig_date = moment()
+      .tz('Asia/Jerusalem')
+      .format();
+    values.sig_user =
+      JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
+    values.parent = this.state.formValues.parent;
+    dispatch({
+      type: 'action/add',
+      payload: Object.assign(values, { lang_id: lang_id, entity: this.entity }),
+      callback: this.handleFormAfterIUD,
+    });
+
+    this.insertKey = {};
+    let params = this.props.location ? this.props.location.query : {};
+    if (this.schema.defaultKey) {
+      this.insertKey[this.schema.defaultKey] = params.name;
+    }
+    if (params.name) {
+      this.handleFormReset;
+    }
     message.success('Raw sent to DB');
     this.handleModalVisible();
   };
 
-// handled item update event
+  // handled item update event
   handleUpdate = fields => {
     const { dispatch } = this.props;
     let lang_id = lang[getLocale()].id;
     //any time field is been converted to string
-    Object.keys(fields).filter(x=> x.includes('_time')).forEach(x=> fields[x] = moment(fields[x]).format('HH:mm'))
+    Object.keys(fields)
+      .filter(x => x.includes('_time'))
+      .forEach(x => (fields[x] = moment(fields[x]).format('HH:mm')));
 
     /*Object.keys(fields).forEach(field => {
       fields[field] = fields[field] instanceof moment ? moment(fields[field]._d).format(fields[field]._f) : fields[field]
-    })*/   
+    })*/
+
     dispatch({
       type: 'action/update',
-      payload: Object.assign(fields,{lang_id: lang_id,entity: this.entity}),
+      payload: Object.assign(fields, { lang_id: lang_id, entity: this.entity }),
       callback: this.handleFormAfterIUD,
     });
 
@@ -420,79 +476,80 @@ return 1;
   };
 
   // handled item delete event
-  remove = (rows) => {
-    const handleFormAfterIUD = this.handleFormAfterIUD
-    const { dispatch } = this.props;  
+  remove = rows => {
+    const handleFormAfterIUD = this.handleFormAfterIUD;
+    const { dispatch } = this.props;
     dispatch({
       type: 'action/remove',
       payload: {
         keys: rows.map(row => row.id),
-        entity: this.entity
+        entity: this.entity,
       },
-      callback: (test) => {
+      callback: test => {
         this.setState({
           selectedRows: [],
         });
-        return handleFormAfterIUD()
+        return handleFormAfterIUD();
       },
     });
   };
 
   // handled functions from schema
-  sendFunction = (funcName,rows) => {
-    const handleFormAfterIUD = this.handleFormAfterIUD
-    const { dispatch } = this.props;    
-        dispatch({
-          type: 'action/sendFunction',
-          payload: {
-            funcName : funcName,
-            keys: rows.map(row => row.id),
-            entity: this.entity
-          },
-          callback: (test) => {
-            this.setState({
-              selectedRows: [],
-            });
-            return handleFormAfterIUD()
-          },
+  sendFunction = (funcName, rows) => {
+    const handleFormAfterIUD = this.handleFormAfterIUD;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'action/sendFunction',
+      payload: {
+        funcName: funcName,
+        keys: rows.map(row => row.id),
+        entity: this.entity,
+      },
+      callback: test => {
+        this.setState({
+          selectedRows: [],
         });
-  };  
+        return handleFormAfterIUD();
+      },
+    });
+  };
 
-// handled item delete event
+  // handled item delete event
   handleDelete = rows => {
-    const remove = this.remove
+    const remove = this.remove;
     Modal.confirm({
       title: 'Warning, You are about to delete data!!',
-      content: rows.filter(x=> x.name).map(x=> `delete ${x.name}？\n`).join(),
+      content: rows
+        .filter(x => x.name)
+        .map(x => `delete ${x.name}？\n`)
+        .join(),
       okText: 'Yes',
       cancelText: 'No',
       onOk: () => {
-        remove(rows)
+        remove(rows);
         message.success('Raw was Deleted');
-        return 
-      }
+        return;
+      },
     });
-  }
+  };
 
-  handleFunction = (funcName,rows) => {
-    const sendFunction = this.sendFunction
+  handleFunction = (funcName, rows) => {
+    const sendFunction = this.sendFunction;
     Modal.confirm({
       title: `You are about to ${funcName} the flowing entities:`,
-      content: rows.map(x=> `${x.name}？\n`).join(),
+      content: rows.map(x => `${x.name}？\n`).join(),
       okText: 'Yes',
       cancelText: 'No',
       onOk: () => {
-        sendFunction(funcName,rows)
+        sendFunction(funcName, rows);
         message.success('Successfull');
-        return 
-      }
+        return;
+      },
     });
-  }
+  };
 
-
-
-// states the pagination attributes
-/*
+  // states the pagination attributes
+  /*
    listPaginationProps = {
       showSizeChanger: true,
       showQuickJumper: false,
@@ -501,131 +558,150 @@ return 1;
    };
 */
 
-  renderMainForm(from,to) {
+  renderMainForm(from, to) {
     const {
       form: { getFieldDecorator },
     } = this.props;
- 
-    /*console.log('=========================:',this.props)     */
-      return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }} >
-          {this.columns.filter(col => col.dataIndex && col.dataIndex !=='tags').slice(from,to).map(col => (
-                  <Col md={8} sm={24} key={'mainform'+col.dataIndex}>
-                    <FormItem label={col.title}>
-                      {getFieldDecorator(col.dataIndex)(
-                      <Input placeholder={col.title}/>
-                      )}
-                    </FormItem>
-                  </Col>
-                ))}   
 
-        <div >
-          <div style={{ float: 'right', marginBottom: 24 }}>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-              Reset
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              {to !== -1 ?  <Icon type="down" /> : <Icon type="up" />}
-            </Button>
+    /*console.log('=========================:',this.props)     */
+    return (
+      <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          {this.columns
+            .filter(col => col.dataIndex && col.dataIndex !== 'tags')
+            .slice(from, to)
+            .map(col => (
+              <Col md={8} sm={24} key={'mainform' + col.dataIndex}>
+                <FormItem label={col.title}>
+                  {getFieldDecorator(col.dataIndex)(<Input placeholder={col.title} />)}
+                </FormItem>
+              </Col>
+            ))}
+
+          <div>
+            <div style={{ float: 'right', marginBottom: 24 }}>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+                Reset
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.toggleForm}>
+                {to !== -1 ? <Icon type="down" /> : <Icon type="up" />}
+              </Button>
+            </div>
           </div>
-        </div>
-          </Row>
+        </Row>
       </Form>
     );
   }
 
   renderForm() {
     const { expandForm } = this.state;
-    return expandForm ? this.renderMainForm(0,this.columns.length-1) :
-    lang[getLocale()].align === 'left' ? this.renderMainForm(0,2) : this.renderMainForm( this.columns.length-3,this.columns.length-1);
+    return expandForm
+      ? this.renderMainForm(0, this.columns.length - 1)
+      : lang[getLocale()].align === 'left'
+      ? this.renderMainForm(0, 2)
+      : this.renderMainForm(this.columns.length - 3, this.columns.length - 1);
   }
 
-
-
-  myList = (data) => (
-    <List key='list'
+  myList = data => (
+    <List
+      key="list"
       grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 5 }}
       dataSource={data}
-      pagination={false}//{this.listPaginationProps}
+      pagination={false} //{this.listPaginationProps}
       renderItem={item => (
         <List.Item>
           <Card title={item.name} key={item.name}>
-              { //renders fields and values
-                Object.keys(item)
-                .filter(x => this.schema.fields.hasOwnProperty(x) && x!== 'id' && item[x])
-                .map((x,i) =>{
-                  var schema = this.columns.filter(col => col.dataIndex === x)[0]
-                  if (!schema) return (<span/>)
-                  var link = schema.link               
-                  var render = schema.render ? schema.render(item[x],item) : null
-                  link = link ? `${link}?name=${item[x].split(':')[0]}` : link
-                  return (
-                    <div key={item.name + 'div' + i} className={styles.tableList}>
-                      <span> {formatMessage({ id: `pages.${x}` })} : </span>
-                      <span> {render}</span>
-                    </div>
-                  )
-                })
-              }
+            {//renders fields and values
+            Object.keys(item)
+              .filter(x => this.schema.fields.hasOwnProperty(x) && x !== 'id' && item[x])
+              .map((x, i) => {
+                var schema = this.columns.filter(col => col.dataIndex === x)[0];
+                if (!schema) return <span />;
+                var link = schema.link;
+                var render = schema.render ? schema.render(item[x], item) : null;
+                link = link ? `${link}?name=${item[x].split(':')[0]}` : link;
+                return (
+                  <div key={item.name + 'div' + i} className={styles.tableList}>
+                    <span> {formatMessage({ id: `pages.${x}` })} : </span>
+                    <span> {render}</span>
+                  </div>
+                );
+              })}
 
-              { 
-                //renders son relation links 
-                Object.keys(this.schema.fields).filter(x => this.schema.fields[x].son)
-                .map((x,i) =>{
-                  const obj = this.schema.fields[x]
-                  if (!obj.link) return (<span/>)  
-                  var link = `${obj.link}?parent=${item.id}` 
-                  return (
-                    <Button  style={{ marginTop: 12 ,marginLeft: 8 ,color:'#fa8c16'}} color='#fa8c16' key={item.name + 'div' + i} onClick={() => router.push(`${link}`)}>
-                      <span> {formatMessage({ id: `pages.${x}` })}  </span>
-                      <span>                     
-                              <Icon type="double-right"/>
-                      </span>
-                    </Button>
-                  )
-                })
-              }
-              {this.schema.forms.update &&
-              <Button key={`bt_update_${item.name}`} style={{marginTop: 12, float: 'right' }} onClick={() => this.handleUpdateModalVisible(true, item) }>
+            {//renders son relation links
+            Object.keys(this.schema.fields)
+              .filter(x => this.schema.fields[x].son)
+              .map((x, i) => {
+                const obj = this.schema.fields[x];
+                if (!obj.link) return <span />;
+                var link = `${obj.link}?parent=${item.id}`;
+                return (
+                  <Button
+                    style={{ marginTop: 12, marginLeft: 8, color: '#fa8c16' }}
+                    color="#fa8c16"
+                    key={item.name + 'div' + i}
+                    onClick={() => router.push(`${link}`)}
+                  >
+                    <span> {formatMessage({ id: `pages.${x}` })} </span>
+                    <span>
+                      <Icon type="double-right" />
+                    </span>
+                  </Button>
+                );
+              })}
+            {this.schema.forms.update && (
+              <Button
+                key={`bt_update_${item.name}`}
+                style={{ marginTop: 12, float: 'right' }}
+                onClick={() => this.handleUpdateModalVisible(true, item)}
+              >
                 Update
               </Button>
-            }
+            )}
           </Card>
         </List.Item>
       )}
-    />    
-  )  
+    />
+  );
 
-  myTable  = (selectedRows,loading,data) => (
-      <StandardTable
-        selectedRows={selectedRows}
-        loading={loading}
-        data={data}
-        key='uid'
-        columns={this.columns}
-        onSelectRow={this.handleSelectRows}
-        onChange={this.handleStandardTableChange}
-      />
-    )
+  myTable = (selectedRows, loading, data) => (
+    <StandardTable
+      selectedRows={selectedRows}
+      loading={loading}
+      data={data}
+      key="uid"
+      columns={this.columns}
+      onSelectRow={this.handleSelectRows}
+      onChange={this.handleStandardTableChange}
+    />
+  );
 
   render() {
     const {
       action: { data },
       loading,
     } = this.props;
-    console.log("DATA",data,this.entity,this.state,this.insertKey,localStorage.getItem('lastEntity'))
+    console.log(
+      'DATA',
+      data,
+      this.entity,
+      this.state,
+      this.insertKey,
+      localStorage.getItem('lastEntity'),
+      getLocale()
+    );
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
-    this.formFields = formFields(this.schema.fields)  
-    if(data.entity !== this.entity) return <span/>  
- 
+    this.formFields = formFields(this.schema.fields);
+    if (data.entity !== this.entity) return <span />;
+
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">Delete</Menu.Item>
-        {this.schema.functions && this.schema.functions.map(x => <Menu.Item key={x.function}>{x.name}</Menu.Item>)}
+        {this.schema.functions &&
+          this.schema.functions.map(x => <Menu.Item key={x.function}>{x.name}</Menu.Item>)}
       </Menu>
     );
     const parentMethods = {
@@ -637,7 +713,7 @@ return 1;
       handleUpdate: this.handleUpdate,
     };
 
-     return (
+    return (
       <PageHeaderWrapper title={this.schema.title}>
         <Card bordered={false}>
           <div className={styles.tableList}>
@@ -653,13 +729,22 @@ return 1;
                   </Dropdown>
                 </span>
               )}
-             {(this.insertKey.hasOwnProperty('name') || this.insertKey.hasOwnProperty('parent') )&& (<h2 style={{ textAlign: 'center' }}> {localStorage.getItem('lastEntity') } </h2>)}
+              {(this.insertKey.hasOwnProperty('name') ||
+                this.insertKey.hasOwnProperty('parent')) && (
+                <h2 style={{ textAlign: 'center' }}> {localStorage.getItem('lastEntity')} </h2>
+              )}
             </div>
-            {( data.list[0] === undefined ? '' : window.innerWidth < 1000 ? this.myList(data.list) :this.myTable(selectedRows,loading,data))}
+            {data.list[0] === undefined
+              ? ''
+              : window.innerWidth < 1000
+              ? this.myList(data.list)
+              : this.myTable(selectedRows, loading, data)}
           </div>
-         <a onClick={() => this.flipShowBugReporter()}><Icon type="exclamation-circle" /></a>          
+          <a onClick={() => this.flipShowBugReporter()}>
+            <Icon type="exclamation-circle" />
+          </a>
         </Card>
-         {this.schema.forms.insert ? (
+        {this.schema.forms.insert ? (
           <MainForm
             {...parentMethods}
             ModalVisible={modalVisible}
@@ -670,25 +755,32 @@ return 1;
             formLayout={this.schema.forms.insert}
             handler={this.handleAdd}
             handleModal={this.handleModalVisible}
-            insertKey = {this.insertKey}
-            formType='insert'
+            insertKey={this.insertKey}
+            formType="insert"
           />
-        ) : null}          
+        ) : null}
         {this.schema.forms.update && stepFormValues && Object.keys(stepFormValues).length ? (
           <MainForm
             {...updateMethods}
             ModalVisible={updateModalVisible}
             values={stepFormValues}
             choosers={data.choosers}
-            cascaders={this.schema.cascaders}            
+            cascaders={this.schema.cascaders}
             fields={this.formFields}
             formLayout={this.schema.forms.update}
             handler={this.handleUpdate}
             handleModal={this.handleUpdateModalVisible}
-            formType='update'
+            formType="update"
           />
         ) : null}
-         {this.state.showBugReporter ? <BugReporter name={JSON.stringify({...this.props,...this.state})}  serverURL={`${Logic}mymes/bug`} /> : <span/>}
+        {this.state.showBugReporter ? (
+          <BugReporter
+            name={JSON.stringify({ ...this.props, ...this.state })}
+            serverURL={`${Logic}mymes/bug`}
+          />
+        ) : (
+          <span />
+        )}
       </PageHeaderWrapper>
     );
   }

@@ -90,11 +90,9 @@ class LoginPage extends Component {
 
           <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
-            Remember Me  
+              Remember Me
             </Checkbox>
-            <a style={{ float: 'right' }} href="">
-              
-            </a>
+            <a style={{ float: 'right' }} href="" />
           </div>
           <Submit loading={submitting}>Log In</Submit>
         </Login>

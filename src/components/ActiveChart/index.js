@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { MiniArea } from '../Charts';
 import NumberInfo from '../NumberInfo';
-
 import styles from './index.less';
 
 function fixedZero(val) {
@@ -34,18 +33,16 @@ export default class ActiveChart extends Component {
   }
 
   loopData = () => {
-    this.requestRef = requestAnimationFrame(() => {
-      this.timer = setTimeout(() => {
-        this.setState(
-          {
-            activeData: getActiveData(),
-          },
-          () => {
-            this.loopData();
-          }
-        );
-      }, 6000);
-    });
+    this.timer = setTimeout(() => {
+      this.setState(
+        {
+          activeData: getActiveData(),
+        },
+        () => {
+          this.loopData();
+        }
+      );
+    }, 500);
   };
 
   render() {
@@ -53,7 +50,7 @@ export default class ActiveChart extends Component {
 
     return (
       <div className={styles.activeChart}>
-        <NumberInfo subTitle="subtitle" total="total" />
+        <NumberInfo subTitle="目标评估" total="有望达到预期" />
         <div style={{ marginTop: 32 }}>
           <MiniArea
             animate={false}
@@ -75,9 +72,17 @@ export default class ActiveChart extends Component {
           />
         </div>
         {activeData && (
-          <div className={styles.activeChartGrid}>
-            <p>{[...activeData].sort()[activeData.length - 1].y + 200} 亿元</p>
-            <p>{[...activeData].sort()[Math.floor(activeData.length / 2)].y} 亿元</p>
+          <div>
+            <div className={styles.activeChartGrid}>
+              <p>{[...activeData].sort()[activeData.length - 1].y + 200} 亿元</p>
+              <p>{[...activeData].sort()[Math.floor(activeData.length / 2)].y} 亿元</p>
+            </div>
+            <div className={styles.dashedLine}>
+              <div className={styles.line} />
+            </div>
+            <div className={styles.dashedLine}>
+              <div className={styles.line} />
+            </div>
           </div>
         )}
         {activeData && (

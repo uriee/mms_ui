@@ -69,8 +69,8 @@ class Center extends PureComponent {
     const { state } = this;
     const { inputValue } = state;
     let { newTags } = state;
-    if (inputValue && newTags.filter(tag => tag === inputValue).length === 0) {
-      newTags = [...newTags, inputValue];
+    if (inputValue && newTags.filter(tag => tag.label === inputValue).length === 0) {
+      newTags = [...newTags, { key: `new-${newTags.length}`, label: inputValue }];
     }
     this.setState({
       newTags,
@@ -129,6 +129,7 @@ class Center extends PureComponent {
                   <div className={styles.avatarHolder}>
                     <img alt="" src={currentUser.avatar} />
                     <div className={styles.name}>{currentUser.name}</div>
+                    <div>{currentUser.signature}</div>
                   </div>
                   <div className={styles.detail}>
                     <p>
@@ -136,15 +137,20 @@ class Center extends PureComponent {
                       {currentUser.title}
                     </p>
                     <p>
+                      <i className={styles.group} />
+                      {currentUser.group}
+                    </p>
+                    <p>
                       <i className={styles.address} />
-                      {currentUser.address}
+                      {currentUser.geographic.province.label}
+                      {currentUser.geographic.city.label}
                     </p>
                   </div>
                   <Divider dashed />
                   <div className={styles.tags}>
-                    <div className={styles.tagsTitle}>Tags</div>
-                    {currentUser.tags.concat(newTags).map((item, i) => (
-                      <Tag key={i}>{item}</Tag>
+                    <div className={styles.tagsTitle}>标签</div>
+                    {currentUser.tags.concat(newTags).map(item => (
+                      <Tag key={item.key}>{item.label}</Tag>
                     ))}
                     {inputVisible && (
                       <Input

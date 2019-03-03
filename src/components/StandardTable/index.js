@@ -74,8 +74,8 @@ class StandardTable extends PureComponent {
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
-      pageSize : 10,
-      ...pagination,     
+      pageSize: 10,
+      ...pagination,
     };
 
     const rowSelection = {
@@ -119,7 +119,7 @@ class StandardTable extends PureComponent {
           columns={columns}
           pagination={false}
           onChange={this.handleTableChange}
-          scroll={{ x: columns.length *200 - 150, y:400}}
+          scroll={{ x: columns.length * 130, y: 440 }}
         />
       </div>
     );

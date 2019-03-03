@@ -19,7 +19,7 @@ import {
   Steps,
   Radio,
   Tree,
-  notification
+  notification,
 } from 'antd';
 
 const { TreeNode } = Tree;
@@ -32,23 +32,22 @@ const FormItem = Form.Item;
 class Permissions extends PureComponent {
   constructor(props) {
     super(props);
-    console.log("IN my tree CONSTRUCTOR",this.props)
+    console.log('IN my tree CONSTRUCTOR', this.props);
 
     this.state = {
-         data : this.props.routes
-    }
+      data: this.props.routes,
+    };
   }
 
-
-  onDragEnter = (info) => {
+  onDragEnter = info => {
     console.log(info);
     // expandedKeys
     // this.setState({
     //   expandedKeys: info.expandedKeys,
     // });
-  }
+  };
 
-  onDrop = (info) => {
+  onDrop = info => {
     console.log(info);
     const dropKey = info.node.props.eventKey;
     const dragKey = info.dragNode.props.eventKey;
@@ -76,17 +75,17 @@ class Permissions extends PureComponent {
 
     if (!info.dropToGap) {
       // Drop on the content
-      loop(data, dropKey, (item) => {
+      loop(data, dropKey, item => {
         item.children = item.children || [];
-        // where to insert 
+        // where to insert
         item.children.push(dragObj);
       });
     } else if (
-      (info.node.props.children || []).length > 0 // Has children
-      && info.node.props.expanded // Is expanded
-      && dropPosition === 1 // On the bottom gap
+      (info.node.props.children || []).length > 0 && // Has children
+      info.node.props.expanded && // Is expanded
+      dropPosition === 1 // On the bottom gap
     ) {
-      loop(data, dropKey, (item) => {
+      loop(data, dropKey, item => {
         item.children = item.children || [];
         // where to insert 示例添加到尾部，可以是随意位置
         item.children.unshift(dragObj);
@@ -108,23 +107,27 @@ class Permissions extends PureComponent {
     this.setState({
       gData: data,
     });
-  }
-
+  };
 
   render() {
     const {
       action: { data },
       loading,
     } = this.props;
-    console.log("DATA",data)
+    console.log('DATA', data);
 
-    const loop = data => data.map((item) => {
-      if (item.children && item.children.length) {
-        return <TreeNode key={item.key} title={item.title}>{loop(item.children)}</TreeNode>;
-      }
-      return <TreeNode key={item.key} title={item.title} />;
-    });    
- 
+    const loop = data =>
+      data.map(item => {
+        if (item.children && item.children.length) {
+          return (
+            <TreeNode key={item.key} title={item.title}>
+              {loop(item.children)}
+            </TreeNode>
+          );
+        }
+        return <TreeNode key={item.key} title={item.title} />;
+      });
+
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">Delete</Menu.Item>
@@ -132,8 +135,8 @@ class Permissions extends PureComponent {
       </Menu>
     );
 
-     return (
-      <PageHeaderWrapper title='Tag Search'>
+    return (
+      <PageHeaderWrapper title="Tag Search">
         <Card bordered={true}>
           <Tree
             className="draggable-tree"
@@ -142,12 +145,12 @@ class Permissions extends PureComponent {
             checkable
             onDragEnter={this.onDragEnter}
             onDrop={this.onDrop}
-            >
-           {loop(this.state.gData)}
+          >
+            {loop(this.state.gData)}
           </Tree>
         </Card>
       </PageHeaderWrapper>
-    )
+    );
   }
 }
 
