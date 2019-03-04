@@ -1,9 +1,8 @@
 import React, { PureComponent, createElement } from 'react';
 import pathToRegexp from 'path-to-regexp';
-import { Breadcrumb } from 'antd';
+import { Breadcrumb, Icon } from 'antd';
 import styles from './index.less';
 import { urlToList } from '../_utils/pathTools';
-
 export const getBreadcrumb = (breadcrumbNameMap, url) => {
   let breadcrumb = breadcrumbNameMap[url];
   if (!breadcrumb) {
@@ -56,24 +55,22 @@ export default class BreadcrumbView extends PureComponent {
   // Generated according to props
   conversionFromProps = () => {
     const { breadcrumbList, breadcrumbSeparator, itemRender, linkElement = 'a' } = this.props;
-    console.log('conversionFromProps ', breadcrumbList);
-    const test = x => {
-      console.log('1234:', x.target, localStorage.getItem('bread'));
-      const href = '/router/' + x.target.toString().split('/')[4];
-      const crumbs = JSON.parse(localStorage.getItem('bread'));
-      console.log('123:', href);
-      let index = 0;
-      crumbs.forEach((x, i) => {
-        if (x.href === href) index = i;
-      });
-      localStorage.setItem('bread', JSON.stringify(crumbs.slice(0, index)));
-    };
+
+  //callback for breadcrubs    
+    const goBack = (x)  => {     
+      const href  = '/router/'+x.target.toString().split('/')[4]
+      const crumbs = JSON.parse(localStorage.getItem('bread'))
+      let index = 0
+      crumbs.forEach((x,i) => {if (x.href == unescape(href)) index = i})
+      localStorage.setItem('bread',JSON.stringify(crumbs.slice(0,index)))
+    }
+
     return (
-      <Breadcrumb className={styles.breadcrumb} separator={breadcrumbSeparator}>
+      <Breadcrumb className={styles.breadcrumb} separator={<Icon type="arrow-right" />}>
         {breadcrumbList.map(item => {
           const title = itemRender ? itemRender(item) : item.title;
           return (
-            <Breadcrumb.Item key={item.title} onClick={test}>
+            <Breadcrumb.Item key={item.title} onClick={goBack}>
               {item.href
                 ? createElement(
                     linkElement,
@@ -136,7 +133,7 @@ export default class BreadcrumbView extends PureComponent {
   /**
    * Convert parameters into breadcrumbs
    */
-
+ 
   conversionBreadcrumbList = () => {
     const { breadcrumbList, breadcrumbSeparator } = this.props;
     const { routes, params, routerLocation, breadcrumbNameMap } = this.getBreadcrumbProps();

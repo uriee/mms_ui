@@ -78,7 +78,7 @@ class TagView extends PureComponent {
           key={`${tag}a-${j}-${i}`}
           onClick={() => {
             router.push(`/router/tags?tags=${tag}`);
-            router.go(`/router/tags?tags=${tag}`);
+         //   router.go(`/router/tags?tags=${tag}`);
           }}
         >
           <Tag color="blue" key={`${tag}-${j}-${i}`}>
@@ -107,7 +107,6 @@ class TagView extends PureComponent {
       mnt_plan: { link: 'mnt_plans', color: 'magenta' },
       part_status: { link: 'part_status', color: 'magenta' },
     };
-    console.log('_________+_______________+_____________+_', x, z, j);
     const color = typeMap[z.row_type].color;
     const link = typeMap[z.row_type].link;
     return (
@@ -261,8 +260,22 @@ class TagView extends PureComponent {
     const {
       action: { data },
       loading,
+      location
     } = this.props;
-    console.log('DATA', data);
+    console.log('DATA', this.state,location);
+
+    if(this.state.formValues.tags != location.query.tags) {
+      const params = this.props.location ? this.props.location.query : {};
+      const { dispatch } = this.props;
+      console.log("@@@@@@@@@@@@@@:",this.state,params,location)      
+      this.setState({...this.state,formValues:{tags:location.query.tags}})
+      console.log("@@@@@@@@@@@@@@:",this.state,params,location)
+      dispatch({
+        type: 'action/fetch',
+        payload: { entity: 'tags', ...this.props.location.query },
+      });      
+      
+    }
 
     if (data.entity !== 'tags') return <span />;
 

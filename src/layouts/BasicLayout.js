@@ -69,9 +69,10 @@ class BasicLayout extends React.Component {
     const { location, breadcrumbNameMap, history } = this.props;
     const next = location.pathname && location.pathname.split('/')[1];
     const current = localStorage.getItem('bread') ? JSON.parse(localStorage.getItem('bread')) : [];
-    const query = location.query.name ? `(${location.query.name})` : '';
+    const name = location.query.tags || location.query.name
+    const query = name ? `(${name})` : '';
     const title =
-      breadcrumbNameMap[location.pathname] && breadcrumbNameMap[location.pathname].name + query;
+      breadcrumbNameMap[location.pathname] && (breadcrumbNameMap[location.pathname].name || breadcrumbNameMap[location.pathname].tags) + query;
     const obj = location.pathname &&
       breadcrumbNameMap[location.pathname] && {
         key: location.pathname,
@@ -85,7 +86,7 @@ class BasicLayout extends React.Component {
         ? [...current, obj]
         : [obj];
     console.log('~~~~~~~~~~~~~~~~~~~~~~~~~ next,current,obj,bread: ', this.props);
-    localStorage.setItem('bread', JSON.stringify(bread));
+    localStorage.setItem('bread', JSON.stringify(bread));    
     return {
       location,
       breadcrumbNameMap,
@@ -131,7 +132,18 @@ class BasicLayout extends React.Component {
       breadcrumbNameMap,
       fixedHeader,
     } = this.props;
-    console.log('BasicLayout:', pathname, breadcrumbNameMap);
+/*
+    const crumbs = JSON.parse(localStorage.getItem('bread'))
+    const last_crumb = crumbs && crumbs.slice(crumbs.length-1,crumbs.length)[0]
+    const last_crumb_name = last_crumb.href && last_crumb.href.split('tags=')[1]
+    const params = this.props.location ? this.props.location.query : {};
+    
+    if(params.name != last_crumb_name) {
+      console.log("!~~~~~~~~~~~~~~~!@#~~~~~~~~~~~~~~~~~~!@#~~~~~~~~~~~~~~~~~~!@#")
+      this.forceUpdate();      
+    }
+    console.log('BasicLayout:', crumbs,last_crumb,last_crumb_name, params);
+*/
     const isTop = PropsLayout === 'topmenu';
     const contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
     const layout = (

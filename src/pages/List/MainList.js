@@ -188,9 +188,7 @@ class TableList extends PureComponent {
           ? field.selectValues
           : null /*in case you need to choose from constants in the schema*/,
         //fixed: (field.dataIndex === "name" ? 'left' : /*field.son ? 'right' */'none'),
-        width: field.width
-          ? field.width
-          : 200 /*field.son ? formatMessage({ id: `pages.${field.name}` }).length * 7 : field.dataIndex === "name" ? 100 : 0,*/,
+        width: field.width ? field.width : 200 /*field.son ? formatMessage({ id: `pages.${field.name}` }).length * 7 : field.dataIndex === "name" ? 100 : 0,*/,
         render: (x, z) =>
           !x && !field.dataIndex ? (
             <span key={fi}>p</span>
@@ -206,7 +204,10 @@ class TableList extends PureComponent {
               {x ? x.toString() : <Icon type="double-right" color="mgenta" />}
             </a>
           ) : field.dataIndex === 'tags' && x ? (
-            this.tagsRender(x, fi)
+            this.tagsRender(
+              x,
+              fi
+            )
           ) : field.dataIndex === 'resource_names' && x ? (
             this.resourcesRender(x, z)
           ) : x && field.inputMethod === 'bool' ? (
@@ -222,7 +223,7 @@ class TableList extends PureComponent {
           ) : (
             x
           ),
-        align: lang[getLocale()] ? lang[getLocale()].align : 'left',
+         align: lang[getLocale()] ? lang[getLocale()].align  : 'left',
       }));
     this.columns.push({ title: '' });
     this.schema.forms.update &&
@@ -683,13 +684,24 @@ class TableList extends PureComponent {
     const {
       action: { data },
       loading,
+      location
     } = this.props;
+
+    if(this.state.formValues.name != location.query.name) {
+      const params = this.props.location ? this.props.location.query : {};
+      const { dispatch } = this.props;
+      this.setState({...this.state,formValues:{name:location.query.name, entity:this.state.formValues.entity}})
+      dispatch({
+        type: 'action/fetch',
+        payload: { ...params, entity: this.entity },
+      });      
+      
+    }
+
     console.log(
-      'DATA',
-      data,
-      this.entity,
+      'DATA',     
       this.state,
-      this.insertKey,
+      location,
       localStorage.getItem('lastEntity'),
       getLocale()
     );
