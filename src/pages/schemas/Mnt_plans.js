@@ -186,6 +186,7 @@ const mnt_plans = {
     start_date: {
       dataIndex: 'start_date',
       inputMethod: 'timestamp',
+      defaultValue: null,      
       sorter: true,
       inputRules: [
         {
@@ -197,6 +198,7 @@ const mnt_plans = {
     end_date: {
       dataIndex: 'end_date',
       inputMethod: 'timestamp',
+      defaultValue: null,       
       sorter: true,
       inputRules: [
         {

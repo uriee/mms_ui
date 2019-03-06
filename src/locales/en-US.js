@@ -33,7 +33,7 @@ export default {
   'menu.production.work.plan': 'Work Plan',
   'menu.production.actions': 'Actions',
   'menu.production.report': 'Work Report',
-  'menu.production.work.report': 'Work Report',
+  'menu.production.work.report': 'Work Report', 
   'menu.production.serials': 'Serial Numbers',
   'menu.production.standard': 'Standards',
   'menu.production.equipments': 'Equipments',
@@ -159,6 +159,7 @@ export default {
   'menu.router.iden': 'All Identifiers',
   'menu.router.work.report': 'Work Report',
   'menu.router.process': 'Processes',
+  'menu.router.proc_act': 'Process Actions',  
   'menu.router.proc.act': 'Process Actions',
   'menu.router.serial.act': 'Work Order Actions',
   'menu.router.serial.status': 'Work Order Statuses',
@@ -178,8 +179,13 @@ export default {
   'pages.maxq': 'Remainder',
   'pages.identifier': 'Identifiers',
   'pages.work_reports': 'Work Reports',
+  'pages.work_report': 'Work Reports',  
   'pages.locations': 'Locations',
   'pages.bom': 'BOM',
+  'pages.kit': 'Kit Items',  
+
+  'pages.lot': 'Lot',    
+  'pages.balance': 'Balance',  
   'pages.x': 'X',
   'pages.y': 'Y',
   'pages.z': 'Z',
@@ -415,4 +421,5 @@ export default {
   'app.setting.copyinfo': 'copy success，please replace defaultSettings in src/models/setting.js',
   'app.setting.production.hint':
     'Setting panel shows in development environment only, please manually modify',
+   'errors.constraint_error'  : 'You will be able to delete this record after the deletion of the referenced',
 };

@@ -3,7 +3,7 @@ import { notification } from 'antd';
 import router from 'umi/router';
 import hash from 'hash.js';
 import { isAntdPro } from './utils';
-import { getLocale } from 'umi/locale';
+import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
 
 const getLang = () => {
   const langs = { 'en-US': 1, 'he-IL': 2, 'de-DE': 3 };
@@ -54,7 +54,7 @@ const checkStatus = response => {
   }
   const errortext = codeMessage[response.status] || response.statusText;
   notification.error({
-    message: `Error ${response.status}`,
+    message: `${response.status}`,
     description: errortext,
   });
   //return { currentAuthority: 'guest', status: response.status, type: 'acount' };
@@ -219,7 +219,7 @@ export default async function mrequest(
     // environment should not be used
     if (status === 403) {
       notification.error({
-        message: `${etitle}`,
+        message: `403 ${etitle}`,
         description: error,
       });
       router.push('/exception/403');
@@ -227,7 +227,7 @@ export default async function mrequest(
     }
     if (status <= 504 && status >= 500) {
       notification.error({
-        message: `${etitle}`,
+        message: `504 ${etitle}`,
         description: error,
       });
       router.push('/exception/500');
@@ -235,17 +235,21 @@ export default async function mrequest(
     }
 
     if (status === 406) {
+      const constraint_error =  etitle.split('on table')[2].split('"')[1] 
+      etitle = constraint_error 
+        ? `${formatMessage({ id: 'errors.constraint_error' })}: ${formatMessage({ id: `menu.router.${constraint_error}` })}`
+        : etitle
       notification.error({
-        message: `${etitle}`,
-        description: error,
+        message: `${etitle}(406)`,
+        description: '',
       });
-      //router.push('/exception/404');
+      //router.push('/exception/505');
       return 0;
     }
 
     if (status >= 404 && status < 422) {
       notification.error({
-        message: `${etitle}`,
+        message: ` 404 ${etitle}`,
         description: error,
       });
       //router.push('/exception/404');
