@@ -5,7 +5,7 @@ import { connect } from 'dva';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import Media from 'react-media';
-import logo from '../assets/logo300.jpg';
+import logo from '../assets/BMK-Logo.png';
 import Footer from './Footer';
 import Header from './Header';
 import Context from './MenuContext';
@@ -45,6 +45,20 @@ const query = {
 };
 
 class BasicLayout extends React.Component {
+  /*
+  constructor(props) {
+        const {
+      dispatch,
+      route: { routes, authority },
+    } = props;
+
+    dispatch({
+      type: 'menu/getMenuData',
+      payload: { routes, authority },
+    });
+    super()
+  }
+  */
   componentDidMount() {
     const {
       dispatch,
@@ -52,20 +66,18 @@ class BasicLayout extends React.Component {
     } = this.props;
 
     dispatch({
+      type: 'menu/getMenuData',
+      payload: { routes, authority },
+    });
+    dispatch({
       type: 'user/fetchCurrent',
     });
     dispatch({
       type: 'setting/getSetting',
     });
-    console.log('uri');
-    dispatch({
-      type: 'menu/getMenuData',
-      payload: { routes, authority },
-    });
-    console.log('uri2');
   }
 
-  getContext() {
+  getContext() {  
     const { location, breadcrumbNameMap, history } = this.props;
     const next = location.pathname && location.pathname.split('/')[1];
     const current = localStorage.getItem('bread') ? JSON.parse(localStorage.getItem('bread')) : [];
@@ -85,7 +97,6 @@ class BasicLayout extends React.Component {
         : next === 'router'
         ? [...current, obj]
         : [obj];
-    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~ next,current,obj,bread: ', this.props);
     localStorage.setItem('bread', JSON.stringify(bread));    
     return {
       location,

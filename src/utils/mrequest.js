@@ -234,16 +234,21 @@ export default async function mrequest(
       return 0;
     }
 
-    if (status === 406) {
-      const constraint_error =  etitle.split('on table')[2].split('"')[1] 
+    if (status === 406) { 
+      let constraint_error = null;
+      try{
+        constraint_error =  etitle.split('on table')[2].split('"')[1] 
+      }catch{}
+
       etitle = constraint_error 
-        ? `${formatMessage({ id: 'errors.constraint_error' })}: ${formatMessage({ id: `menu.router.${constraint_error}` })}`
+        ? `${formatMessage({ id: 'errors.constraint_error' })} ${formatMessage({ id: `menu.router.${constraint_error}` })}`
         : etitle
+
       notification.error({
-        message: `${etitle}(406)`,
+        message: `${etitle}`,
         description: '',
       });
-      //router.push('/exception/505');
+
       return 0;
     }
 

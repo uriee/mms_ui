@@ -4,7 +4,6 @@ import isEqual from 'lodash/isEqual';
 import { formatMessage } from 'umi/locale';
 import Authorized from '@/utils/Authorized';
 import { menu } from '../defaultSettings';
-
 const { check } = Authorized;
 
 // Conversion router to menu.
@@ -101,16 +100,14 @@ export default {
 
   effects: {
     *getMenuData({ payload }, { put, call }) {
-      console.log('ret from fr:', payload);
       const response = yield call(fetchRoutes);
-      console.log('ret from fr1:', response);
       const { routes, authority } = payload;
       const originalMenuData = memoizeOneFormatter(response);
       const menuData = filterMenuData(originalMenuData);
       const breadcrumbNameMap = memoizeOneGetBreadcrumbNameMap(originalMenuData);
       yield put({
         type: 'save',
-        payload: { menuData, breadcrumbNameMap, routerData: routes },
+        payload: { menuData, breadcrumbNameMap, routerData: response },
       });
     },
   },

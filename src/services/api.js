@@ -77,7 +77,7 @@ export async function remove(params) {
 export async function sendFunction(params) {
   const entity = params.entity;
   console.log('_---_-____-:', params);
-  const ret = await mrequest(`${Logic}/mymes/func`, {
+  const ret = await mrequest(`${Logic}mymes/func`, {
     method: 'POST',
     data: {
       ...params,
@@ -89,14 +89,11 @@ export async function sendFunction(params) {
 
 export async function fetchRoutes() {
   var ret;
-  console.log('xxxxx1:', ret, Logic);
   try {
     ret = await axios.get(`${Logic}mymes/routes`);
-    console.log('xxxxx2:', ret);
   } catch (error) {
-    console.error('ppppp', error);
+    console.error('in fetch routes', error);
   }
-  console.log('xxxxx:', ret);
   return await JSON.parse(ret.data.main[0].routes);
 }
 
@@ -175,8 +172,9 @@ const myGet = async (url, entity) => {
         : 1;
     });
   }
-
+  // moved to server side filtering 
   let filterDataSource = dataSource;
+
   Object.keys(params)
     .filter(param => {
       return dataSource[0] && dataSource[0].hasOwnProperty(param);
@@ -191,22 +189,25 @@ const myGet = async (url, entity) => {
               .indexOf(params[param].toString().toUpperCase()) > -1
       );
     });
+
   dataSource = filterDataSource.length ? filterDataSource : dataSource;
 
-  let pageSize = 10;
-  if (params.pageSize) {
-    pageSize = params.pageSize * 1;
-  }
 
+/*
+  let pageSize = 10;
+  if (params.pageSize) {    pageSize = params.pageSize * 1;
+  }
+*/
   const result = {
     list: dataSource,
     choosers: choosers,
     entity: entity,
-    pagination: {
+   /* pagination: {
       total: dataSource.length,
       pageSize,
       current: parseInt(params.currentPage, 10) || 1,
     },
+    */
   };
 
   return result;
@@ -328,10 +329,25 @@ export async function fakeRegister(params) {
   });
 }
 
-export async function queryNotices(params = {}) {
-  return request(`/api/notices?${stringify(params)}`);
-}
 
+export async function queryNotices(params = {}) {
+  console.log("!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",params)
+  return await axios.get(`${Logic}mymes/notifications`);
+  //request(`/api/notices?${stringify(params)}`);
+  //return request(`${Logic}mymes/notifications`);
+}
+/*
+export async function queryNotices(params) {
+  const ret = await mrequest(`${Logic}mymes/notifications`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+  console.log('ret  queryNotices api:', ret);
+  return ret;
+}
+*/
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
 }

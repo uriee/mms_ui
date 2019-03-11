@@ -86,8 +86,7 @@ export default [
               entity: 'work_report',
             },
             name: 'report',
-            authority: ['admin', 'user'],
-          },
+           },
           {
             path: '/production/identifiers',
             name: 'serials',
@@ -95,18 +94,15 @@ export default [
             params: {
               entity: 'iden',
             },
-            authority: ['admin', 'user'],
           },
           {
             path: '/production/work_plan',
             name: 'plan',
-            authority: ['admin'],
             component: './Result/Success',
           },
           {
             path: '/production/standard',
             name: 'standard',
-            authority: ['admin'],
             component: './Result/Success',
           },
           {
@@ -321,7 +317,6 @@ export default [
       {
         name: 'hr',
         path: '/hr',
-        authority: ['admin'],
         routes: [
           {
             path: '/hr/employees',
@@ -339,6 +334,14 @@ export default [
               entity: 'dept',
             },
           },
+          {
+            path: '/hr/employees_timeoff',
+            name: 'employees_timeoff',
+            component: './List/MainList',
+            params: {
+              entity: 'employees_timeoff',
+            },
+          },          
           {
             path: '/hr/certifications',
             name: 'certifications',
@@ -410,7 +413,6 @@ export default [
       {
         name: 'admin',
         path: '/admin',
-        authority: ['admin'],
         routes: [
           {
             path: '/admin/users',
@@ -579,7 +581,6 @@ export default [
               entity: 'serials',
             },
             name: 'serials',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -588,7 +589,6 @@ export default [
               entity: 'actions',
             },
             name: 'actions',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -597,7 +597,6 @@ export default [
               entity: 'identifiers',
             },
             name: 'identifiers',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -606,7 +605,6 @@ export default [
               entity: 'kit',
             },
             name: 'kit',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -615,7 +613,6 @@ export default [
               entity: 'bom',
             },
             name: 'bom',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -624,7 +621,6 @@ export default [
               entity: 'bom_locations',
             },
             name: 'bom_locations',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -633,7 +629,6 @@ export default [
               entity: 'locations',
             },
             name: 'locations',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -642,7 +637,6 @@ export default [
               entity: 'identifier',
             },
             name: 'identifier',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -651,7 +645,6 @@ export default [
               entity: 'iden',
             },
             name: 'serials',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -660,7 +653,6 @@ export default [
               entity: 'work_report',
             },
             name: 'work_report',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -669,8 +661,7 @@ export default [
               entity: 'process',
             },
             name: 'process',
-            authority: ['admin'],
-          },
+            },
           {
             component: './List/MainList',
             path: '/router/proc_act',
@@ -678,7 +669,6 @@ export default [
               entity: 'proc_act',
             },
             name: 'proc_act',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -687,7 +677,6 @@ export default [
               entity: 'serial_act',
             },
             name: 'serial_act',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -696,7 +685,6 @@ export default [
               entity: 'serial_statuses',
             },
             name: 'serial_statuses',
-            authority: ['admin'],
           },
           {
             component: './List/MainList',
@@ -705,7 +693,6 @@ export default [
               entity: 'part_status',
             },
             name: 'part_status',
-            authority: ['admin'],
           },
           {
             path: '/router/tags',
