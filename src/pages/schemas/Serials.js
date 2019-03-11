@@ -208,7 +208,7 @@ const serials = {
     },
     end_date: {
       dataIndex: 'end_date',
-      inputMethod: 'timestamp', 
+      inputMethod: 'timestamp',
       sorter: true,
       inputRules: [
         {

@@ -172,7 +172,7 @@ const myGet = async (url, entity) => {
         : 1;
     });
   }
-  // moved to server side filtering 
+  // moved to server side filtering
   let filterDataSource = dataSource;
 
   Object.keys(params)
@@ -192,8 +192,7 @@ const myGet = async (url, entity) => {
 
   dataSource = filterDataSource.length ? filterDataSource : dataSource;
 
-
-/*
+  /*
   let pageSize = 10;
   if (params.pageSize) {    pageSize = params.pageSize * 1;
   }
@@ -202,7 +201,7 @@ const myGet = async (url, entity) => {
     list: dataSource,
     choosers: choosers,
     entity: entity,
-   /* pagination: {
+    /* pagination: {
       total: dataSource.length,
       pageSize,
       current: parseInt(params.currentPage, 10) || 1,
@@ -329,9 +328,8 @@ export async function fakeRegister(params) {
   });
 }
 
-
 export async function queryNotices(params = {}) {
-  console.log("!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",params)
+  console.log('!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', params);
   return await axios.get(`${Logic}mymes/notifications`);
   //request(`/api/notices?${stringify(params)}`);
   //return request(`${Logic}mymes/notifications`);

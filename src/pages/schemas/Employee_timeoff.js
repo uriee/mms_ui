@@ -1,9 +1,9 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
-const resource_timeoff = {
-  entity: 'resource_timeoff',
-  title: 'resource_timeoff',
+const employee_timeof = {
+  entity: 'employee_timeof',
+  title: 'employee_timeof',
   defaultKey: 'name',
   forms: {
     insert: {
@@ -34,8 +34,11 @@ const resource_timeoff = {
             {
               field: 'ts_range',
             },
+            {
+              field: 'request',
+            },            
           ],
-          format: [[0], [1], [2], [3]],
+          format: [[0], [1], [2], [3], [4]],
         },
       ],
     },
@@ -74,6 +77,18 @@ const resource_timeoff = {
       inputMethod: 'timestamp_r',
       "width" : 400
     },
+    approval:{
+      defaultValue: 'Pending approval',
+      inputMethod: 'select'
+    },
+    request:{
+      inputMethod: 'textArea',
+      "width" : 400
+    }
+    approved_by:{
+      inputMethod: 'textArea',
+      inputMethod: 'input'
+    }    
   },
 };
-export { resource_timeoff };
+export { employee_timeof };

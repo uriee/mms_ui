@@ -67,7 +67,7 @@ class CreateForm extends PureComponent {
               : null
             : value;
         value =
-          this.props.fields[key].inputMethod === 'timestamp'
+          this.props.fields[key].inputMethod === 'timestamp_t'
             ? value
               ? [moment(value[0], 'YYYY-MM-DD HH:mm:ss'), moment(value[1], 'YYYY-MM-DD HH:mm:ss')]
               : null

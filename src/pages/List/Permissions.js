@@ -212,14 +212,16 @@ class Permissions extends PureComponent {
               )}
             </Form.Item>
 
-            { null && <Form.Item label="Type" labelCol={{ span: 1 }} wrapperCol={{ span: 4 }}>
-              {getFieldDecorator('type')(
-                <Select placeholder="Edit Access Or Permissions" onChange={this.handleTypeChange}>
-                  <Option value="Access">Access</Option>
-                  <Option value="Permissions">Permissions</Option>
-                </Select>
-              )}
-            </Form.Item>}
+            {null && (
+              <Form.Item label="Type" labelCol={{ span: 1 }} wrapperCol={{ span: 4 }}>
+                {getFieldDecorator('type')(
+                  <Select placeholder="Edit Access Or Permissions" onChange={this.handleTypeChange}>
+                    <Option value="Access">Access</Option>
+                    <Option value="Permissions">Permissions</Option>
+                  </Select>
+                )}
+              </Form.Item>
+            )}
             <Form.Item wrapperCol={{ span: 4, offset: 1 }}>
               <Button type="primary" htmlType="submit">
                 Save

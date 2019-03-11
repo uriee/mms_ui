@@ -282,6 +282,12 @@ const equipment = {
       defaultValue: true,
       sorter: true,
       align: 'right',
+      inputRules: [
+        {
+          required: true,
+          message: 'This field is required',
+        },
+      ],      
     },
     calibrated: {
       dataIndex: 'calibrated',

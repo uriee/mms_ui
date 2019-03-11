@@ -184,11 +184,14 @@ class TableList extends PureComponent {
         key: `${field.dataIndex ? field.dataIndex : field.name}-${fi}`,
         sorter: field.sorter ? field.sorter : false /*if the table can be sotrted by this field*/,
         link: field.link ? field.link : false /*goto link when clicked upon*/,
+        son: field.son,
         selectValues: field.selectValues
           ? field.selectValues
           : null /*in case you need to choose from constants in the schema*/,
         //fixed: (field.dataIndex === "name" ? 'left' : /*field.son ? 'right' */'none'),
-        width: field.width ? field.width : 200 /*field.son ? formatMessage({ id: `pages.${field.name}` }).length * 7 : field.dataIndex === "name" ? 100 : 0,*/,
+        width: field.width
+          ? field.width
+          : 200 /*field.son ? formatMessage({ id: `pages.${field.name}` }).length * 7 : field.dataIndex === "name" ? 100 : 0,*/,
         render: (x, z) =>
           !x && !field.dataIndex ? (
             <span key={fi}>p</span>
@@ -204,10 +207,7 @@ class TableList extends PureComponent {
               {x ? x.toString() : <Icon type="double-right" color="mgenta" />}
             </a>
           ) : field.dataIndex === 'tags' && x ? (
-            this.tagsRender(
-              x,
-              fi
-            )
+            this.tagsRender(x, fi)
           ) : field.dataIndex === 'resource_names' && x ? (
             this.resourcesRender(x, z)
           ) : x && field.inputMethod === 'bool' ? (
@@ -223,10 +223,25 @@ class TableList extends PureComponent {
           ) : (
             x
           ),
-         align: lang[getLocale()] ? lang[getLocale()].align  : 'left',
+        align: lang[getLocale()] ? lang[getLocale()].align : 'left',
       }));
     this.columns.push({ title: '' });
-    this.schema.forms.update &&
+    this.columns = 
+    this.schema.forms.update ?
+            this.columns = [{
+              title: <Icon type="edit" />,
+              //fixed : 'right',
+              width: 40,
+              render: (text, record) => (
+                <Fragment>
+                  <a onClick={() => this.handleUpdateModalVisible(true, record)}>
+                    {' '}
+                    <Icon type="edit" />
+                  </a>
+                </Fragment>
+              ),
+            }, ...this.columns] : this.columns
+      /*
       this.columns.push({
         title: '',
         //fixed : 'right',
@@ -240,6 +255,7 @@ class TableList extends PureComponent {
           </Fragment>
         ),
       });
+      */
     //if(lang[getLocale()].align === 'right') this.columns.reverse()
     return 1;
   };
@@ -286,7 +302,7 @@ class TableList extends PureComponent {
   /*--- HandleTable Pagination and sorting  ----*/
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues } = this.state;
+    const { filtersArgformValues } = this.state;
 
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
@@ -294,10 +310,11 @@ class TableList extends PureComponent {
       return newObj;
     }, {});
 
+console.log("~~~~~~~~~~~~~~~~~~~~~~~1: ",this.state)
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
+      //currentPage: pagination.current,
+      //pageSize: pagination.pageSize,
+      ...this.state.formValues,
       ...filters,
     };
     if (sorter.field) {
@@ -380,10 +397,12 @@ class TableList extends PureComponent {
         ...fieldsValue,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
+
       const filterString = Object.keys(values)
         .filter(x => values[x])
         .reduce((o, x) => o + `${x}=${values[x]}&`, '');
       router.push(`${this.props.route.path}?${filterString}`);
+      this.setState({formValues : {...this.state.formValues, ...values }})
 
       dispatch({
         type: 'action/fetch',
@@ -569,7 +588,7 @@ class TableList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           {this.columns
-            .filter(col => col.dataIndex && col.dataIndex !== 'tags')
+            .filter(col => col.dataIndex && col.dataIndex !== 'tags').filter(col => !col.son) 
             .slice(from, to)
             .map(col => (
               <Col md={8} sm={24} key={'mainform' + col.dataIndex}>
@@ -614,7 +633,7 @@ class TableList extends PureComponent {
       pagination={false} //{this.listPaginationProps}
       renderItem={item => (
         <List.Item>
-          <Card title={item.name} key={item.name}>
+          <Card title={item.name || ''} key={item.name}>
             {//renders fields and values
             Object.keys(item)
               .filter(x => this.schema.fields.hasOwnProperty(x) && x !== 'id' && item[x])
@@ -644,7 +663,12 @@ class TableList extends PureComponent {
                     style={{ marginTop: 12, marginLeft: 8, color: '#fa8c16' }}
                     color="#fa8c16"
                     key={item.name + 'div' + i}
-                    onClick={() => router.push(`${link}`)}
+                    onClick={() => 
+                      {
+                      localStorage.setItem('lastEntity', item.name)
+                      router.push(`${link}`)
+                      }
+                    }
                   >
                     <span> {formatMessage({ id: `pages.${x}` })} </span>
                     <span>
@@ -658,8 +682,8 @@ class TableList extends PureComponent {
                 key={`bt_update_${item.name}`}
                 style={{ marginTop: 12, float: 'right' }}
                 onClick={() => this.handleUpdateModalVisible(true, item)}
-              >
-                Update
+              >\
+                <Icon type="edit" />
               </Button>
             )}
           </Card>
@@ -677,6 +701,7 @@ class TableList extends PureComponent {
       columns={this.columns}
       onSelectRow={this.handleSelectRows}
       onChange={this.handleStandardTableChange}
+      nodelete={this.schema.nodelete}
     />
   );
 
@@ -684,27 +709,23 @@ class TableList extends PureComponent {
     const {
       action: { data },
       loading,
-      location
+      location,
     } = this.props;
 
-    if(this.state.formValues.name != location.query.name) {
+    if (this.state.formValues.name != location.query.name) {
       const params = this.props.location ? this.props.location.query : {};
       const { dispatch } = this.props;
-      this.setState({...this.state,formValues:{name:location.query.name, entity:this.state.formValues.entity}})
+      this.setState({
+        ...this.state,
+        formValues: { name: location.query.name, entity: this.state.formValues.entity },
+      });
       dispatch({
         type: 'action/fetch',
         payload: { ...params, entity: this.entity },
-      });      
-      
+      });
     }
 
-    console.log(
-      'DATA',     
-      this.state,
-      location,
-      localStorage.getItem('lastEntity'),
-      getLocale()
-    );
+    console.log('DATA', this.state, location, localStorage.getItem('lastEntity'), getLocale());
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
     this.formFields = formFields(this.schema.fields);
     if (data.entity !== this.entity) return <span />;

@@ -20,16 +20,19 @@ export default {
     },
 
     *fetchNotices(_, { call, put }) {
-      const data = yield call(queryNotices);
+      const userId = JSON.parse(localStorage.user).id
+      const data = yield call(queryNotices,{userId: userId});
+      console.log("!!@@##$$:",data.data)
       yield put({
         type: 'saveNotices',
-        payload: data,
+        payload: data.data,
       });
       yield put({
         type: 'user/changeNotifyCount',
-        payload: data.length,
+        payload: data.data.length,
       });
     },
+
     *clearNotices({ payload }, { put, select }) {
       yield put({
         type: 'saveClearedNotices',

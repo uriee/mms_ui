@@ -111,7 +111,9 @@ class StandardTable extends PureComponent {
             showIcon
           />
         </div>
+        {!this.props.nodelete ?
         <Table
+          className="xxxx"
           loading={loading}
           rowKey={rowKey || 'key'}
           rowSelection={rowSelection}
@@ -119,8 +121,20 @@ class StandardTable extends PureComponent {
           columns={columns}
           pagination={false}
           onChange={this.handleTableChange}
-          scroll={{ x: columns.length * 130, y: 440 }}
+          scroll={{ x: columns.length * 130 , y: 440 }}
         />
+        :
+        <Table
+          className="xxxx"
+          loading={loading}
+          rowKey={rowKey || 'key'}
+          dataSource={list}
+          columns={columns}
+          pagination={false}
+          onChange={this.handleTableChange}
+          scroll={{ x: columns.length * 130 , y: 440 }}
+        />        
+      }
       </div>
     );
   }

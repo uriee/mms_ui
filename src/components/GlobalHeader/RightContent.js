@@ -117,6 +117,8 @@ export default class GlobalHeaderRight extends PureComponent {
     };
     const noticeData = this.getNoticeData();
     const unreadMsg = this.getUnreadData(noticeData);
+    //console.log("noticeData --- ",noticeData )
+    //console.log("unreadMsg --- ",unreadMsg)
     let className = styles.right;
     if (theme === 'dark') {
       className = `${styles.right}  ${styles.dark}`;
@@ -148,7 +150,8 @@ export default class GlobalHeaderRight extends PureComponent {
             <Icon type="question-circle-o" />
           </a>
         </Tooltip>
-        <NoticeIcon
+
+        { 1 &&         <NoticeIcon
           className={styles.action}
           count={currentUser.unreadCount}
           onItemClick={(item, tabProps) => {
@@ -194,7 +197,8 @@ export default class GlobalHeaderRight extends PureComponent {
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
             {...loadMoreProps}
           />
-        </NoticeIcon>
+        </NoticeIcon>}
+
         {currentUser.name ? (
           <HeaderDropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>

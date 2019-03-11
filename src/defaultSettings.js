@@ -8,12 +8,12 @@ module.exports = {
   fixSiderbar: false, // sticky siderbar
 
   menu: {
-    disableLocal: false,
+    disableLocal: true,
   },
-  title: 'BMK Group',
+  title: '',
   pwa: true,
   // your iconfont Symbol Scrip Url
   // eg：//at.alicdn.com/t/font_1039637_btcrd5co4w.js
   iconfontUrl: '',
-  Logic: 'http://192.9.200.101/', //'http://3.16.188.229/',
+  Logic: 'http://192.9.200.101/'//'http://3.16.188.229/',
 };

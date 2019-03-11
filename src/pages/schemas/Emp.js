@@ -32,6 +32,13 @@ const emp = {
               },
             },
             {
+              field: 'manager',
+              placeholder: 'Manager?',
+              style: {
+                width: '80%',
+              },
+            },            
+            {
               field: 'id_n',
               placeholder: 'ID Number',
               style: {
@@ -53,7 +60,7 @@ const emp = {
               },
             },
           ],
-          format: [[0, 2], [1], [3], [4], [5]],
+          format: [[0, 2], [1,3], [4], [5], [6]],
         },
         {
           title: 'Employee Names',
@@ -84,8 +91,20 @@ const emp = {
                 width: '80%',
               },
             },
+            {
+              field: 'email',
+              style: {
+                width: '80%',
+              },
+            },
+            {
+              field: 'phone',
+              style: {
+                width: '80%',
+              },
+            },                        
           ],
-          format: [[0, 1], [2, 3]],
+          format: [[0, 1], [2, 3],[4,5]],
         },
         {
           title: 'Details',
@@ -107,14 +126,21 @@ const emp = {
               },
             },
             {
+              field: 'delivery_method',
+              placeholder: 'Delivery Method',
+              style: {
+                width: '80%',
+              }
+            },            
+            {
               field: 'tags',
               placeholder: 'Tags',
               style: {
                 width: '100%',
-              },
-            },
+              }
+            },              
           ],
-          format: [[0, 1], [2]],
+          format: [[0, 1,],[2], [3]],
         },
       ],
     },
@@ -145,6 +171,13 @@ const emp = {
               },
             },
             {
+              field: 'manager',
+              placeholder: 'Manager?',
+              style: {
+                width: '80%',
+              },
+            },             
+            {
               field: 'id_n',
               placeholder: 'ID Number',
               style: {
@@ -166,10 +199,10 @@ const emp = {
               },
             },
           ],
-          format: [[0, 2], [1], [3], [4], [5]],
+          format: [[0, 2], [1,3], [4], [5], [6]],
         },
         {
-          title: 'Employy Names',
+          title: 'Employee Details',
           fields: [
             {
               field: 'fname',
@@ -184,11 +217,23 @@ const emp = {
                 width: '100%',
               },
             },
+            {
+              field: 'email',
+              style: {
+                width: '80%',
+              },
+            },
+            {
+              field: 'phone',
+              style: {
+                width: '80%',
+              },
+            },            
           ],
-          format: [[0], [1]],
+          format: [[0,1],[2,3]],
         },
         {
-          title: 'Details',
+          title: 'More Details',
           fields: [
             {
               field: 'dept_name',
@@ -207,6 +252,13 @@ const emp = {
               },
             },
             {
+              field: 'delivery_method',
+              placeholder: 'Delivery Method',
+              style: {
+                width: '80%',
+              }
+            },            
+            {
               field: 'tags',
               placeholder: 'Tags',
               style: {
@@ -214,7 +266,7 @@ const emp = {
               },
             },
           ],
-          format: [[0, 1], [2]],
+          format: [[0, 1], [2], [3]],
         },
       ],
     },
@@ -259,11 +311,7 @@ const emp = {
         {
           required: true,
           message: 'This field is required',
-        },
-        {
-          min: 2,
-          message: ' minimum 2 character',
-        },
+        }
       ],
       required: false,
     },
@@ -274,11 +322,7 @@ const emp = {
         {
           required: true,
           message: 'This field is required',
-        },
-        {
-          min: 2,
-          message: ' minimum 2 character',
-        },
+        }
       ],
       required: false,
     },
@@ -288,6 +332,24 @@ const emp = {
       sorter: true,
       align: 'right',
     },
+    manager: {
+      dataIndex: 'manager',
+      inputMethod: 'bool',
+    },
+    email: {
+      dataIndex: 'email',
+      inputMethod: 'input',
+    },
+    phone: {
+      dataIndex: 'phone',
+      inputMethod: 'input',
+    },        
+    delivery_method: {
+      dataIndex: 'delivery_method',
+      inputMethod: 'select',
+      selectValues: ['Integral email', 'External email', 'Both'],       
+      required: false,
+    },        
     id_n: {
       dataIndex: 'id_n',
       inputMethod: 'input',

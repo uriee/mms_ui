@@ -247,6 +247,7 @@ export default {
   'pages.email': 'Email',
   'pages.tags': 'Tags',
   'pages.title': 'Title',
+  'pages.flag_o' : 'Add Time',
   'pages.created_at': 'Created At',
   'pages.last_login': 'Last Login',
   'pages.password': 'Password',

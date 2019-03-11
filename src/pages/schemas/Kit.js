@@ -76,7 +76,7 @@ const kit = {
     name: {
       dataIndex: 'name',
       sorter: true,
-      required : false,
+      required: false,
       inputRules: [
         {
           required: true,

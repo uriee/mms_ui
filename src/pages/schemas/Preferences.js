@@ -5,6 +5,7 @@ const preferences = {
   entity: 'preferences',
   title: 'Preferencess',
   defaultKey: 'name',
+  nodelete: true,
   forms: {
     insert: {
       steps: [
@@ -31,22 +32,14 @@ const preferences = {
     update: {
       steps: [
         {
-          title: 'Details',
+          title: 'Update Value',
           fields: [
-            {
-              field: 'name',
-              placeholder: 'Name',
-            },
-            {
-              field: 'description',
-              placeholder: 'Description',
-            },
             {
               field: 'value',
               placeholder: 'Value',
             },
           ],
-          format: [[0, 2], [1]],
+          format: [[0]],
         },
       ],
     },

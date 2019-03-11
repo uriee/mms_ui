@@ -152,10 +152,6 @@ const user = {
           required: true,
           message: 'This field is required',
         },
-        {
-          min: 2,
-          message: ' minimum 2 character',
-        },
       ],
     },
     title: {
@@ -194,7 +190,7 @@ const user = {
           message: 'This field is required',
         },
         {
-          min: 6,
+          min: 4,
           message: ' minimum 4 character',
         },
       ],
