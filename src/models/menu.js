@@ -15,6 +15,7 @@ function formatter(data, parentAuthority, parentName) {
       }
 
       let locale = 'menu';
+      console.log('---', locale, parentName, item, formatMessage({ id: locale }));
       if (parentName) {
         locale = `${parentName}.${item.name}`;
       } else {
@@ -22,9 +23,7 @@ function formatter(data, parentAuthority, parentName) {
       }
       // if enableMenuLocale use item.name,
       // close menu international
-      const name = menu.disableLocal
-        ? item.name
-        : formatMessage({ id: locale, defaultMessage: item.name });
+      const name = formatMessage({ id: locale, defaultMessage: item.name });
       const result = {
         ...item,
         name,

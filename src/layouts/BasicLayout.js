@@ -13,6 +13,7 @@ import PageLoading from '@/components/PageLoading';
 import SiderMenu from '@/components/SiderMenu';
 import getPageTitle from '@/utils/getPageTitle';
 import styles from './BasicLayout.less';
+import router from 'umi/router';
 
 // lazy load SettingDrawer
 const SettingDrawer = React.lazy(() => import('@/components/SettingDrawer'));
@@ -77,19 +78,28 @@ class BasicLayout extends React.Component {
     });
   }
 
-  getContext() {  
+  getContext() {
     const { location, breadcrumbNameMap, history } = this.props;
     const next = location.pathname && location.pathname.split('/')[1];
     const current = localStorage.getItem('bread') ? JSON.parse(localStorage.getItem('bread')) : [];
-    const name = location.query.tags || location.query.name
+    const last = current[current.length - 1];
+    const name = location.query.tags || location.query.name;
     const query = name ? `(${name})` : '';
     const title =
-      breadcrumbNameMap[location.pathname] && (breadcrumbNameMap[location.pathname].name || breadcrumbNameMap[location.pathname].tags) + query;
+      breadcrumbNameMap[location.pathname] &&
+      (breadcrumbNameMap[location.pathname].name || breadcrumbNameMap[location.pathname].tags) +
+        query;
     const obj = location.pathname &&
       breadcrumbNameMap[location.pathname] && {
         key: location.pathname,
         href: location.pathname + location.search,
         title: title,
+      };
+    if (JSON.stringify(last) === JSON.stringify(obj))
+      return {
+        location,
+        breadcrumbNameMap,
+        current,
       };
     const bread =
       history.action === 'POP'
@@ -97,7 +107,7 @@ class BasicLayout extends React.Component {
         : next === 'router'
         ? [...current, obj]
         : [obj];
-    localStorage.setItem('bread', JSON.stringify(bread));    
+    localStorage.setItem('bread', JSON.stringify(bread));
     return {
       location,
       breadcrumbNameMap,
@@ -133,6 +143,8 @@ class BasicLayout extends React.Component {
   };
 
   render() {
+    if (!localStorage.getItem('user') || !JSON.parse(localStorage.getItem('user')).username)
+      router.push('/user/login');
     const {
       navTheme,
       layout: PropsLayout,
@@ -143,7 +155,7 @@ class BasicLayout extends React.Component {
       breadcrumbNameMap,
       fixedHeader,
     } = this.props;
-/*
+    /*
     const crumbs = JSON.parse(localStorage.getItem('bread'))
     const last_crumb = crumbs && crumbs.slice(crumbs.length-1,crumbs.length)[0]
     const last_crumb_name = last_crumb.href && last_crumb.href.split('tags=')[1]
