@@ -9,14 +9,14 @@ const FooterView = () => (
       links={[
         {
           key: 'cbt',
-          title: 'CBT ',
-          href: 'https://cbt.co.il',
+          title: 'Smart-Fact',
+          href: 'https://Smart-Fact.com',
           blankTarget: true,
         },
       ]}
       copyright={
         <Fragment>
-          Copyright <Icon type="copyright" /> 2018 CBT MES
+          Copyright <Icon type="copyright" /> 2018 
         </Fragment>
       }
     />
