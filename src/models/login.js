@@ -13,15 +13,13 @@ export default {
 
   effects: {
     *login({ payload }, { call, put }) {
-      console.log('1:', payload);
       //const alogin = (payload.userName != 'uri' ? fakeAccountLogin : accountLogin)
       const response = yield call(accountLogin, payload);
-      console.log('login response:', response);
       yield put({
         type: 'changeLoginStatus',
         payload: response,
       });
-      console.log('iiiiiiii');
+
       // Login successfully
       if (response.statusText === 'OK' || response.status === 'ok') {
         reloadAuthorized();
@@ -29,10 +27,8 @@ export default {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
-        console.log('aaaaaaaaaaaaaaaaaaa:', urlParams, params);
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
-          console.log(' redirectUrlParams:', redirectUrlParams);
           if (redirectUrlParams.origin === urlParams.origin) {
             redirect = redirect.substr(urlParams.origin.length);
             if (redirect.startsWith('/#')) {
@@ -43,6 +39,7 @@ export default {
             return;
           }
         }
+        redirect = redirect.includes('login') ? null : redirect //fixed bug when redirecting back to user/login 
         yield put(routerRedux.replace(redirect || '/'));
       }
     },
