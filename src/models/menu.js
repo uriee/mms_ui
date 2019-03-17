@@ -15,7 +15,6 @@ function formatter(data, parentAuthority, parentName) {
       }
 
       let locale = 'menu';
-      console.log('---', locale, parentName, item, formatMessage({ id: locale }));
       if (parentName) {
         locale = `${parentName}.${item.name}`;
       } else {

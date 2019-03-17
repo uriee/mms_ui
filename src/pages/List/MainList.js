@@ -599,7 +599,7 @@ class TableList extends PureComponent {
             .map(col => (
               <Col md={8} sm={24} key={'mainform' + col.dataIndex}>
                 <FormItem label={col.title}>
-                  {getFieldDecorator(col.dataIndex)(<Input placeholder={col.title} />)}
+                  {getFieldDecorator(col.dataIndex)(<Input placeholder={col.title} style={{width: '80%'}}/>)}
                 </FormItem>
               </Col>
             ))}

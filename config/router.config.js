@@ -335,11 +335,11 @@ export default [
             },
           },
           {
-            path: '/hr/employees_timeoff',
-            name: 'employees_timeoff',
+            path: '/hr/employee_timeoff',
+            name: 'employee_timeoff',
             component: './List/MainList',
             params: {
-              entity: 'employees_timeoff',
+              entity: 'employee_timeoff',
             },
           },          
           {
