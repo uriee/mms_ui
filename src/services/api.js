@@ -23,8 +23,23 @@ export function fetch(params) {
   console.log('in fetch api', params);
   let x;
   const entity = params.entity;
+  const command = entity === 'tags' ? 'tags' : 'fetch'
   try {
-    x = myGet(`${Logic}mymes/${entity}?${stringify(params)}`, entity);
+    x = myGet(`${Logic}mymes/${command}?${stringify(params)}`, entity);
+  } catch (e) {
+    console.log(e);
+  }
+  console.log('Returned From myGet:', x);
+  return x;
+}
+
+
+export function fetchTags(params) {
+  console.log('in fetch api', params);
+  let x;
+  const entity = params.entity;
+  try {
+    x = myGet(`${Logic}mymes/tags?${stringify(params)}`, entity);
   } catch (e) {
     console.log(e);
   }
