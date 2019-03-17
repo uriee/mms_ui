@@ -39,6 +39,23 @@ const resource_timeoff = {
         },
       ],
     },
+    update: {
+      steps: [
+        {
+          title: 'Approval',
+          fields: [
+            {
+              field: 'approval',
+              placeholder: 'Approval Status',
+              style: {
+                width: '80%',
+              },
+            },
+          ],
+          format: [[0]],
+        },
+      ],
+    },
   },
   fields: {
     id: {
@@ -68,11 +85,25 @@ const resource_timeoff = {
       inputMethod: 'bool',
       defaultValue: false,
       sorter: true,
-      "width" : 150
+      width: 150,
     },
     ts_range: {
+      required: false,
       inputMethod: 'timestamp_r',
-      "width" : 400
+      width: 400,
+    },
+    request: {
+      inputMethod: 'textArea',
+      width: 400,
+    },
+    approval: {
+      defaultValue: 'Pending approval',
+      inputMethod: 'select',
+      selectValues: ['Pending approval', 'Approved', 'Rejected'],
+    },
+    approved_by: {
+      inputMethod: 'textArea',
+      inputMethod: 'input',
     },
   },
 };

@@ -1,7 +1,7 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
-const employee_timeof = {
+const employee_timeoff = {
   entity: 'employee_timeof',
   title: 'employee_timeof',
   defaultKey: 'name',
@@ -26,19 +26,10 @@ const employee_timeof = {
               },
             },
             {
-              field: 'flag_o',
-              style: {
-                width: '20%',
-              },
-            },
-            {
-              field: 'ts_range',
-            },
-            {
               field: 'request',
-            },            
+            },
           ],
-          format: [[0], [1], [2], [3], [4]],
+          format: [[0], [1], [2]],
         },
       ],
     },
@@ -67,28 +58,23 @@ const employee_timeof = {
         },
       ],
     },
-    flag_o: {
-      inputMethod: 'bool',
-      defaultValue: false,
-      sorter: true,
-      "width" : 150
-    },
     ts_range: {
+      required: false,
       inputMethod: 'timestamp_r',
-      "width" : 400
+      width: 400,
     },
-    approval:{
+    request: {
+      inputMethod: 'textArea',
+      width: 400,
+    },
+    approval: {
       defaultValue: 'Pending approval',
-      inputMethod: 'select'
+      inputMethod: 'select',
     },
-    request:{
+    approved_by: {
       inputMethod: 'textArea',
-      "width" : 400
-    }
-    approved_by:{
-      inputMethod: 'textArea',
-      inputMethod: 'input'
-    }    
+      inputMethod: 'input',
+    },
   },
 };
-export { employee_timeof };
+export { employee_timeoff };

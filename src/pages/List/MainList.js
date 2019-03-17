@@ -45,6 +45,7 @@ import { resource } from '../schemas/Resource.js';
 import { availabilityProfile } from '../schemas/AvailabilityProfile.js';
 import { availabilities } from '../schemas/Availabilities.js';
 import { resource_timeoff } from '../schemas/Resource_timeoff.js';
+import { employee_timeoff } from '../schemas/Employee_timeoff.js';
 import { malfunctions } from '../schemas/Malfunctions.js';
 import { malfunction_types } from '../schemas/Malfunction_Types.js';
 import { repairs } from '../schemas/Repairs.js';
@@ -85,6 +86,7 @@ const schemas = {
   availabilityProfile: availabilityProfile,
   availabilities: availabilities,
   resource_timeoff: resource_timeoff,
+  employee_timeoff: employee_timeoff,
   malfunctions: malfunctions,
   malfunction_types: malfunction_types,
   repairs: repairs,
@@ -226,22 +228,25 @@ class TableList extends PureComponent {
         align: lang[getLocale()] ? lang[getLocale()].align : 'left',
       }));
     this.columns.push({ title: '' });
-    this.columns = 
-    this.schema.forms.update ?
-            this.columns = [{
-              title: <Icon type="edit" />,
-              //fixed : 'right',
-              width: 40,
-              render: (text, record) => (
-                <Fragment>
-                  <a onClick={() => this.handleUpdateModalVisible(true, record)}>
-                    {' '}
-                    <Icon type="edit" />
-                  </a>
-                </Fragment>
-              ),
-            }, ...this.columns] : this.columns
-      /*
+    this.columns = this.schema.forms.update
+      ? (this.columns = [
+          {
+            title: <Icon type="edit" />,
+            //fixed : 'right',
+            width: 40,
+            render: (text, record) => (
+              <Fragment>
+                <a onClick={() => this.handleUpdateModalVisible(true, record)}>
+                  {' '}
+                  <Icon type="edit" />
+                </a>
+              </Fragment>
+            ),
+          },
+          ...this.columns,
+        ])
+      : this.columns;
+    /*
       this.columns.push({
         title: '',
         //fixed : 'right',
@@ -310,7 +315,7 @@ class TableList extends PureComponent {
       return newObj;
     }, {});
 
-console.log("~~~~~~~~~~~~~~~~~~~~~~~1: ",this.state)
+    console.log('~~~~~~~~~~~~~~~~~~~~~~~1: ', this.state);
     const params = {
       //currentPage: pagination.current,
       //pageSize: pagination.pageSize,
@@ -402,7 +407,7 @@ console.log("~~~~~~~~~~~~~~~~~~~~~~~1: ",this.state)
         .filter(x => values[x])
         .reduce((o, x) => o + `${x}=${values[x]}&`, '');
       router.push(`${this.props.route.path}?${filterString}`);
-      this.setState({formValues : {...this.state.formValues, ...values }})
+      this.setState({ formValues: { ...this.state.formValues, ...values } });
 
       dispatch({
         type: 'action/fetch',
@@ -588,7 +593,8 @@ console.log("~~~~~~~~~~~~~~~~~~~~~~~1: ",this.state)
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           {this.columns
-            .filter(col => col.dataIndex && col.dataIndex !== 'tags').filter(col => !col.son) 
+            .filter(col => col.dataIndex && col.dataIndex !== 'tags')
+            .filter(col => !col.son)
             .slice(from, to)
             .map(col => (
               <Col md={8} sm={24} key={'mainform' + col.dataIndex}>
@@ -663,12 +669,10 @@ console.log("~~~~~~~~~~~~~~~~~~~~~~~1: ",this.state)
                     style={{ marginTop: 12, marginLeft: 8, color: '#fa8c16' }}
                     color="#fa8c16"
                     key={item.name + 'div' + i}
-                    onClick={() => 
-                      {
-                      localStorage.setItem('lastEntity', item.name)
-                      router.push(`${link}`)
-                      }
-                    }
+                    onClick={() => {
+                      localStorage.setItem('lastEntity', item.name);
+                      router.push(`${link}`);
+                    }}
                   >
                     <span> {formatMessage({ id: `pages.${x}` })} </span>
                     <span>
@@ -682,7 +686,8 @@ console.log("~~~~~~~~~~~~~~~~~~~~~~~1: ",this.state)
                 key={`bt_update_${item.name}`}
                 style={{ marginTop: 12, float: 'right' }}
                 onClick={() => this.handleUpdateModalVisible(true, item)}
-              >\
+              >
+                \
                 <Icon type="edit" />
               </Button>
             )}
