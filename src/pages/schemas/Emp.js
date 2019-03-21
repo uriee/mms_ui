@@ -33,11 +33,11 @@ const emp = {
             },
             {
               field: 'manager',
-              placeholder: 'Manager?',
+              placeholder: 'Manager type',
               style: {
                 width: '80%',
               },
-            },            
+            },
             {
               field: 'id_n',
               placeholder: 'ID Number',
@@ -60,7 +60,7 @@ const emp = {
               },
             },
           ],
-          format: [[0, 2], [1,3], [4], [5], [6]],
+          format: [[0, 2], [1, 3], [4], [5], [6]],
         },
         {
           title: 'Employee Names',
@@ -102,9 +102,9 @@ const emp = {
               style: {
                 width: '80%',
               },
-            },                        
+            },
           ],
-          format: [[0, 1], [2, 3],[4,5]],
+          format: [[0, 1], [2, 3], [4, 5]],
         },
         {
           title: 'Details',
@@ -130,17 +130,17 @@ const emp = {
               placeholder: 'Delivery Method',
               style: {
                 width: '80%',
-              }
-            },            
+              },
+            },
             {
               field: 'tags',
               placeholder: 'Tags',
               style: {
                 width: '100%',
-              }
-            },              
+              },
+            },
           ],
-          format: [[0, 1,],[2], [3]],
+          format: [[0, 1], [2], [3]],
         },
       ],
     },
@@ -176,7 +176,7 @@ const emp = {
               style: {
                 width: '80%',
               },
-            },             
+            },
             {
               field: 'id_n',
               placeholder: 'ID Number',
@@ -199,7 +199,7 @@ const emp = {
               },
             },
           ],
-          format: [[0, 2], [1,3], [4], [5], [6]],
+          format: [[0, 2], [1, 3], [4], [5], [6]],
         },
         {
           title: 'Employee Details',
@@ -228,9 +228,9 @@ const emp = {
               style: {
                 width: '80%',
               },
-            },            
+            },
           ],
-          format: [[0,1],[2,3]],
+          format: [[0, 1], [2, 3]],
         },
         {
           title: 'More Details',
@@ -256,8 +256,8 @@ const emp = {
               placeholder: 'Delivery Method',
               style: {
                 width: '80%',
-              }
-            },            
+              },
+            },
             {
               field: 'tags',
               placeholder: 'Tags',
@@ -311,7 +311,7 @@ const emp = {
         {
           required: true,
           message: 'This field is required',
-        }
+        },
       ],
       required: false,
     },
@@ -322,7 +322,7 @@ const emp = {
         {
           required: true,
           message: 'This field is required',
-        }
+        },
       ],
       required: false,
     },
@@ -334,7 +334,8 @@ const emp = {
     },
     manager: {
       dataIndex: 'manager',
-      inputMethod: 'bool',
+      inputMethod: 'select',
+      selectValues: ['None', 'Manager', 'Manager(HR)'],
     },
     email: {
       dataIndex: 'email',
@@ -343,13 +344,13 @@ const emp = {
     phone: {
       dataIndex: 'phone',
       inputMethod: 'input',
-    },        
+    },
     delivery_method: {
       dataIndex: 'delivery_method',
       inputMethod: 'select',
-      selectValues: ['Integral email', 'External email', 'Both'],       
+      selectValues: ['Integral email', 'External email', 'Both'],
       required: false,
-    },        
+    },
     id_n: {
       dataIndex: 'id_n',
       inputMethod: 'input',

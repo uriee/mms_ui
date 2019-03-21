@@ -4,6 +4,7 @@ import router from 'umi/router';
 import hash from 'hash.js';
 import { isAntdPro } from './utils';
 import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
+import { message } from 'antd';
 
 const getLang = () => {
   const langs = { 'en-US': 1, 'he-IL': 2, 'de-DE': 3 };
@@ -15,6 +16,7 @@ const getUser = () => {
   return { token: user.token, username: user.username };
 };
 
+/*
 axios.interceptors.response.use(
   function(response) {
     console.log(' in the interceptor', response);
@@ -25,7 +27,7 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
+*/
 const codeMessage = {
   0: 'TEST',
   200: '200',
@@ -94,8 +96,10 @@ export default async function mrequest(
    */
   console.log('url:', url);
 
-  let checkIfUpdated = options.method !== 'POST' && url.split('?')[1].includes('update');
+  //let checkIfUpdated = options.method !== 'POST' && url.split('?')[1].includes('update');
+  console.log('url2:', url);
   const user = getUser();
+  console.log('url3:', url);
   /* strip UI parameters from url in order to use the caching mechanizem, add lang and authentication*/
   url =
     options.method == 'POST'
@@ -104,10 +108,12 @@ export default async function mrequest(
   //    : url.split('?').shift() + `?lang=${getLang()}&token=${user.token}&user=${user.username}`;
   const fingerprint = url + (options.data ? JSON.stringify(options.data) : '');
   console.log('fingerprint:', fingerprint, options);
-  const hashcode = hash
+  /*const hashcode = hash
     .sha256()
     .update(fingerprint)
     .digest('hex');
+    */
+
   const defaultOptions = {
     credentials: 'include',
   };
@@ -155,7 +161,7 @@ export default async function mrequest(
     }
   }
   */
-  console.log('before fetch', { url: url, ...newOptions });
+  console.log('mrequest before ', { url: url, ...newOptions });
   try {
     const resp = await axios({
       url: url,
@@ -165,10 +171,13 @@ export default async function mrequest(
       checkStatus(e.response)
       throw new Error("Server Error")
     });*/
-    console.log('mrequest after axios call: ', resp);
     await checkStatus(resp);
-    await cachedSave(resp, hashcode);
-    console.log('mrequset after chseckstatus and cach:', resp);
+    //await cachedSave(resp, hashcode);
+    if (resp.status === 201) message.success('Inserted');
+    if (resp.status === 202) message.success('Updates');
+    if (resp.status === 205) message.success('Removed');
+    if (resp.status === 230) message.success('Successfull');
+    console.log('mrequset after ', resp);
     return resp.data;
   } catch (e) {
     console.log(
@@ -268,7 +277,6 @@ export default async function mrequest(
       description: 'Undefined Error',
     });
     router.push('/exception/404');
-    console.log('mrequest debug end :', window.location.href);
     return Promise.resolve('ERROR');
   }
   return 1;

@@ -4,7 +4,24 @@ The label in forms is determents by <FormattedMessage id=forms+entity+field /> f
 const resource = {
   entity: 'resource',
   title: 'Resources',
-  forms: {},
+  forms: {
+    /*
+    update: {
+      steps: [
+        {
+          title: 'Drag',
+          fields: [
+            {
+              field: 'dragable',
+              placeholder: '',
+            },
+          ],
+          format: [[0]],
+        },
+      ],
+    },
+    */
+  },
   fields: {
     id: {
       required: false,
@@ -64,6 +81,12 @@ const resource = {
           message: 'This field is required',
         },
       ],
+    },
+    dragable: {
+      dataIndex: 'dragable',
+      inputMethod: 'bool',
+      defaultValue: true,
+      sorter: true,
     },
     resource_timeoff: {
       link: '/router/resource_timeoff',

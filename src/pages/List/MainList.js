@@ -140,7 +140,6 @@ const formFields = obj => {
 class TableList extends PureComponent {
   constructor(props) {
     super(props);
-    console.log('IN CONSTRUCTOR', this.props);
     this.entity = this.props.route.params.entity;
 
     this.state = {
@@ -172,7 +171,6 @@ class TableList extends PureComponent {
   }
   /*---  change the schema in page loading ---*/
   schemaChange = () => {
-    //  console.log('0000000000000000000000:',this.entity,schemas[this.entity] )
     this.schema = schemas[this.entity];
     this.fields = pushKey(this.schema.fields);
     this.columns = this.fields
@@ -315,7 +313,6 @@ class TableList extends PureComponent {
       return newObj;
     }, {});
 
-    console.log('~~~~~~~~~~~~~~~~~~~~~~~1: ', this.state);
     const params = {
       //currentPage: pagination.current,
       //pageSize: pagination.pageSize,
@@ -384,7 +381,6 @@ class TableList extends PureComponent {
   };
 
   handleSelectRows = rows => {
-    console.log('!@#!@#: c ', rows);
     this.setState({
       selectedRows: rows,
     });
@@ -454,7 +450,7 @@ class TableList extends PureComponent {
     let lang_id = lang[getLocale()].id;
     values.name = values.name || this.state.formValues.name;
     values.sig_date = moment()
-      .tz('Asia/Jerusalem')
+      //.tz('Asia/Jerusalem')
       .format();
     values.sig_user =
       JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
@@ -473,7 +469,7 @@ class TableList extends PureComponent {
     if (params.name) {
       this.handleFormReset;
     }
-    message.success('Raw sent to DB');
+
     this.handleModalVisible();
   };
 
@@ -496,7 +492,7 @@ class TableList extends PureComponent {
       callback: this.handleFormAfterIUD,
     });
 
-    message.success('Raw was Updated Successfully');
+    //message.success('Raw was Updated Successfully');
     this.handleUpdateModalVisible();
   };
 
@@ -552,7 +548,6 @@ class TableList extends PureComponent {
       cancelText: 'No',
       onOk: () => {
         remove(rows);
-        message.success('Raw was Deleted');
         return;
       },
     });
@@ -567,7 +562,6 @@ class TableList extends PureComponent {
       cancelText: 'No',
       onOk: () => {
         sendFunction(funcName, rows);
-        message.success('Successfull');
         return;
       },
     });
@@ -587,8 +581,6 @@ class TableList extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-
-    /*console.log('=========================:',this.props)     */
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
