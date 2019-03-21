@@ -20,22 +20,18 @@ const timeChartify = (data, interval) =>
   }));
 
 export function fetch(params) {
-  console.log('in fetch api', params);
   let x;
   const entity = params.entity;
-  const command = entity === 'tags' ? 'tags' : 'fetch'
+  const command = entity === 'tags' ? 'tags' : 'fetch';
   try {
     x = myGet(`${Logic}mymes/${command}?${stringify(params)}`, entity);
   } catch (e) {
     console.log(e);
   }
-  console.log('Returned From myGet:', x);
   return x;
 }
 
-
 export function fetchTags(params) {
-  console.log('in fetch api', params);
   let x;
   const entity = params.entity;
   try {
@@ -43,7 +39,16 @@ export function fetchTags(params) {
   } catch (e) {
     console.log(e);
   }
-  console.log('Returned From myGet:', x);
+  return x;
+}
+
+export async function fetchResources() {
+  let x;
+  try {
+    x = await myGet(`${Logic}mymes/resources?`);
+  } catch (e) {
+    console.log(e);
+  }
   return x;
 }
 
@@ -55,7 +60,6 @@ export async function fetch_dash(params) {
   } catch (e) {
     console.log(e);
   }
-  console.log('fetch dash', x);
   x.data['work_report_placements'] = timeChartify(
     x.data['work_report_placements'],
     params.interval
@@ -65,7 +69,6 @@ export async function fetch_dash(params) {
 }
 
 export async function insert(params) {
-  console.log('in insert:', params);
   const entity = params.entity;
   const ret = await mrequest(`${Logic}mymes/insert`, {
     method: 'POST',
@@ -73,7 +76,6 @@ export async function insert(params) {
       ...params,
     },
   });
-  console.log('retRETert:', ret);
   return ret;
 }
 
@@ -85,13 +87,11 @@ export async function remove(params) {
       ...params,
     },
   });
-  console.log('ret remove api:', ret);
   return ret;
 }
 
 export async function sendFunction(params) {
   const entity = params.entity;
-  console.log('_---_-____-:', params);
   const ret = await mrequest(`${Logic}mymes/func`, {
     method: 'POST',
     data: {
@@ -107,14 +107,13 @@ export async function fetchRoutes() {
   try {
     ret = await axios.get(`${Logic}mymes/routes`);
   } catch (error) {
-    console.error('in fetch routes', error);
+    console.error('Error in fetch routes', error);
   }
   return await JSON.parse(ret.data.main[0].routes);
 }
 
 export async function update(params) {
   console.log('********in update*********:', params);
-  const entity = params.entity;
   return await mrequest(`${Logic}mymes/update`, {
     method: 'POST',
     data: {
@@ -133,6 +132,19 @@ export async function updatePermissions(params) {
       data: {
         routes,
       },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function updateResources(params) {
+  console.log('********in updateResourceGroups*********:', params);
+  var ret;
+  try {
+    ret = await mrequest(`${Logic}mymes/updateResources`, {
+      method: 'POST',
+      data: params,
     });
   } catch (error) {
     console.error(error);

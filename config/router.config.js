@@ -86,7 +86,7 @@ export default [
               entity: 'work_report',
             },
             name: 'report',
-           },
+          },
           {
             path: '/production/identifiers',
             name: 'serials',
@@ -261,6 +261,12 @@ export default [
             },
           },
           {
+            path: '/plan/resourcetree',
+            name: 'resourcetree',
+            component: './List/ResourceTree',
+          },
+
+          {
             path: '/plan/resource_groups',
             name: 'resource_groups',
             component: './List/MainList',
@@ -341,7 +347,7 @@ export default [
             params: {
               entity: 'employee_timeoff',
             },
-          },          
+          },
           {
             path: '/hr/certifications',
             name: 'certifications',
@@ -661,7 +667,7 @@ export default [
               entity: 'process',
             },
             name: 'process',
-            },
+          },
           {
             component: './List/MainList',
             path: '/router/proc_act',
