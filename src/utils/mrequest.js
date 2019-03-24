@@ -12,8 +12,8 @@ const getLang = () => {
 };
 
 const getUser = () => {
-  const user = JSON.parse(localStorage.getItem('user')) || {};
-  return { token: user.token, username: user.username };
+  const user = localStorage.getItem('user') > '' && JSON.parse(localStorage.getItem('user')) || {};
+  return { token: user.token, user: user.username };
 };
 
 /*
@@ -97,14 +97,14 @@ export default async function mrequest(
   console.log('url:', url);
 
   //let checkIfUpdated = options.method !== 'POST' && url.split('?')[1].includes('update');
-  console.log('url2:', url);
   const user = getUser();
-  console.log('url3:', url);
+  options.data = {...options.data , ...user} 
+
   /* strip UI parameters from url in order to use the caching mechanizem, add lang and authentication*/
   url =
     options.method == 'POST'
       ? url
-      : url + `&lang=${getLang()}&token=${user.token}&user=${user.username}`;
+      : url + `&lang=${getLang()}&token=${user.token}&user=${user.user}`;
   //    : url.split('?').shift() + `?lang=${getLang()}&token=${user.token}&user=${user.username}`;
   const fingerprint = url + (options.data ? JSON.stringify(options.data) : '');
   console.log('fingerprint:', fingerprint, options);
@@ -117,7 +117,8 @@ export default async function mrequest(
   const defaultOptions = {
     credentials: 'include',
   };
-  const newOptions = { ...defaultOptions, ...options };
+
+  let  newOptions = { ...defaultOptions, ...options};
 
   if (
     newOptions.method === 'post' ||
@@ -131,8 +132,7 @@ export default async function mrequest(
         ...newOptions.headers,
       };
       newOptions.data = JSON.stringify(newOptions.data);
-      newOptions.data.token = user.token; /*add authentication */
-      newOptions.data.token = user.username; /*add authentication */
+
     } else {
       // newOptions.data is FormData
       newOptions.headers = {
@@ -174,7 +174,7 @@ export default async function mrequest(
     await checkStatus(resp);
     //await cachedSave(resp, hashcode);
     if (resp.status === 201) message.success('Inserted');
-    if (resp.status === 202) message.success('Updates');
+    if (resp.status === 202) message.success('Updated');
     if (resp.status === 205) message.success('Removed');
     if (resp.status === 230) message.success('Successfull');
     console.log('mrequset after ', resp);
@@ -234,6 +234,14 @@ export default async function mrequest(
       router.push('/exception/403');
       return 0;
     }
+    if (status === 408) {
+      notification.error({
+        message: `Please login`,
+        description: error,
+      });
+      router.push('/user/login');
+      return 0;
+    }    
     if (status <= 504 && status >= 500) {
       notification.error({
         message: `504 ${etitle}`,
