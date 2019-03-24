@@ -89,6 +89,7 @@ class StandardTable extends PureComponent {
     return (
       <div className={styles.standardTable}>
         <div className={styles.tableAlert}>
+        {selectedRowKeys.length ?
           <Alert
             message={
               <Fragment>
@@ -110,6 +111,8 @@ class StandardTable extends PureComponent {
             type="info"
             showIcon
           />
+          :<span/>
+        } 
         </div>
         {!this.props.nodelete ?
         <Table
