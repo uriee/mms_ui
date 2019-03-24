@@ -5,7 +5,6 @@ const resource = {
   entity: 'resource',
   title: 'Resources',
   forms: {
-    /*
     update: {
       steps: [
         {
@@ -20,7 +19,6 @@ const resource = {
         },
       ],
     },
-    */
   },
   fields: {
     id: {
@@ -53,20 +51,6 @@ const resource = {
       dataIndex: 'type',
       sorter: true,
       align: 'right',
-    },
-    dept_name: {
-      dataIndex: 'dept_name',
-      link: '/router/departments',
-      type: 'text',
-      sorter: true,
-      inputMethod: 'select',
-      chooser: 'departments',
-      inputRules: [
-        {
-          required: true,
-          message: 'This field is required',
-        },
-      ],
     },
     ap_name: {
       dataIndex: 'ap_name',

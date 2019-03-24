@@ -110,14 +110,6 @@ const emp = {
           title: 'Details',
           fields: [
             {
-              field: 'dept_name',
-              placeholder: 'Department',
-              style: {
-                width: '80%',
-                align: 'center',
-              },
-            },
-            {
               field: 'ap_name',
               placeholder: 'Availability',
               style: {
@@ -140,7 +132,7 @@ const emp = {
               },
             },
           ],
-          format: [[0, 1], [2], [3]],
+          format: [[0], [1], [2]],
         },
       ],
     },
@@ -236,14 +228,6 @@ const emp = {
           title: 'More Details',
           fields: [
             {
-              field: 'dept_name',
-              placeholder: 'Department',
-              style: {
-                width: '80%',
-                align: 'center',
-              },
-            },
-            {
               field: 'ap_name',
               placeholder: 'Availability',
               style: {
@@ -266,7 +250,7 @@ const emp = {
               },
             },
           ],
-          format: [[0, 1], [2], [3]],
+          format: [[0], [1], [2]],
         },
       ],
     },
@@ -373,20 +357,6 @@ const emp = {
       sorter: true,
       inputMethod: 'select',
       chooser: 'users',
-    },
-    dept_name: {
-      dataIndex: 'dept_name',
-      link: '/router/departments',
-      type: 'text',
-      sorter: true,
-      inputMethod: 'select',
-      chooser: 'departments',
-      inputRules: [
-        {
-          required: true,
-          message: 'This field is required',
-        },
-      ],
     },
     ap_name: {
       dataIndex: 'ap_name',

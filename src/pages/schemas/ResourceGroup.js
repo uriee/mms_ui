@@ -65,14 +65,6 @@ const resourceGroup = {
           title: 'Details',
           fields: [
             {
-              field: 'dept_name',
-              placeholder: 'Department',
-              style: {
-                width: '80%',
-                align: 'center',
-              },
-            },
-            {
               field: 'ap_name',
               placeholder: 'Availability',
               style: {
@@ -81,7 +73,7 @@ const resourceGroup = {
               },
             },
           ],
-          format: [[0], [1]],
+          format: [[0]],
         },
       ],
     },
@@ -139,21 +131,14 @@ const resourceGroup = {
           title: 'Details',
           fields: [
             {
-              field: 'dept_name',
-              placeholder: 'Department',
-              style: {
-                width: '100%',
-              },
-            },
-            {
               field: 'ap_name',
-              placeholder: 'Department',
+              placeholder: 'Availability Profile',
               style: {
                 width: '100%',
               },
             },
           ],
-          format: [[0], [1]],
+          format: [[0]],
         },
       ],
     },
@@ -213,20 +198,6 @@ const resourceGroup = {
       inputMethod: 'tags',
       chooser: 'resources',
       width: 300,
-      inputRules: [
-        {
-          required: true,
-          message: 'This field is required',
-        },
-      ],
-    },
-    dept_name: {
-      dataIndex: 'dept_name',
-      link: '/router/departments',
-      type: 'text',
-      sorter: true,
-      inputMethod: 'select',
-      chooser: 'departments',
       inputRules: [
         {
           required: true,

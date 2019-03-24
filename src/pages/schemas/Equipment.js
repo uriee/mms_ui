@@ -65,14 +65,6 @@ const equipment = {
           title: 'Details',
           fields: [
             {
-              field: 'dept_name',
-              placeholder: 'Department',
-              style: {
-                width: '80%',
-                align: 'center',
-              },
-            },
-            {
               field: 'ap_name',
               placeholder: 'Availability',
               style: {
@@ -102,7 +94,7 @@ const equipment = {
               placeholder: 'Last Calibration',
             },
           ],
-          format: [[0, 1], [2], [3], [4, 5]],
+          format: [[0], [1], [2], [3, 4]],
         },
       ],
     },
@@ -159,14 +151,6 @@ const equipment = {
           title: 'Details',
           fields: [
             {
-              field: 'dept_name',
-              placeholder: 'Department',
-              style: {
-                width: '80%',
-                align: 'center',
-              },
-            },
-            {
               field: 'ap_name',
               placeholder: 'Availability',
               style: {
@@ -196,7 +180,7 @@ const equipment = {
               placeholder: 'Last Calibration',
             },
           ],
-          format: [[0, 1], [2], [3], [4, 5]],
+          format: [[0], [1], [2], [3, 4]],
         },
       ],
     },
@@ -287,7 +271,7 @@ const equipment = {
           required: true,
           message: 'This field is required',
         },
-      ],      
+      ],
     },
     calibrated: {
       dataIndex: 'calibrated',
@@ -299,20 +283,6 @@ const equipment = {
       inputMethod: 'timestamp',
       defaultValue: null,
       sorter: true,
-    },
-    dept_name: {
-      dataIndex: 'dept_name',
-      link: '/router/departments',
-      type: 'text',
-      sorter: true,
-      inputMethod: 'select',
-      chooser: 'departments',
-      inputRules: [
-        {
-          required: true,
-          message: 'This field is required',
-        },
-      ],
     },
     ap_name: {
       dataIndex: 'ap_name',
