@@ -39,7 +39,7 @@ export default {
             return;
           }
         }
-        redirect = redirect.includes('login') ? null : redirect //fixed bug when redirecting back to user/login 
+        redirect = redirect && redirect.includes('login') ? false : redirect //fixed bug when redirecting back to user/login  
         yield put(routerRedux.replace(redirect || '/'));
       }
     },
