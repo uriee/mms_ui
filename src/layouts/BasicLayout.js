@@ -143,8 +143,8 @@ class BasicLayout extends React.Component {
   };
 
   render() {
-    if (!localStorage.getItem('user') || !JSON.parse(localStorage.getItem('user')).username)
-      router.push('/user/login');
+    //if (!localStorage.getItem('user') || !JSON.parse(localStorage.getItem('user')).username)
+      //router.push('/user/login');
     const {
       navTheme,
       layout: PropsLayout,

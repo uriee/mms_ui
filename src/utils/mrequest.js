@@ -102,12 +102,12 @@ export default async function mrequest(
 
   /* strip UI parameters from url in order to use the caching mechanizem, add lang and authentication*/
   url =
-    options.method == 'POST'
+    options.method === 'POST'
       ? url
       : url + `&lang=${getLang()}&token=${user.token}&user=${user.user}`;
   //    : url.split('?').shift() + `?lang=${getLang()}&token=${user.token}&user=${user.username}`;
   const fingerprint = url + (options.data ? JSON.stringify(options.data) : '');
-  console.log('fingerprint:', fingerprint, options);
+  console.log('fingerprint:', fingerprint, options,user);
   /*const hashcode = hash
     .sha256()
     .update(fingerprint)

@@ -56,7 +56,7 @@ export async function fetch_dash(params) {
   let x;
   const data = params.data;
   try {
-    x = await axios.get(`${Logic}mymes/dash/?${stringify(params)}`);
+    x = await mrequest(`${Logic}mymes/dash/?${stringify(params)}`,{method : 'GET'});
   } catch (e) {
     console.log(e);
   }
