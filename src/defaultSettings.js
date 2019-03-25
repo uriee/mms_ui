@@ -11,9 +11,9 @@ module.exports = {
     disableLocal: true,
   },
   title: '',
-  pwa: true,
+  pwa: false,
   // your iconfont Symbol Scrip Url
   // eg：//at.alicdn.com/t/font_1039637_btcrd5co4w.js
   iconfontUrl: '',
-  Logic: 'http://3.16.188.229/'//, 'https://18.191.207.239/''http://192.9.200.101/'
+  Logic: 'http://192.9.200.101/'//'https://bmkil.smart-fact.com/''https://demo.smart-fact.com/'
 };

@@ -169,6 +169,12 @@ class TableList extends PureComponent {
       payload: { ...params, entity: this.entity },
     });
   }
+
+
+    componentWillUnmount(){
+      if (this.insertKey.hasOwnProperty('name') || this.insertKey.hasOwnProperty('parent'))  localStorage.setItem('lastEntity', '')
+    }
+
   /*---  change the schema in page loading ---*/
   schemaChange = () => {
     this.schema = schemas[this.entity];
@@ -267,7 +273,7 @@ class TableList extends PureComponent {
     <span key={`tags-${j}`}>
       {x.map((tag, i) => (
         <a key={`${tag}a-${j}-${i}`} onClick={() => router.push(`/router/tags?tags=${tag}`)}>
-          <Tag color="blue" key={`${tag}-${j}-${i}`}>
+          <Tag  style={{marginTop: 8}} color="blue" key={`${tag}-${j}-${i}`}>
             {tag}
           </Tag>
         </a>
@@ -276,6 +282,8 @@ class TableList extends PureComponent {
   );
   /* Renders the resources */
   resourcesRender = (x, z) => {
+    console.log('XXXXXXXX',x)
+    if (!x[0]) return <span/>
     const resourceTypeMap = {
       employee: { link: 'employees', color: 'green' },
       equipment: { link: 'equipments', color: 'orange' },
@@ -293,7 +301,7 @@ class TableList extends PureComponent {
             key={`atag-${z.name}-${tag}-${i}`}
             onClick={() => router.push(`/router/${links[i]}?name=${tag}`)}
           >
-            <Tag color={colors[i]} key={`rtag-${z.name}-${tag}-${i}`}>
+            <Tag style={{marginTop: 8}} color={colors[i]} key={`rtag-${z.name}-${tag}-${i}`}>
               {tag}
             </Tag>
           </a>
@@ -679,7 +687,6 @@ class TableList extends PureComponent {
                 style={{ marginTop: 12, float: 'right' }}
                 onClick={() => this.handleUpdateModalVisible(true, item)}
               >
-                \
                 <Icon type="edit" />
               </Button>
             )}

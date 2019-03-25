@@ -118,6 +118,7 @@ class Permissions extends PureComponent {
 
     const loop = data =>
       data.map(item => {
+        if(item.name === 'exception') return <span/>
         if (item.children && item.children.length) {
           return (
             <TreeNode key={item.key} title={item.title}>
