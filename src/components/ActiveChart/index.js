@@ -50,7 +50,7 @@ export default class ActiveChart extends Component {
 
     return (
       <div className={styles.activeChart}>
-        <NumberInfo subTitle="目标评估" total="有望达到预期" />
+        <NumberInfo subTitle="subTitle" total="total" />
         <div style={{ marginTop: 32 }}>
           <MiniArea
             animate={false}
@@ -74,8 +74,8 @@ export default class ActiveChart extends Component {
         {activeData && (
           <div>
             <div className={styles.activeChartGrid}>
-              <p>{[...activeData].sort()[activeData.length - 1].y + 200} 亿元</p>
-              <p>{[...activeData].sort()[Math.floor(activeData.length / 2)].y} 亿元</p>
+              <p>{[...activeData].sort()[activeData.length - 1].y + 200} ??</p>
+              <p>{[...activeData].sort()[Math.floor(activeData.length / 2)].y} ??</p>
             </div>
             <div className={styles.dashedLine}>
               <div className={styles.line} />
