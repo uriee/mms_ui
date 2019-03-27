@@ -13,7 +13,7 @@ const getLang = () => {
 
 const getUser = () => {
   const user = localStorage.getItem('user') > '' && JSON.parse(localStorage.getItem('user')) || {};
-  return { token: user.token, user: user.username };
+  return { token: user.token, user: user.username ,auth: localStorage.getItem('antd-pro-authority') };
 };
 
 /*
@@ -104,7 +104,7 @@ export default async function mrequest(
   url =
     options.method === 'POST'
       ? url
-      : url + `&lang=${getLang()}&token=${user.token}&user=${user.user}`;
+      : url + `&lang=${getLang()}&token=${user.token}&user=${user.user}&auth=${user.auth}`;
   //    : url.split('?').shift() + `?lang=${getLang()}&token=${user.token}&user=${user.username}`;
   const fingerprint = url + (options.data ? JSON.stringify(options.data) : '');
   console.log('fingerprint:', fingerprint, options,user);
