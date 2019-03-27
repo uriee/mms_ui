@@ -130,8 +130,8 @@ class Permissions extends PureComponent {
     this.setState({ type: value });
   };
 
-  sAuth = (authorityArr, profile, checked) =>{ console.log(authorityArr, profile, checked);
-    return authorityArr && authorityArr.length
+  sAuth = (authorityArr, profile, checked ) =>
+    authorityArr && authorityArr.length
       ? authorityArr.includes(profile)
         ? checked
           ? authorityArr
@@ -142,7 +142,6 @@ class Permissions extends PureComponent {
       : checked
       ? [profile]
       : [];
-  }
 
   onCheck = (checkedKeys, x) => {
     this.checked = checkedKeys;
@@ -153,9 +152,15 @@ class Permissions extends PureComponent {
     routes.map((item, i) => {
       console.log('~~~~', item);
       if (item.routes && item.routes.length) {
-        item.routes = this.setAuth(item.routes, profile);
-        const parent = item.routes.reduce((o, x) => o || x.authority.includes(profile), false);
-        item.authority = this.sAuth(item.authority, profile, parent);
+        item.routes = this.setAuth(item.routes, profile)
+        const parentV = item.routes.reduce((o, x) => o || x.authority.includes(profile), false)
+        const parentI = item.routes.reduce((o, x) => o || x.authI.includes(profile), false)        
+        const parentU = item.routes.reduce((o, x) => o || x.authU.includes(profile), false)
+        const parentD = item.routes.reduce((o, x) => o || x.authD.includes(profile), false)
+        item.authority = this.sAuth(item.authority, profile, parentV)
+        item.authI = this.sAuth(item.authI, profile, parentI)
+        item.authU = this.sAuth(item.authU, profile, parentU)
+        item.authD = this.sAuth(item.authD, profile, parentD)
         return item;
       }
       item.authority = this.sAuth(
