@@ -119,6 +119,7 @@ export default async function mrequest(
   };
 
   let  newOptions = { ...defaultOptions, ...options};
+  Object.keys(newOptions).forEach(x=> newOptions[x] = (typeof newOptions[x] === 'string'  ? newOptions[x].trim() : newOptions[x]))
 
   if (
     newOptions.method === 'post' ||
@@ -284,7 +285,7 @@ export default async function mrequest(
       message: `${status}`,
       description: 'Undefined Error',
     });
-    router.push('/exception/404');
+    router.push('/user/login');
     return Promise.resolve('ERROR');
   }
   return 1;
