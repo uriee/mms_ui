@@ -33,6 +33,7 @@ const FormItem = Form.Item;
 class ResourceTree extends PureComponent {
   constructor(props) {
     super(props);
+
     this.props.dispatch({
       type: 'resources/fetch',
     });
@@ -43,12 +44,16 @@ class ResourceTree extends PureComponent {
       searchFocusIndex: 0,
       searchFoundCount: null,
     };
+
+   
 }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.setState({ data: this.props.resources.list });
+  }
 
   render() {
-    if (!this.state.data) return <span />;
+    //if (!this.state.data) return <span />;
 
     const icons = {
       employee: 'user',
@@ -135,7 +140,7 @@ class ResourceTree extends PureComponent {
 
         <div style={{ height: 500 }}>
           <SortableTree
-            treeData={this.state.data || this.props.resources.list}
+            treeData={this.state.data || this.props.resources.list || []}
             onChange={data => this.setState({ data })}
             generateNodeProps={({ node, path }) => {
               const style = {
