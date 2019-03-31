@@ -28,6 +28,12 @@ import {
   Cascader,
 } from 'antd';
 
+const lang = {
+  'en-US': { id: 1, align: 'left' },
+  'he-IL': { id: 2, align: 'right' },
+  'de-DE': { id: 3, align: 'left' },
+};
+
 const { RangePicker } = DatePicker;
 
 const groupBy = function(xs, key) {
@@ -130,10 +136,10 @@ class CreateForm extends PureComponent {
 
   getFormItemFromSchema = fieldData => {
     const fieldName = fieldData.field;
+    if (fieldName === 'description' && lang[getLocale()].id === 1) return <span/>
     const fieldStyle = fieldData.style;
     const { form, fields } = this.props;
     const field = fields[fieldName];
-    //if (field.inputMethod === "select" && !this.props.hasOwnProperty('choosers')) return <span/> //a bug that need to be fixed
     const placeHolder = fieldData.placeholder || field.title;
     const formVals = this.state.formVals;
     let formField = null;
@@ -183,7 +189,7 @@ class CreateForm extends PureComponent {
           >
             {tagArray.map(option => (
               <Option key={option.name} value={option.name}>
-                {option.name}
+                {option.name + (option.description ? ': '+option.description : '') }
               </Option>
             ))}
           </Select>

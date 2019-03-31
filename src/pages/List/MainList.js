@@ -200,7 +200,7 @@ class TableList extends PureComponent {
           : 200 /*field.son ? formatMessage({ id: `pages.${field.name}` }).length * 7 : field.dataIndex === "name" ? 100 : 0,*/,
         render: (x, z) =>
           !x && !field.dataIndex ? (
-            <span key={fi}>p</span>
+            <span key={fi}></span>
           ) : field.link ? (
             <a
               onClick={() => {
