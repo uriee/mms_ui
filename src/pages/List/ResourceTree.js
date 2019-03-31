@@ -43,18 +43,12 @@ class ResourceTree extends PureComponent {
       searchFocusIndex: 0,
       searchFoundCount: null,
     };
-
-    this.first = 0;
-  }
+}
 
   componentDidMount() {}
 
   render() {
-    if (!this.props.resources.list) return <span />;
-    if (this.first === 2) {
-      this.setState({ data: this.props.resources.list });
-    }
-    this.first += 1;
+    if (!this.state.data) return <span />;
 
     const icons = {
       employee: 'user',
