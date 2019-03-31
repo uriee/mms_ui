@@ -249,11 +249,11 @@ export default [
         ],
       },
       {
-        name: 'plan',
-        path: '/plan',
+        name: 'resources',
+        path: '/resources',
         routes: [
           {
-            path: '/plan/resources',
+            path: '/resources/resources',
             name: 'resources',
             component: './List/MainList',
             params: {
@@ -261,13 +261,13 @@ export default [
             },
           },
           {
-            path: '/plan/resourcetree',
+            path: '/resources/resourcetree',
             name: 'resourcetree',
             component: './List/ResourceTree',
           },
 
           {
-            path: '/plan/resource_groups',
+            path: '/resources/resource_groups',
             name: 'resource_groups',
             component: './List/MainList',
             params: {
@@ -275,13 +275,35 @@ export default [
             },
           },
           {
-            path: '/plan/availability_profiles',
+            path: '/resources/availability_profiles',
             name: 'availability_profiles',
             component: './List/MainList',
             params: {
               entity: 'availabilityProfile',
             },
           },
+          {
+            path: '/resources/employees',
+            name: 'employees',
+            component: './List/MainList',
+            params: {
+              entity: 'emp',
+            },
+          },
+          {
+            path: '/resources/equipment',
+            name: 'equipment',
+            component: './List/MainList',
+            params: {
+              entity: 'equipment',
+            },
+          },                    
+        ],
+      },      
+      {
+        name: 'plan',
+        path: '/plan',
+        routes: [
           {
             path: '/plan/standards',
             name: 'standards',
