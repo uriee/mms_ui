@@ -197,7 +197,7 @@ const resourceGroup = {
       sorter: true,
       inputMethod: 'tags',
       chooser: 'resources',
-      width: 300,
+      width: 500,
       inputRules: [
         {
           required: true,
