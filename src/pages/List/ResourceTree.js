@@ -1,9 +1,8 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import 'react-sortable-tree/style.css';
 import SortableTree from 'react-sortable-tree';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
-import FetchRoutes from '../../wrappers/FetchRoutes';
 import {
   Card,
   Form,
@@ -22,9 +21,6 @@ import {
   notification,
 } from 'antd';
 
-const { TreeNode } = Tree;
-
-const FormItem = Form.Item;
 
 /* eslint react/no-multi-comp:0 */
 @connect(state => ({
@@ -34,12 +30,9 @@ class ResourceTree extends PureComponent {
   constructor(props) {
     super(props);
 
-    this.props.dispatch({
-      type: 'resources/fetch',
-    });
 
     this.state = {
-      data: this.props.resources.list,
+      data: [],
       searchString: '',
       searchFocusIndex: 0,
       searchFoundCount: null,
@@ -49,6 +42,9 @@ class ResourceTree extends PureComponent {
 }
 
   componentDidMount() {
+    this.props.dispatch({
+      type: 'resources/fetch',
+    });
     this.setState({ data: this.props.resources.list });
   }
 
@@ -57,6 +53,7 @@ class ResourceTree extends PureComponent {
 
     const icons = {
       employee: 'user',
+      manager: 'user-add',
       equipment: 'tool',
       resource_group: 'deployment-unit',
     };
@@ -82,10 +79,13 @@ class ResourceTree extends PureComponent {
       });
 
     const handleTreeReset = () => this.setState({ data: this.props.resources.list });
+
     const handleTreeSave = () => {
-      this.props.dispatch({ type: 'resources/update', payload: { resources: this.state.data } });
-      this.setState({ state: this.state });
-    };
+      this.props.dispatch({ type: 'resources/update', payload: { resources: this.state.data } })
+      this.props.dispatch({
+        type: 'resources/fetch',
+      });
+    }
 
     return (
       <div>
@@ -150,7 +150,7 @@ class ResourceTree extends PureComponent {
               return {
                 title: (
                   <span style={style}>
-                    <Icon type={icons[node.row_type]} /> {node.name}{' '}
+                    <Icon type={icons[node.manager && node.manager[0] === 'M' ? 'manager' : node.row_type]} /> {node.name}{' '}
                   </span>
                 ),
               };

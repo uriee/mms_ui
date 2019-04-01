@@ -25,20 +25,19 @@ export default {
           : [rec];
       const rest = flattenDeep(data);
 
-      const arrEqual = (a, b) =>
-        a.map(x => b.includes(x)).every(x => x) && b.map(x => a.includes(x)).every(x => x);
+      const arrEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
+        //a.map(x => b.includes(x)).every(x => x) && b.map(x => a.includes(x)).every(x => x);
 
       const tree = rg
         .filter(x => x.id)
         .map(rg => {
           const children = rg.children.map(x => x.id);
-          console.log(arrEqual(rg.resource_ids, children));
           return arrEqual(rg.resource_ids, children)
             ? false
             : { id: rg.id, resource_ids: children };
         });
       const ret = { entity: '', data: tree.filter(x => x) };
-      console.log('***--------------------------------*****2', rg, tree, tree.filter(x => x));
+      //const ret2 = {entity: '' ,data : rg.map(x => { return {id :x.id, resource_ids :  x.children.map(x => x.id)}})}//{ entity: '', data: tree.filter(x => x) };
 
       const response = yield call(updateResources(ret));
       if (callback) callback();
@@ -48,7 +47,6 @@ export default {
   reducers: {
     save(state, action) {
       return {
-        ...state,
         ...action.payload,
       };
     },
