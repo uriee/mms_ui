@@ -65,7 +65,6 @@ import { bom } from '../schemas/Bom.js';
 import { iden } from '../schemas/Iden.js';
 import { identifier } from '../schemas/Identifier.js';
 import { preferences } from '../schemas/Preferences.js';
-
 const lang = {
   'en-US': { id: 1, align: 'left' },
   'he-IL': { id: 2, align: 'right' },
@@ -282,7 +281,6 @@ class TableList extends PureComponent {
   );
   /* Renders the resources */
   resourcesRender = (x, z) => {
-    console.log('XXXXXXXX',x)
     if (!x[0]) return <span/>
     const resourceTypeMap = {
       employee: { link: 'employees', color: 'green' },
