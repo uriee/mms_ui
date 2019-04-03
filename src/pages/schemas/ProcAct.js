@@ -63,6 +63,7 @@ const proc_act = {
     name: {
       dataIndex: 'name',
       sorter: true,
+      required: false,
     },
     pos: {
       dataIndex: 'pos',
