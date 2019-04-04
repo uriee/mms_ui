@@ -355,11 +355,11 @@ export default [
             },
           },
           {
-            path: '/hr/departments',
-            name: 'departments',
+            path: '/hr/positions',
+            name: 'positions',
             component: './List/MainList',
             params: {
-              entity: 'dept',
+              entity: 'positions',
             },
           },
           {
@@ -500,10 +500,10 @@ export default [
             },
           },
           {
-            path: '/router/departments',
+            path: '/router/positions',
             component: './List/MainList',
             params: {
-              entity: 'dept',
+              entity: 'positions',
             },
           },
           {

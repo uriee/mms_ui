@@ -25,15 +25,15 @@ const emp = {
               },
             },
             {
-              field: 'active',
-              placeholder: 'Active',
+              field: 'position_name',
+              placeholder: 'Position',
               style: {
                 width: '80%',
               },
-            },
+            },            
             {
-              field: 'manager',
-              placeholder: 'Manager type',
+              field: 'active',
+              placeholder: 'Active',
               style: {
                 width: '80%',
               },
@@ -60,7 +60,7 @@ const emp = {
               },
             },
           ],
-          format: [[0, 2], [1, 3], [4], [5], [6]],
+          format: [[0, 3], [1, 2], [4], [5]],
         },
         {
           title: 'Employee Names',
@@ -114,7 +114,6 @@ const emp = {
               placeholder: 'Availability',
               style: {
                 width: '80%',
-                align: 'center',
               },
             },
             {
@@ -156,15 +155,15 @@ const emp = {
               },
             },
             {
-              field: 'active',
-              placeholder: 'Active',
+              field: 'position_name',
+              placeholder: 'Position',
               style: {
                 width: '80%',
               },
-            },
+            },            
             {
-              field: 'manager',
-              placeholder: 'Manager?',
+              field: 'active',
+              placeholder: 'Active',
               style: {
                 width: '80%',
               },
@@ -191,7 +190,12 @@ const emp = {
               },
             },
           ],
-          format: [[0, 2], [1, 3], [4], [5], [6]],
+          format: [
+            [0, 3],
+            [1, 2],
+             [4],
+             [5]
+            ],
         },
         {
           title: 'Employee Details',
@@ -232,7 +236,6 @@ const emp = {
               placeholder: 'Availability',
               style: {
                 width: '80%',
-                align: 'center',
               },
             },
             {
@@ -264,7 +267,6 @@ const emp = {
       type: 'text',
       inputMethod: 'input',
       sorter: true,
-      align: 'right',
       inputRules: [
         {
           required: true,
@@ -279,14 +281,12 @@ const emp = {
     fname: {
       type: 'text',
       inputMethod: 'input',
-      sorter: true,
-      align: 'right',
+      sorter: true
     },
     sname: {
       type: 'text',
       inputMethod: 'input',
-      sorter: true,
-      align: 'right',
+      sorter: true
     },
     fname_t: {
       type: 'text',
@@ -314,12 +314,6 @@ const emp = {
       type: 'text',
       inputMethod: 'bool',
       sorter: true,
-      align: 'right',
-    },
-    manager: {
-      dataIndex: 'manager',
-      inputMethod: 'select',
-      selectValues: ['None', 'Manager', 'Manager(HR)'],
     },
     email: {
       dataIndex: 'email',
@@ -331,8 +325,7 @@ const emp = {
     },
     delivery_method: {
       dataIndex: 'delivery_method',
-      inputMethod: 'select',
-      selectValues: ['Integral email', 'External email', 'Both'],
+      inputMethod: 'bo',
       required: false,
     },
     id_n: {
@@ -358,6 +351,14 @@ const emp = {
       inputMethod: 'select',
       chooser: 'users',
     },
+    position_name: {
+      dataIndex: 'position_name',
+      link: '/router/positions',
+      type: 'text',
+      sorter: true,
+      inputMethod: 'select',
+      chooser: 'positions',
+    },    
     ap_name: {
       dataIndex: 'ap_name',
       link: '/router/availability_profiles',
@@ -373,8 +374,7 @@ const emp = {
       ],
     },
     tags: {
-      inputMethod: 'tags',
-      align: 'right',
+      inputMethod: 'tags'
     },
     resource_timeoff: {
       link: '/router/resource_timeoff',

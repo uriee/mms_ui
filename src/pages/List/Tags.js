@@ -103,6 +103,7 @@ class TagView extends PureComponent {
       serial: { link: 'serials', color: 'blue' },
       serial_status: { link: 'serial_status', color: 'lime' },
       action: { link: 'actions', color: 'magenta' },
+      position: { link: 'positions', color: 'magenta' },      
       process: { link: 'process', color: 'geekblue' },
       mnt_plan: { link: 'mnt_plans', color: 'magenta' },
       part_status: { link: 'part_status', color: 'magenta' },

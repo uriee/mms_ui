@@ -55,6 +55,7 @@ import { mnt_plan_items } from '../schemas/Mnt_plan_items.js';
 import { serials } from '../schemas/Serials.js';
 import { serialStatuses } from '../schemas/SerialStatuses.js';
 import { actions } from '../schemas/Actions.js';
+import { positions } from '../schemas/Positions.js';
 import { work_report } from '../schemas/WorkReport.js';
 import { process } from '../schemas/Process.js';
 import { proc_act } from '../schemas/ProcAct.js';
@@ -96,6 +97,7 @@ const schemas = {
   serial_statuses: serialStatuses,
   part_status: partStatus,
   actions: actions,
+  positions: positions,  
   process: process,
   locations: locations,
   proc_act: proc_act,
