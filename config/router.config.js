@@ -72,14 +72,6 @@ export default [
             },
           },
           {
-            path: '/production/actions',
-            name: 'actions',
-            component: './List/MainList',
-            params: {
-              entity: 'actions',
-            },
-          },
-          {
             path: '/production/work_report',
             component: './List/MainList',
             params: {
@@ -96,22 +88,9 @@ export default [
             },
           },
           {
-            path: '/production/work_plan',
-            name: 'plan',
-            component: './Result/Success',
-          },
-          {
             path: '/production/standard',
             name: 'standard',
             component: './Result/Success',
-          },
-          {
-            path: '/production/equipments',
-            name: 'equipments',
-            component: './List/MainList',
-            params: {
-              entity: 'equipment',
-            },
           },
         ],
       },
@@ -428,6 +407,14 @@ export default [
               entity: 'part_status',
             },
           },
+          {
+            path: '/model/actions',
+            name: 'actions',
+            component: './List/MainList',
+            params: {
+              entity: 'actions',
+            },
+          },          
           {
             path: '/model/process',
             name: 'process',

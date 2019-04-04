@@ -146,12 +146,17 @@ class ResourceTree extends PureComponent {
               const style = {
                 fontSize: '1.1 rem',
               };
-
+              const position = {fontSize: '10px' }
               return {
                 title: (
                   <span style={style}>
-                    <Icon type={icons[node.manager  ? 'manager' : node.row_type]} /> {node.name}{' '}
+                    <Icon type={icons[node.manager  ? 'manager' : node.row_type]} />
+                    <span>
+                      {node.name}  
+                      <div style={position}>{node.position}</div>
+                    </span>
                   </span>
+                  
                 ),
               };
             }}
