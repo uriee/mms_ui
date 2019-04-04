@@ -150,7 +150,7 @@ class ResourceTree extends PureComponent {
               return {
                 title: (
                   <span style={style}>
-                    <Icon type={icons[node.manager && node.manager[0] === 'M' ? 'manager' : node.row_type]} /> {node.name}{' '}
+                    <Icon type={icons[node.manager  ? 'manager' : node.row_type]} /> {node.name}{' '}
                   </span>
                 ),
               };
