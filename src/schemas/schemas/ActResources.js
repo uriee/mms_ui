@@ -1,9 +1,10 @@
 
-const sub_resources = {
-  entity: 'sub_resources',
-  title: 'Sub Resources',
+const act_resources = {
+  entity: 'act_resources',
+  title: "Action Resources",
   defaultKey: 'name',
   defaultSort: 'ord',
+  noFilter : true,
   forms: {
     insert: {
       steps: [
@@ -18,7 +19,7 @@ const sub_resources = {
               },
             },
             {
-              field: 'name',
+              field: 'resource_name',
               placeholder: 'Resource Name',
               style: {
                 width: '80%',
@@ -51,11 +52,11 @@ const sub_resources = {
     id: {
       required: false,
     },
-    son_id: {
-        
+    resource_id: {
+      required: false,      
     },   
-    parent_id: {
-        
+    act_id: { 
+      required: false,      
     },        
      
     ord: {
@@ -69,7 +70,7 @@ const sub_resources = {
         },
       ],
     },    
-    name: {
+    resource_name: {
       dataIndex: 'name',
       link: '/router/resources',
       sorter: true,
@@ -82,9 +83,14 @@ const sub_resources = {
         },
       ],
     },
-    desc: {
-        sorter: true,        
-    },    
+    description: {
+      dataIndex: 'description',
+      sorter: true,
+    },
+    type: {
+      value: 1,
+      required : false
+    },       
   },
 };
-export { sub_resources };
+export { act_resources };

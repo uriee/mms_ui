@@ -138,9 +138,10 @@ class TableList extends PureComponent {
             <a
               onClick={() => {
                 localStorage.setItem('lastEntity', z.name);
-                x
-                  ? router.push(`${field.link}?name=${x.split(':')[0] || z.name}`)
-                  : router.push(`${field.link}?parent=${z.id}`);
+                const query = field.link.includes('?') ? '' : '?'
+                return x
+                  ? router.push(`${field.link}${query}name=${x.split(':')[0] || z.name}`)
+                  : router.push(`${field.link}${query}parent=${z.id}`);
               }}
             >
               {x ? x.toString() : <Icon type="double-right" color="mgenta" />}
@@ -372,6 +373,9 @@ class TableList extends PureComponent {
   handleAdd = values => {
     const { dispatch } = this.props;
 
+    const constants = {}
+    Object.keys(this.schema.fields).filter(x=> this.schema.fields[x].value).forEach(x=> constants[x] = this.schema.fields[x].value)
+
     this.schema.cascaders &&
       Object.keys(this.schema.cascaders).forEach(x => {
         values[this.schema.cascaders[x][1]] = values[this.schema.cascaders[x][0]][1].split(':')[1];
@@ -395,9 +399,10 @@ class TableList extends PureComponent {
     values.sig_user =
       JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
     values.parent = this.state.formValues.parent;
+    console.log("ccccccccccccccccccccccccccccc:", Object.assign(values, { lang_id: lang_id, entity: this.entity },constants))
     dispatch({
       type: 'action/add',
-      payload: Object.assign(values, { lang_id: lang_id, entity: this.entity }),
+      payload: Object.assign(values, { lang_id: lang_id, entity: this.entity },constants),
       callback: this.handleFormAfterIUD,
     });
 
@@ -686,7 +691,7 @@ class TableList extends PureComponent {
       <PageHeaderWrapper title={this.schema.title}>
         <Card bordered={false}>
           <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderForm()}</div>
+            {!this.schema.noFilter && <div className={styles.tableListForm}>{this.renderForm()}</div>}
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)} />
               {selectedRows.length > 0 && (

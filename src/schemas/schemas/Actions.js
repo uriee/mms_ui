@@ -169,6 +169,10 @@ const actions = {
     tags: {
       inputMethod: 'tags',
     },
+    act_resources: {
+      link: '/router/actResources?type=1&',
+      son: true,
+    },         
   },
 };
 export { actions };

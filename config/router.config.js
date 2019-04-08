@@ -522,6 +522,27 @@ export default [
             },
           },
           {
+            path: '/router/actResources',
+            component: './List/MainList',
+            params: {
+              entity: 'act_resources',
+            },
+          },          
+          {
+            path: '/router/processActResources',
+            component: './List/MainList',
+            params: {
+              entity: 'process_act_resources',
+            },
+          },
+          {
+            path: '/router/serialActResources',
+            component: './List/MainList',
+            params: {
+              entity: 'serial_act_resources',
+            },
+          },                     
+          {
             path: '/router/availability_profiles',
             component: './List/MainList',
             params: {

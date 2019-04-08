@@ -89,6 +89,10 @@ const proc_act = {
         },
       ],
     },
+    act_resources: {
+      link: '/router/processActResources?type=2&',
+      son: true,
+    },     
   },
 };
 export { proc_act };

@@ -113,6 +113,14 @@ const serial_act = {
       inputMethod: 'number',
       sorter: true,
     },
+    act_resources: {
+      link: '/router/serialActResources?type=3&',
+      son: true,
+    },
+    type: {
+      value: 'a',
+      required : false
+    },         
   },
 };
 export { serial_act };

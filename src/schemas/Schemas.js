@@ -25,6 +25,9 @@ import { work_report } from './schemas/WorkReport.js';
 import { process } from './schemas/Process.js';
 import { proc_act } from './schemas/ProcAct.js';
 import { serial_act } from './schemas/SerAct.js';
+import { act_resources } from './schemas/ActResources.js';
+import { process_act_resources } from './schemas/ProcessActResources.js';
+import { serial_act_resources } from './schemas/SerialActResources.js';
 import { locations } from './schemas/Locations.js';
 import { kit } from './schemas/Kit.js';
 import { bom } from './schemas/Bom.js';
@@ -63,6 +66,9 @@ const schemas = {
   locations: locations,
   proc_act: proc_act,
   serial_act: serial_act,
+  act_resources: act_resources,
+  process_act_resources : process_act_resources ,
+  serial_act_resources : serial_act_resources ,  
   work_report: work_report,
   identifier: identifier,
   preferences: preferences,
