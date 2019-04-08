@@ -214,7 +214,7 @@ class CreateForm extends PureComponent {
                 ))
               : this.props.choosers[field.chooser].map(option => (
                   <Option key={option.name} value={option.name}>
-                    {option.name}
+                    {option.name + (option.description ? ': '+option.description : '') }
                   </Option>
                 ))}
           </Select>
