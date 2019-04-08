@@ -69,7 +69,7 @@ export default class BreadcrumbView extends PureComponent {
       <Breadcrumb className={styles.breadcrumb} separator={<Icon type="arrow-right" />}>
         {breadcrumbList.map(item => {
           const title = itemRender ? itemRender(item) : item.title;
-          return (
+          return item && (
             <Breadcrumb.Item key={item.title} onClick={goBack}>
               {item.href
                 ? createElement(

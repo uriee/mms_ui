@@ -20,10 +20,10 @@ const PageHeaderWrapper = ({ children, contentWidth, wrapperClassName, top, ...r
           {...restProps}
           linkElement={Link}
           itemRender={item => {
-            if (item.locale) {
+            if (item && item.locale) {
               return <FormattedMessage id={item.locale} defaultMessage={item.title} />;
             }
-            return item.title;
+            return item && item.title;
           }}
         />
       )}
