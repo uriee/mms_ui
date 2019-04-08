@@ -26,6 +26,13 @@ const part = {
               },
             },
             {
+              field: 'active',
+              placeholder: 'Active?',
+              style: {
+                width: '80%',
+              },
+            },            
+            {
               field: 'revision',
               placeholder: 'Revision',
               style: {
@@ -33,8 +40,8 @@ const part = {
               },
             },
             {
-              field: 'active',
-              placeholder: 'Active?',
+              field: 'doc_revision',
+              placeholder: 'Doc.Rev',
               style: {
                 width: '80%',
               },
@@ -54,7 +61,7 @@ const part = {
               },
             },
           ],
-          format: [[0, 1], [2, 3], [4]],
+          format: [[0, 1], [2, 3], [4],[5]],
         },
         {
           title: 'Descriptions',
@@ -91,6 +98,13 @@ const part = {
               },
             },
             {
+              field: 'active',
+              placeholder: 'Active?',
+              style: {
+                width: '80%',
+              },
+            },            
+            {
               field: 'revision',
               placeholder: 'Revision',
               style: {
@@ -98,15 +112,15 @@ const part = {
               },
             },
             {
-              field: 'description',
-              placeholder: 'Description',
+              field: 'doc_revision',
+              placeholder: 'Doc.Rev',
               style: {
                 width: '80%',
               },
-            },
+            },            
             {
-              field: 'active',
-              placeholder: 'Active?',
+              field: 'description',
+              placeholder: 'Description',
               style: {
                 width: '80%',
               },
@@ -126,7 +140,7 @@ const part = {
               },
             },
           ],
-          format: [[0, 1], [2], [3, 4], [5]],
+          format: [[0, 1], [2, 3], [4, 5], [6]],
         },
       ],
     },
@@ -164,6 +178,11 @@ const part = {
         },
       ],
     },
+    doc_revision: {
+      dataIndex: 'doc_revision',
+      inputMethod: 'input',
+      sorter: true,
+    },    
     description_t: {
       updateable: false,
       insertable: true,
