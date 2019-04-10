@@ -458,6 +458,11 @@ export default [
             name: 'Edit Permissions',
             component: './List/Permissions',
           },
+          {
+            path: '/admin/importbyfile',
+            name: 'importbyfile',
+            component: './List/ImportByFile',
+          },          
         ],
       },
       {
