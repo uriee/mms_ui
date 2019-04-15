@@ -375,13 +375,14 @@ class TableList extends PureComponent {
 
     const constants = {}
     Object.keys(this.schema.fields).filter(x=> this.schema.fields[x].value).forEach(x=> constants[x] = this.schema.fields[x].value)
-
     this.schema.cascaders &&
       Object.keys(this.schema.cascaders).forEach(x => {
-        values[this.schema.cascaders[x][1]] = values[this.schema.cascaders[x][0]][1].split(':')[1];
+        console.log('------',this.schema.cascaders[x],values,values[this.schema.cascaders[x][0]])
+        values[this.schema.cascaders[x][2]] = values[this.schema.cascaders[x][0]][2];        
+        values[this.schema.cascaders[x][1]] = values[this.schema.cascaders[x][0]][1];
         values[this.schema.cascaders[x][0]] = values[this.schema.cascaders[x][0]][0];
       });
-
+    this.schema.cascaders && console.log('123123123123:::',this.schema.cascaders,values)
     //put value in X when only X_t has value
     Object.keys(values)
       .filter(x => x.endsWith('_t'))

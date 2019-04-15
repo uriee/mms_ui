@@ -7,7 +7,7 @@ const work_report = {
   title: 'Work_report',
 
   cascaders: {
-    seract: ['serialname', 'actname'],
+    resseract: ['resourcename','serialname', 'actname'],
   },
 
   forms: {
@@ -17,7 +17,7 @@ const work_report = {
           title: 'Report',
           fields: [
             {
-              field: 'serialname',
+              field: 'resourcename',
               placeholder: 'Work Order -> Action',
             },
             {
@@ -34,12 +34,12 @@ const work_report = {
     id: {
       required: false,
     },
-    serialname: {
-      dataIndex: 'serialname',
-      link: '/router/serials',
+    resourcename: {
+      dataIndex: 'resourcename',
+      link: '/router/resources',
       sorter: true,
       inputMethod: 'cascader',
-      chooser: 'seract',
+      chooser: 'resseract',
       inputRules: [
         {
           required: true,
@@ -47,11 +47,17 @@ const work_report = {
         },
       ],
     },
+    serialname: {
+      dataIndex: 'serialname',
+      link: '/router/serials',
+      sorter: true,
+      chooser: 'resseract',
+    },   
     actname: {
       dataIndex: 'actname',
       link: '/router/actions',
       sorter: true,
-      chooser: 'seract',
+      chooser: 'resseract',
     },
     quant: {
       dataIndex: 'quant',

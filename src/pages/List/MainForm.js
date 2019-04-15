@@ -43,6 +43,28 @@ const groupBy = function(xs, key) {
   }, {});
 };
 
+/***
+* treefy : format recursivly the data from db to fit into UI cascaders
+* @xs : data entries
+* @keys :  the order of data cascading 
+* @name : nedded for recursion never to be used (allways = 'root')
+*/
+var treefy = (xs, keys,name='root') =>  {
+  var ret = {}
+  ret.label = ret.value = name
+  ret.children = xs.map(x=> ({value : Object.values(x)[0],label : Object.values(x)[0]}))
+  if (keys.length === 0 ) return  ret
+  const [,...Keys] = keys
+  const children =  xs.reduce(function(rv, x) {
+      const y = {...x};
+      delete y[keys[0]];
+      (rv[x[keys[0]]] = rv[x[keys[0]]] || []).push(y);
+      return rv
+  }, {})   
+  ret.children  =  Object.keys(children).map(x=> treefy(children[x],Keys,x)) 
+  return ret
+};
+
 const FormItem = Form.Item;
 const { Step } = Steps;
 const { TextArea } = Input;
@@ -147,6 +169,7 @@ class CreateForm extends PureComponent {
       formVals[field.dataIndex] === false ? false : formVals[field.dataIndex] || field.defaultValue;
     let layout = {};
     let tagArray = [];
+    console.log("AAA In casacsder 1",field)
     switch (field.inputMethod) {
       case 'input':
         formField = <Input placeholder={placeHolder} style={fieldStyle} />;
@@ -223,8 +246,11 @@ class CreateForm extends PureComponent {
         break;
 
       case 'cascader':
+                console.log("AAA In casacsder",this.props.cascaders,this.props.choosers,this.props.choosers[field.chooser] )
         const cascadeMap = this.props.cascaders && this.props.cascaders[field.chooser];
+        console.log('----------------------1 ',field.chooser,  this.props.cascaders && this.props.cascaders[field.chooser], this.props.cascaders )       
         var cascadeData = groupBy(this.props.choosers[field.chooser], cascadeMap[0]);
+        var cascadeData2 = treefy(this.props.choosers[field.chooser],['resourcename','serialname'] ).children;
         cascadeData = Object.keys(cascadeData).map(x => ({
           value: x,
           label: x,
@@ -233,10 +259,12 @@ class CreateForm extends PureComponent {
             label: x1[cascadeMap[1]],
           })),
         }));
+        
+        console.log('----------------------2 ',cascadeMap,cascadeData,cascadeData2)
         formField = (
           <Cascader
             key={`cascade_${field.dataIndex}`}
-            options={cascadeData}
+            options={cascadeData2}
             placeholder="Please select"
           />
         );
