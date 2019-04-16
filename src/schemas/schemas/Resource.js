@@ -1,6 +1,8 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
+
+
 const resource = {
   entity: 'resource',
   title: 'Resources',
@@ -27,6 +29,15 @@ const resource = {
     resource_name: {
       dataIndex: 'name',
       inputMethod: 'input',
+      link: (type) => {
+                const types = {
+                  employee : 'employees',
+                  equipment : 'equipments',
+                  resource_group : 'resource_groups'
+                }  
+                return '/router/' + types[type]
+              },
+      linkParam : 'type',
       sorter: true,
       align: 'right',
       inputRules: [

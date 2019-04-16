@@ -123,7 +123,8 @@ class TableList extends PureComponent {
         key: `${field.dataIndex ? field.dataIndex : field.name}-${fi}`,
         sorter: field.sorter ? field.sorter : false /*if the table can be sotrted by this field*/,
         link: field.link ? field.link : false /*goto link when clicked upon*/,
-        son: field.son,
+        linkParam : field.linkParam ? field.linkParam : false /*param to the link function - the existance of theis variable suggest that the link is not a string but a function that nedd to be invoked with this parametr*/,
+        son: field.son, /*if true this field  is a link to a sub form*/
         selectValues: field.selectValues
           ? field.selectValues
           : null /*in case you need to choose from constants in the schema*/,
@@ -131,17 +132,18 @@ class TableList extends PureComponent {
         width: field.width
           ? field.width
           : 200 /*field.son ? formatMessage({ id: `pages.${field.name}` }).length * 7 : field.dataIndex === "name" ? 100 : 0,*/,
-        render: (x, z) =>
-          !x && !field.dataIndex ? (
+        render: (x, z) => {
+          const link  = field.link ? field.linkParam ? field.link(z[field.linkParam]) : field.link : false
+          return !x && !field.dataIndex ? (
             <span key={fi}></span>
-          ) : field.link ? (
+          ) : link ? (
             <a
               onClick={() => {
                 localStorage.setItem('lastEntity', z.name);
-                const query = field.link.includes('?') ? '' : '?'
+                const query = link.includes('?') ? '' : '?'
                 return x
-                  ? router.push(`${field.link}${query}name=${x.split(':')[0] || z.name}`)
-                  : router.push(`${field.link}${query}parent=${z.id}`);
+                  ? router.push(`${link}${query}name=${x.split(':')[0] || z.name}`)
+                  : router.push(`${link}${query}parent=${z.id}`);
               }}
             >
               {x ? x.toString() : <Icon type="double-right" color="mgenta" />}
@@ -162,7 +164,7 @@ class TableList extends PureComponent {
             x.replace('T', ' ').split('.')[0]
           ) : (
             x
-          ),
+          )},
         align: lang[getLocale()] ? lang[getLocale()].align : 'left',
       }));
     this.columns.push({ title: '' });
@@ -184,22 +186,6 @@ class TableList extends PureComponent {
           ...this.columns,
         ])
       : this.columns;
-    /*
-      this.columns.push({
-        title: '',
-        //fixed : 'right',
-        width: 50,
-        render: (text, record) => (
-          <Fragment>
-            <a onClick={() => this.handleUpdateModalVisible(true, record)}>
-              {' '}
-              <Icon type="edit" />
-            </a>
-          </Fragment>
-        ),
-      });
-      */
-    //if(lang[getLocale()].align === 'right') this.columns.reverse()
     return 1;
   };
 
@@ -377,12 +363,12 @@ class TableList extends PureComponent {
     Object.keys(this.schema.fields).filter(x=> this.schema.fields[x].value).forEach(x=> constants[x] = this.schema.fields[x].value)
     this.schema.cascaders &&
       Object.keys(this.schema.cascaders).forEach(x => {
-        console.log('------',this.schema.cascaders[x],values,values[this.schema.cascaders[x][0]])
+        //console.log('------',this.schema.cascaders[x],values,values[this.schema.cascaders[x][0]])
         values[this.schema.cascaders[x][2]] = values[this.schema.cascaders[x][0]][2];        
         values[this.schema.cascaders[x][1]] = values[this.schema.cascaders[x][0]][1];
         values[this.schema.cascaders[x][0]] = values[this.schema.cascaders[x][0]][0];
       });
-    this.schema.cascaders && console.log('123123123123:::',this.schema.cascaders,values)
+    //this.schema.cascaders && console.log('123123123123:::',this.schema.cascaders,values)
     //put value in X when only X_t has value
     Object.keys(values)
       .filter(x => x.endsWith('_t'))
