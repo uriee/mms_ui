@@ -37,7 +37,7 @@ const resource = {
                 }  
                 return '/router/' + types[type]
               },
-      linkParam : 'type',
+      linkParam : 'type', 
       sorter: true,
       align: 'right',
       inputRules: [

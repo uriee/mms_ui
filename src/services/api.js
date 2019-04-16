@@ -6,7 +6,7 @@ import { Logic } from '@/defaultSettings';
 //const Logic = 'http://3.16.188.229/'
 //const Logic = 'http://192.9.200.101/'
 const timeChartify = (data, interval) =>
-  data.map(x => ({
+  data.map(x => ({ ...x ,
     /*x: Date(dateString.replace(' ', 'T'))*/
     x:
       interval === 'day' || interval === 'week'
@@ -60,11 +60,9 @@ export async function fetch_dash(params) {
   } catch (e) {
     console.log(e);
   }
-  x.data['work_report_placements'] = timeChartify(
-    x.data['work_report_placements'],
-    params.interval
-  );
+  x.data['work_report_placements'] = timeChartify( x.data['work_report_placements'], params.interval );
   x.data['work_report_products'] = timeChartify(x.data['work_report_products'], params.interval);
+  x.data['work_report_placements_by_parent_resource'] = timeChartify(x.data['work_report_placements_by_parent_resource'], params.interval);
   return x.data;
 }
 

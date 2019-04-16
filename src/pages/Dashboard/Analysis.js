@@ -30,7 +30,6 @@ import Trend from '@/components/Trend';
 import NumberInfo from '@/components/NumberInfo';
 import numeral from 'numeral';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
-import Yuan from '@/utils/Yuan';
 import { getTimeDistance } from '@/utils/utils';
 
 import styles from './Analysis.less';
@@ -118,7 +117,6 @@ class Analysis extends Component {
   selectDate = type => {
     const { dispatch } = this.props;
     let rangePickerValue = this.state.rangePickerValue;
-    console.log('rangePickerValue 1:', rangePickerValue, type);
 
     if (type === 'hour') rangePickerValue[1] = rangePickerValue[0].endOf('days');
     if (type === 'month' || type === 'year') {
@@ -130,8 +128,6 @@ class Analysis extends Component {
       rangePickerValue = getTimeDistance('week');
       type = 'day';
     }
-
-    console.log('rangePickerValue 2:', rangePickerValue, type);
 
     this.setState({
       rangePickerValue,
@@ -171,6 +167,7 @@ class Analysis extends Component {
     const {
       work_report_placements,
       work_report_products,
+      work_report_placements_by_parent_resource,
       wo_percent_total,
       serial_stats,
       visitData2,
@@ -270,6 +267,99 @@ class Analysis extends Component {
       </Row>
     );
 
+    const ResourceChartOld = () => (
+      <Card loading={loading} bordered={false} bodyStyle={{ padding: 0 }}>
+      <div className={styles.salesCard}>
+        <Tabs tabBarExtraContent={salesExtra} size="large" tabBarStyle={{ marginBottom: 24 }}>
+          <TabPane
+            tab={<FormattedMessage id="app.analysis.placements" defaultMessage="Placements" />}
+            key="placements"
+          >
+            <Row>
+              <Col xl={23} lg={12} md={12} sm={24} xs={24}>
+                <div className={styles.salesBar}>
+                  <Bar
+                    height={295}
+                    title={
+                      <FormattedMessage
+                        id="app.analysis.placements"
+                        defaultMessage="Placements"
+                      />
+                    }
+                    data={work_report_placements}
+                  />
+                </div>
+              </Col>
+            </Row>
+          </TabPane>
+          <TabPane
+            tab={<FormattedMessage id="app.analysis.products" defaultMessage="Products" />}
+            key="views"
+          >
+            <Row>
+              <Col xl={23} lg={12} md={12} sm={24} xs={24}>
+                <div className={styles.salesBar}>
+                  <Bar
+                    height={292}
+                    title={
+                      <FormattedMessage
+                        id="app.analysis.visits-trend"
+                        defaultMessage="Products"
+                      />
+                    }
+                    data={work_report_products}
+                  />
+                </div>
+              </Col>
+              <Col xl={8} lg={12} md={12} sm={24} xs={24}>
+                <div className={styles.salesRank}>
+                  <h4 className={styles.rankingTitle}>
+                    <FormattedMessage
+                      id="app.analysis.visits-ranking"
+                      defaultMessage="Visits Ranking"
+                    />
+                  </h4>
+                </div>
+              </Col>
+            </Row>
+          </TabPane>
+        </Tabs>
+      </div>
+    </Card>      
+    )
+
+    const ResourceChart = () => (
+      <Card loading={loading} bordered={false} bodyStyle={{ padding: 0 }}>
+      <div className={styles.salesCard}>
+        <Tabs tabBarExtraContent={salesExtra} size="large" tabBarStyle={{ marginBottom: 24 }}>
+          {work_report_placements_by_parent_resource.map(resource =>(
+          <TabPane
+          tab={resource.resource}
+          key={resource.resource}
+        >
+          <Row>
+            <Col xl={23} lg={12} md={12} sm={24} xs={24}>
+              <div className={styles.salesBar}>
+                <Bar
+                  height={295}
+                  title={
+                    <FormattedMessage
+                      id="app.analysis.placements"
+                      defaultMessage="Placements"
+                    />
+                  }
+                  data={resource.data}
+                />
+              </div>
+            </Col>
+          </Row>
+        </TabPane>
+          ))}
+        </Tabs>
+      </div>
+    </Card>       
+    )    
+              
     const activeKey = currentTabKey || (offlineData[0] && offlineData[0].name);
 
     const CustomTab = ({ data, currentTabKey: currentKey }) => (
@@ -464,66 +554,7 @@ class Analysis extends Component {
             </ChartCard>
           </Col>
         </Row>
-
-        <Card loading={loading} bordered={false} bodyStyle={{ padding: 0 }}>
-          <div className={styles.salesCard}>
-            <Tabs tabBarExtraContent={salesExtra} size="large" tabBarStyle={{ marginBottom: 24 }}>
-              <TabPane
-                tab={<FormattedMessage id="app.analysis.placements" defaultMessage="Placements" />}
-                key="placements"
-              >
-                <Row>
-                  <Col xl={23} lg={12} md={12} sm={24} xs={24}>
-                    <div className={styles.salesBar}>
-                      <Bar
-                        height={295}
-                        title={
-                          <FormattedMessage
-                            id="app.analysis.placements"
-                            defaultMessage="Placements"
-                          />
-                        }
-                        data={work_report_placements}
-                      />
-                    </div>
-                  </Col>
-                </Row>
-              </TabPane>
-              <TabPane
-                tab={<FormattedMessage id="app.analysis.products" defaultMessage="Products" />}
-                key="views"
-              >
-                <Row>
-                  <Col xl={23} lg={12} md={12} sm={24} xs={24}>
-                    <div className={styles.salesBar}>
-                      <Bar
-                        height={292}
-                        title={
-                          <FormattedMessage
-                            id="app.analysis.visits-trend"
-                            defaultMessage="Products"
-                          />
-                        }
-                        data={work_report_products}
-                      />
-                    </div>
-                  </Col>
-                  <Col xl={8} lg={12} md={12} sm={24} xs={24}>
-                    <div className={styles.salesRank}>
-                      <h4 className={styles.rankingTitle}>
-                        <FormattedMessage
-                          id="app.analysis.visits-ranking"
-                          defaultMessage="Visits Ranking"
-                        />
-                      </h4>
-                    </div>
-                  </Col>
-                </Row>
-              </TabPane>
-            </Tabs>
-          </div>
-        </Card>
-
+        {ResourceChart()}
         {WOStats(serial_stats)}
       </GridContent>
     );

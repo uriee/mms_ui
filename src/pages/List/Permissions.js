@@ -84,7 +84,6 @@ class Permissions extends PureComponent {
         return item.authority && item.authority.includes(profile) ? item.name + '_pkey' + i : null;
       })
       .filter(x => x);
-    //console.log("__2__",defaultChecked)
     return defaultChecked;
   };
   getChecked = (routes, profile) => {
@@ -105,12 +104,6 @@ class Permissions extends PureComponent {
           payload: { ...this.state },
         });
         router.push(1);
-        /*
-         dispatch({
-          type: 'permissions/fetch',
-          payload: {},
-        })*/
-        message.success('Permissions Updated.');
       }
     });
   };
@@ -170,7 +163,6 @@ class Permissions extends PureComponent {
     console.log('____render______', this.state);
     const renderTree = routes =>
       routes.map((item, i) => {
-        /*console.log("___3___",item,i)*/
         if (item.routes && item.routes.length) {
           return (
             <TreeNode
@@ -235,7 +227,6 @@ class Permissions extends PureComponent {
                 checkable
                 onCheck={this.onCheck}
                 defaultCheckedKeys={this.state.defaultChecked}
-                //checkedKeys={this.state.defaultChecked}
               >
                 {children.map(data => data)}
               </Tree>
