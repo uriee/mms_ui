@@ -67,16 +67,6 @@ const checkStatus = response => {
   throw error;
 };
 
-const cachedSave = async (response, hashcode) => {
-  const contentType = response.headers['content-type'];
-  if (contentType && contentType.match(/application\/json/i)) {
-    const content = await JSON.stringify(response.data);
-    sessionStorage.setItem(hashcode, content);
-    sessionStorage.setItem(`${hashcode}:timestamp`, Date.now());
-  }
-  return response;
-};
-
 /**
  * Requests a URL, returning a promise.
  *
@@ -144,42 +134,22 @@ export default async function mrequest(
   }
 
   const expirys = options.expirys || 60;
-  // options.expirys !== false, return the cache,
 
-  //  Disabled CACHE
-  /*
-  if (options.expirys !== false) {
-    const cached = sessionStorage.getItem(hashcode);
-    const whenCached = sessionStorage.getItem(`${hashcode}:timestamp`);
-    if (cached !== null && whenCached !== null) {
-      const age = (Date.now() - whenCached) / 1000;
-      if (age < expirys && !checkIfUpdated) {
-        const response = new Response(new Blob([cached]));
-        return response.json();
-      }
-      sessionStorage.removeItem(hashcode);
-      sessionStorage.removeItem(`${hashcode}:timestamp`);
-    }
-  }
-  */
   console.log('mrequest before ', { url: url, ...newOptions });
   try {
     const resp = await axios({
       url: url,
       ...newOptions,
-    }); /*.catch(e => {
-      console.log('Error in mrequest axios call', e.response);
-      checkStatus(e.response)
-      throw new Error("Server Error")
-    });*/
+    }); 
+
     await checkStatus(resp);
-    //await cachedSave(resp, hashcode);
+
     if (resp.status === 201) message.success('Inserted');
     if (resp.status === 202) message.success('Updated');
     if (resp.status === 205) message.success('Removed');
     if (resp.status === 230) message.success('Successfull');
     console.log('mrequset after ', resp);
-    return resp.data;
+    return Promise.resolve(resp.data)
   } catch (e) {
     console.log(
       '___________________________________________4_______________________________________________________',
@@ -214,7 +184,7 @@ export default async function mrequest(
         description: error,
       });
       router.push('/exception/404');
-      return 0;
+      return Promise.reject(error)
     }
 
     if (status === 401 || e === undefined) {
@@ -223,7 +193,7 @@ export default async function mrequest(
       window.g_app._store.dispatch({
         type: 'login/logout',
       });
-      return 0;
+      return Promise.reject(error)
     }
 
     // environment should not be used
@@ -233,7 +203,7 @@ export default async function mrequest(
         description: error,
       });
       router.push('/exception/403');
-      return 0;
+      return Promise.reject(error)
     }
     if (status === 408) {
       notification.error({
@@ -241,7 +211,7 @@ export default async function mrequest(
         description: error,
       });
       router.push('/user/login');
-      return 0;
+      return Promise.reject(error)
     }    
     if (status <= 504 && status >= 500) {
       notification.error({
@@ -249,7 +219,7 @@ export default async function mrequest(
         description: error,
       });
       router.push('/exception/500');
-      return 0;
+      return Promise.reject(error)
     }
 
     if (status === 406) {
@@ -269,7 +239,7 @@ export default async function mrequest(
         description: '',
       });
 
-      return 0;
+      return Promise.reject(error)
     }
 
     if (status >= 404 && status < 422) {
@@ -278,7 +248,7 @@ export default async function mrequest(
         description: error,
       });
       //router.push('/exception/404');
-      return 0;
+      return Promise.reject(error)
     }
 
     notification.error({
@@ -286,7 +256,8 @@ export default async function mrequest(
       description: 'Undefined Error',
     });
     router.push('/user/login');
-    return Promise.resolve('ERROR');
+    //return Promise.resolve('ERROR');
+    return Promise.reject(error)
   }
   return 1;
 }
