@@ -1,75 +1,102 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import {
-  Card, Upload, Button, Icon, message, Select, List, Typography
-} from 'antd';
+import { Card, Upload, Button, Icon, message, Select, List, Input } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import schemas from '../../schemas/schemas.js';
-import axios from 'axios';
+import { Logic } from '@/defaultSettings';
+import mrequest from '@/utils/mrequest';
+import * as csv from 'csvtojson';
 
-const schamasTypes = Object.keys(schemas).map(x=> ({name: x ,title : schemas[x].title}))
+const schamasTypes = Object.keys(schemas)
+  .filter(x => schemas[x].loadable)
+  .map(x => ({ name: x, title: schemas[x].title }));
+
+const typeDic = {
+  tags: 'Text Array : inclosed by {} delimited by Comma+Space ',
+  bool: 'Boolean : empty OR some charecter',
+  input: 'Text',
+  textArea: 'Text',
+  select: 'Text',
+  cascader: 'Text',
+};
 
 class ImportDataByFile extends React.Component {
   state = {
     fileList: [],
     uploading: false,
-    schemaName : '',
-    schemaFields : []
-  }
+    schemaName: '',
+    schemaFields: [],
+  };
 
-  schemaPick = (schemaName) => {
-    const schema = schemas[schemaName]
+  schemaPick = schemaName => {
+    const schema = schemas[schemaName];
     const fields = Object.keys(schema.fields)
-      .map(x => ({name : x , type : schema.fields[x].inputMethod}))
-      .filter(x=> x.type)
-      .map(x=> `name : ${x.name} , type: ${x.type}`)
-    console.log("*****************",schemaName,fields)    
+      .map(x => ({ name: x, type: schema.fields[x].inputMethod }))
+      .filter(x => x.type)
+      .map(x => ({ name: x.name, type: x.type }));
     this.setState({
-      schemaFields : fields
-    })
-  }
+      schemaFields: fields,
+      schemaName: schemaName,
+    });
+  };
 
-  handleUpload = () => {
-    const { fileList } = this.state;
-    const formData = new FormData();
-    fileList.forEach((file) => {
-      formData.append('files[]', file);
+  handleUpload = async () => {
+    const { fileList, schemaFields, schemaName } = this.state;
+    const reader = new FileReader();
+    const file = fileList[0];
+    const headers = schemaFields.map(x => x.name);
+    let THIS = this;
+
+    const converter = csv({
+      noheader: true,
+      //  trim : true,
+      //  ignoreEmpty : true,
+      //  checkColumn : true,
+      headers: headers,
     });
 
-    this.setState({
-      uploading: true,
-    });
+    reader.readAsText(file);
 
-    // You can use any AJAX library you like
-    axios.post('http://jsonplaceholder.typicode.com/posts/')
-    reqwest({
-      url: '//jsonplaceholder.typicode.com/posts/',
-      method: 'post',
-      processData: false,
-      data: formData,
-      success: () => {
-        this.setState({
+    reader.onload = async function() {
+      console.log('------------------------------:', headers, reader.result);
+      try {
+        const json = await converter.fromString(reader.result);
+        console.log('3333333333333:', json);
+
+        THIS.setState({
+          uploading: true,
+        });
+
+        const ret = await mrequest(`${Logic}mymes/importdata`, {
+          method: 'POST',
+          data: { schemaName: schemaName, data: json },
+        });
+
+        THIS.setState({
           fileList: [],
           uploading: false,
         });
         message.success('upload successfully.');
-      },
-      error: () => {
-        this.setState({
+      } catch (e) {
+        THIS.setState({
           uploading: false,
         });
         message.error('upload failed.');
-      },
-    });
-  }
+      }
+    };
+  };
 
   render() {
     const { uploading, fileList } = this.state;
+    if (!(window.File && window.FileReader)) {
+      message.error('The File APIs are not fully supported in this browser.');
+      return <span />;
+    }
 
     const props = {
-      multiple : false, 
-      onRemove: (file) => {
-        this.setState((state) => {
+      multiple: false,
+      onRemove: file => {
+        this.setState(state => {
           const index = state.fileList.indexOf(file);
           const newFileList = state.fileList.slice();
           newFileList.splice(index, 1);
@@ -78,7 +105,7 @@ class ImportDataByFile extends React.Component {
           };
         });
       },
-      beforeUpload: (file) => {
+      beforeUpload: file => {
         this.setState(state => ({
           fileList: [...state.fileList, file],
         }));
@@ -86,38 +113,45 @@ class ImportDataByFile extends React.Component {
       },
       fileList,
     };
-    const choose = schamasTypes.map(x => (<Option key={x.name} value={x.name}>{x.title}</Option>))
-    console.log("------------------",schamasTypes,choose,this.state,this.props)
+
+    const choose = schamasTypes.map(x => (
+      <Option key={x.name} value={x.name}>
+        {x.title}
+      </Option>
+    ));
+    console.log('------------------', schamasTypes, choose, this.state, this.props);
     return (
       <PageHeaderWrapper title="Import Data From A File">
         <Card bordered={true}>
-        <Select
-          showSearch
-          data 
-          style={{ width: 200 }}
-          placeholder="Select a schema"
-          optionFilterProp="children"
-          onChange={this.schemaPick}
-          filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-        >
-          {choose}
-        </Select>,
-
-        <List
-          header={<h1>Schema Stracture</h1>}
-          bordered
-          size="small"
-          dataSource={this.state.schemaFields}
-          renderItem={item => (<List.Item> {item}</List.Item>)}
-          style={{ margin: 16 }}
-        />
-
+          <Select
+            showSearch
+            data
+            style={{ width: 200 }}
+            placeholder="Select a schema"
+            optionFilterProp="children"
+            onChange={this.schemaPick}
+            filterOption={(input, option) =>
+              option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            {choose}
+          </Select>
+          ,
+          <List
+            header={<h1>Schema Stracture</h1>}
+            bordered
+            size="small"
+            dataSource={this.state.schemaFields.map(x => `${x.name}   =>   ${typeDic[x.type]}`)}
+            renderItem={item => <List.Item> {item}</List.Item>}
+            style={{ margin: 16 }}
+          />
           <div>
             <Upload {...props} style={{ marginTop: 16 }}>
               <Button>
                 <Icon type="upload" /> Select File
               </Button>
             </Upload>
+
             <Button
               type="primary"
               onClick={this.handleUpload}
@@ -125,7 +159,7 @@ class ImportDataByFile extends React.Component {
               loading={uploading}
               style={{ marginTop: 16 }}
             >
-              {uploading ? 'Uploading' : 'Start Upload' }
+              {uploading ? 'Uploading' : 'Start Upload'}
             </Button>
           </div>
         </Card>

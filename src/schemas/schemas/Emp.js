@@ -2,6 +2,7 @@
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
 const emp = {
+  loadable: true,
   entity: 'emp',
   title: 'Employees',
   forms: {
@@ -30,7 +31,7 @@ const emp = {
               style: {
                 width: '80%',
               },
-            },            
+            },
             {
               field: 'active',
               placeholder: 'Active',
@@ -160,7 +161,7 @@ const emp = {
               style: {
                 width: '80%',
               },
-            },            
+            },
             {
               field: 'active',
               placeholder: 'Active',
@@ -190,12 +191,7 @@ const emp = {
               },
             },
           ],
-          format: [
-            [0, 3],
-            [1, 2],
-             [4],
-             [5]
-            ],
+          format: [[0, 3], [1, 2], [4], [5]],
         },
         {
           title: 'Employee Details',
@@ -281,12 +277,12 @@ const emp = {
     fname: {
       type: 'text',
       inputMethod: 'input',
-      sorter: true
+      sorter: true,
     },
     sname: {
       type: 'text',
       inputMethod: 'input',
-      sorter: true
+      sorter: true,
     },
     fname_t: {
       type: 'text',
@@ -358,7 +354,7 @@ const emp = {
       sorter: true,
       inputMethod: 'select',
       chooser: 'positions',
-    },    
+    },
     ap_name: {
       dataIndex: 'ap_name',
       link: '/router/availability_profiles',
@@ -374,7 +370,7 @@ const emp = {
       ],
     },
     tags: {
-      inputMethod: 'tags'
+      inputMethod: 'tags',
     },
     resource_timeoff: {
       link: '/router/resource_timeoff',

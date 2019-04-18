@@ -2,6 +2,7 @@
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
 const equipment = {
+  loadable: true,
   entity: 'equipment',
   title: 'Equipments',
   forms: {

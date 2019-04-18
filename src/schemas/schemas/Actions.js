@@ -2,6 +2,7 @@
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
 const actions = {
+  loadable: true,
   entity: 'action',
   title: 'Actions',
   forms: {
@@ -172,7 +173,7 @@ const actions = {
     act_resources: {
       link: '/router/actResources?type=1&',
       son: true,
-    },         
+    },
   },
 };
 export { actions };

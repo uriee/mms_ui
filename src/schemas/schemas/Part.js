@@ -2,6 +2,7 @@
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
 const part = {
+  loadable: true,
   entity: 'part',
   title: 'Parts',
 
@@ -31,7 +32,7 @@ const part = {
               style: {
                 width: '80%',
               },
-            },            
+            },
             {
               field: 'revision',
               placeholder: 'Revision',
@@ -61,7 +62,7 @@ const part = {
               },
             },
           ],
-          format: [[0, 1], [2, 3], [4],[5]],
+          format: [[0, 1], [2, 3], [4], [5]],
         },
         {
           title: 'Descriptions',
@@ -103,7 +104,7 @@ const part = {
               style: {
                 width: '80%',
               },
-            },            
+            },
             {
               field: 'revision',
               placeholder: 'Revision',
@@ -117,7 +118,7 @@ const part = {
               style: {
                 width: '80%',
               },
-            },            
+            },
             {
               field: 'description',
               placeholder: 'Description',
@@ -182,7 +183,7 @@ const part = {
       dataIndex: 'doc_revision',
       inputMethod: 'input',
       sorter: true,
-    },    
+    },
     description_t: {
       updateable: false,
       insertable: true,
