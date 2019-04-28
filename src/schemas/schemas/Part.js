@@ -20,7 +20,7 @@ const part = {
           title: 'Details',
           fields: [
             {
-              field: 'part_name',
+              field: 'name',
               placeholder: 'Part Name',
               style: {
                 width: '80%',
@@ -92,7 +92,7 @@ const part = {
           title: 'Details',
           fields: [
             {
-              field: 'part_name',
+              field: 'name',
               placeholder: 'Part Name',
               style: {
                 width: '80%',
@@ -153,7 +153,7 @@ const part = {
       required: false,
     },
 
-    part_name: {
+    name: {
       dataIndex: 'name',
       inputMethod: 'input',
       sorter: true,

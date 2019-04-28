@@ -169,7 +169,7 @@ class CreateForm extends PureComponent {
       formVals[field.dataIndex] === false ? false : formVals[field.dataIndex] || field.defaultValue;
     let layout = {};
     let tagArray = [];
-    console.log("AAA In casacsder 1",field)
+
     switch (field.inputMethod) {
       case 'input':
         formField = <Input placeholder={placeHolder} style={fieldStyle} />;

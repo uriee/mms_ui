@@ -49,7 +49,7 @@ class ImportDataByFile extends React.Component {
 
     const converter = csv({
       noheader: true,
-      //  trim : true,
+        trim : true,
       //  ignoreEmpty : true,
       //  checkColumn : true,
       headers: headers,
@@ -58,10 +58,8 @@ class ImportDataByFile extends React.Component {
     reader.readAsText(file);
 
     reader.onload = async function() {
-      console.log('------------------------------:', headers, reader.result);
       try {
-        const json = await converter.fromString(reader.result);
-        console.log('3333333333333:', json);
+        const json = await converter.fromString(reader.result)
 
         THIS.setState({
           uploading: true,
@@ -69,7 +67,7 @@ class ImportDataByFile extends React.Component {
 
         const ret = await mrequest(`${Logic}mymes/importdata`, {
           method: 'POST',
-          data: { schemaName: schemaName, data: json },
+          data: { data: json, entity : schemaName },
         });
 
         THIS.setState({

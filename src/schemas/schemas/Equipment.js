@@ -12,7 +12,7 @@ const equipment = {
           title: 'Identifiers',
           fields: [
             {
-              field: 'equipment_name',
+              field: 'name',
               placeholder: 'Equipment Name',
               style: {
                 width: '80%',
@@ -105,7 +105,7 @@ const equipment = {
           title: 'Identifiers',
           fields: [
             {
-              field: 'equipment_name',
+              field: 'name',
               placeholder: 'Equipment Name',
               style: {
                 width: '80%',
@@ -190,7 +190,7 @@ const equipment = {
     id: {
       required: false,
     },
-    equipment_name: {
+    name: {
       dataIndex: 'name',
       inputMethod: 'input',
       sorter: true,

@@ -12,7 +12,7 @@ const emp = {
           title: 'Identifiers',
           fields: [
             {
-              field: 'emp_number',
+              field: 'name',
               placeholder: 'Employee Number',
               style: {
                 width: '80%',
@@ -142,7 +142,7 @@ const emp = {
           title: 'Identifiers',
           fields: [
             {
-              field: 'emp_number',
+              field: 'name',
               placeholder: 'Employee Number',
               style: {
                 width: '80%',
@@ -258,7 +258,7 @@ const emp = {
     id: {
       required: false,
     },
-    emp_number: {
+    name: {
       dataIndex: 'name',
       type: 'text',
       inputMethod: 'input',

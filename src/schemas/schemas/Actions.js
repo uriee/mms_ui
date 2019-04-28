@@ -12,7 +12,7 @@ const actions = {
           title: 'Details',
           fields: [
             {
-              field: 'action_name',
+              field: 'name',
               placeholder: 'Action Name',
               style: {
                 width: '80%',
@@ -71,7 +71,7 @@ const actions = {
           title: 'Details',
           fields: [
             {
-              field: 'action_name',
+              field: 'name',
               placeholder: 'Action Name',
               style: {
                 width: '80%',
@@ -122,7 +122,7 @@ const actions = {
     id: {
       required: false,
     },
-    action_name: {
+    name: {
       dataIndex: 'name',
       inputMethod: 'input',
       sorter: true,
