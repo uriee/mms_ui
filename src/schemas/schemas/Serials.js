@@ -86,8 +86,15 @@ const serials = {
                 width: '100%',
               },
             },
+            {
+              field: 'extserial',
+              placeholder: 'External Serial',
+              style: {
+                width: '80%',
+              },
+            },            
           ],
-          format: [[0], [1], [2]],
+          format: [[0], [1], [2], [3]],
         },
       ],
     },
@@ -164,7 +171,7 @@ const serials = {
               style: {
                 width: '100%',
               },
-            },
+            },          
           ],
           format: [[0], [1]],
         },
@@ -282,6 +289,11 @@ const serials = {
       link: '/router/work_report',
       son: true,
     },
+    extserial: {
+      dataIndex: 'extserial',
+      inputMethod: 'input',
+      sorter: true,
+    },    
   },
 };
 export { serials };

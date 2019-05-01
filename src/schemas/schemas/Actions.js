@@ -164,7 +164,7 @@ const actions = {
     },
     erpact: {
       dataIndex: 'erpact',
-      inputMethod: 'tags',
+      inputMethod: 'input',
       sorter: true,
     },
     tags: {

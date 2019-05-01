@@ -25,6 +25,13 @@ const serialStatuses = {
               },
             },
             {
+              field: 'closed',
+              placeholder: 'Closed Work Order',
+              style: {
+                width: '80%',
+              },
+            },            
+            {
               field: 'description',
               placeholder: 'Description in English',
               style: {
@@ -46,7 +53,7 @@ const serialStatuses = {
               },
             },
           ],
-          format: [[0, 1], [2], [3], [4]],
+          format: [[0, 1, 2], [3], [4], [5]],
         },
       ],
     },
@@ -70,6 +77,13 @@ const serialStatuses = {
               },
             },
             {
+              field: 'closed',
+              placeholder: 'Closed Work Order',
+              style: {
+                width: '10%',
+              },
+            },            
+            {
               field: 'description',
               placeholder: 'Description in English',
               style: {
@@ -84,7 +98,7 @@ const serialStatuses = {
               },
             },
           ],
-          format: [[0, 1], [2], [3]],
+          format: [[0, 1, 2], [3], [4]],
         },
       ],
     },
@@ -129,6 +143,11 @@ const serialStatuses = {
       inputMethod: 'bool',
       sorter: true,
     },
+    closed: {
+      dataIndex: 'closed',
+      inputMethod: 'bool',
+      sorter: true,
+    },    
     tags: {
       inputMethod: 'tags',
     },
