@@ -93,6 +93,7 @@ class ImportDataByFile extends React.Component {
 
     const props = {
       multiple: false,
+      accept : '.csv',
       onRemove: file => {
         this.setState(state => {
           const index = state.fileList.indexOf(file);
