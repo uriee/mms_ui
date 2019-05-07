@@ -32,9 +32,16 @@ const actions = {
               style: {
                 width: '80%',
               },
+            },              
+            {
+                field: 'quantitative',
+                placeholder: 'Quantitative?',
+                style: {
+                  width: '80%',
+                },                
             },
           ],
-          format: [[0, 1], [2]],
+          format: [[0, 1], [2,3]],
         },
         {
           title: 'Descriptions',
@@ -92,8 +99,15 @@ const actions = {
                 width: '80%',
               },
             },
+            {
+              field: 'quantitative',
+              placeholder: 'Quantitative?',
+              style: {
+                width: '80%',
+              },                
+          },            
           ],
-          format: [[0, 1], [2]],
+          format: [[0, 1], [2,3]],
         },
         {
           title: 'Descriptions',
@@ -162,6 +176,11 @@ const actions = {
       inputMethod: 'bool',
       sorter: true,
     },
+    quantitative: {
+      dataIndex: 'quantitative',
+      inputMethod: 'bool',
+      sorter: true,
+    },    
     erpact: {
       dataIndex: 'erpact',
       inputMethod: 'input',

@@ -92,9 +92,16 @@ const serials = {
               style: {
                 width: '80%',
               },
-            },            
+            }, 
+            {
+              field: 'parent_serial',
+              placeholder: 'Parent Serial',
+              style: {
+                width: '80%',
+              },
+            },                       
           ],
-          format: [[0], [1], [2], [3]],
+          format: [[0], [1], [2], [3,4]],
         },
       ],
     },
@@ -171,9 +178,16 @@ const serials = {
               style: {
                 width: '100%',
               },
-            },          
+            },
+            {
+              field: 'parent_serial',
+              placeholder: 'Parent Serial',
+              style: {
+                width: '80%',
+              },
+            },             
           ],
-          format: [[0], [1]],
+          format: [[0], [1], [2]],
         },
       ],
     },
@@ -289,6 +303,13 @@ const serials = {
       link: '/router/work_report',
       son: true,
     },
+    parent_serial: {
+      dataIndex: 'parent_serial_name',
+      link: '/router/serials',
+      sorter: true,
+      inputMethod: 'select',
+      chooser: 'parent_serial',
+    },     
     extserial: {
       dataIndex: 'extserial',
       inputMethod: 'input',
