@@ -320,9 +320,10 @@ class TableList extends PureComponent {
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-
+      const parent = this.state.formValues.parent ? { parent :this.state.formValues.parent } : {}
       const values = {
         ...fieldsValue,
+        ...parent,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
 
