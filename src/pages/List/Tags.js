@@ -45,7 +45,7 @@ class TagView extends PureComponent {
         title: formatMessage({ id: `pages.type` }),
         dataIndex: 'row_type',
         sorter: true,
-        render: x => x,
+        render: x => formatMessage({ id: `schemas.${x}` }),
       },
       {
         title: formatMessage({ id: `pages.name` }),
