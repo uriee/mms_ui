@@ -222,7 +222,7 @@ class CreateForm extends PureComponent {
         formField = (
           <Select
             showSearch
-            style={{ width: 200 }}
+            style={{ width: '95%' }}
             placeholder="Select"
             optionFilterProp="children"
             filterOption={(input, option) =>
