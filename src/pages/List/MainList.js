@@ -524,7 +524,7 @@ class TableList extends PureComponent {
             .map(col => (
               <Col md={8} sm={24} key={'mainform' + col.dataIndex}>
                 <FormItem label={col.title}>
-                  {getFieldDecorator(col.dataIndex)(<Input placeholder={col.title} style={{width: '80%'}}/>)}
+                  {getFieldDecorator(col.dataIndex)(<Input placeholder={col.title} style={{ float: 'right' , marginLeft: 8}}/>)}
                 </FormItem>
               </Col>
             ))}
@@ -537,8 +537,8 @@ class TableList extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 Reset
               </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                {to !== -1 ? <Icon type="down" /> : <Icon type="up" />}
+              <Button style={{ marginLeft: 8, marginRight: 24 }} onClick={this.toggleForm}>
+                {to - from > 2 ? <Icon type="up" /> : <Icon type="down" />}
               </Button>
             </div>
           </div>
