@@ -25,6 +25,13 @@ const actions = {
                 width: '80%',
               },
             },
+            {
+              field: 'serial_report',
+              placeholder: 'Serial Reporting?',
+              style: {
+                width: '80%',
+              },
+            },            
 
             {
               field: 'erpact',
@@ -41,7 +48,7 @@ const actions = {
                 },                
             },
           ],
-          format: [[0, 1], [2,3]],
+          format: [[0, 1, 2], [3,4]],
         },
         {
           title: 'Descriptions',
@@ -91,6 +98,13 @@ const actions = {
                 width: '80%',
               },
             },
+            {
+              field: 'serial_report',
+              placeholder: 'Serial Reporting?',
+              style: {
+                width: '80%',
+              },
+            },            
 
             {
               field: 'erpact',
@@ -107,7 +121,7 @@ const actions = {
               },                
           },            
           ],
-          format: [[0, 1], [2,3]],
+          format: [[0, 1, 2], [3,4]],
         },
         {
           title: 'Descriptions',
@@ -176,6 +190,11 @@ const actions = {
       inputMethod: 'bool',
       sorter: true,
     },
+    serial_report: {
+      dataIndex: 'serial_report',
+      inputMethod: 'bool',
+      sorter: true,
+    },      
     quantitative: {
       dataIndex: 'quantitative',
       inputMethod: 'bool',

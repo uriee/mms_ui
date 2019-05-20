@@ -52,8 +52,15 @@ const serialStatuses = {
                 width: '100%',
               },
             },
+            {
+              field: 'ext_status',
+              placeholder: 'External Status',
+              style: {
+                width: '80%',
+              },
+            },            
           ],
-          format: [[0, 1, 2], [3], [4], [5]],
+          format: [[0, 1, 2], [3], [4], [5],[6]],
         },
       ],
     },
@@ -147,10 +154,15 @@ const serialStatuses = {
       dataIndex: 'closed',
       inputMethod: 'bool',
       sorter: true,
-    },    
+    },      
     tags: {
       inputMethod: 'tags',
     },
+    ext_status: {
+      dataIndex: 'ext_status',
+      inputMethod: 'input',
+      sorter: true,
+    },      
   },
 };
 export { serialStatuses };

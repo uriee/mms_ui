@@ -3,7 +3,7 @@ The label in forms is determents by <FormattedMessage id=forms+entity+field /> f
 */
 const serials = {
   entity: 'serial',
-  title: 'Serials',
+  title: 'Work Orders',
   forms: {
     insert: {
       steps: [

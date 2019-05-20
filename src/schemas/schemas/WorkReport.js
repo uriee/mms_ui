@@ -91,6 +91,16 @@ const work_report = {
       link: '/router/identifier',
       son: true,
     },
+    sent: {
+      dataIndex: 'sent',
+      sorter: true,
+      inputMethod: 'bool',      
+    },    
+    approved: {
+      dataIndex: 'approved',
+      sorter: true,
+      inputMethod: 'bool',      
+    },     
   },
 };
 export { work_report };

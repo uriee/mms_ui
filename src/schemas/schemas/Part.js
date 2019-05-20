@@ -34,6 +34,13 @@ const part = {
               },
             },
             {
+              field: 'serial_report',
+              placeholder: 'Serial Reporting?',
+              style: {
+                width: '80%',
+              },
+            },            
+            {
               field: 'revision',
               placeholder: 'Revision',
               style: {
@@ -62,7 +69,7 @@ const part = {
               },
             },
           ],
-          format: [[0, 1], [2, 3], [4], [5]],
+          format: [[0, 1, 2], [3, 4], [5], [6]],
         },
         {
           title: 'Descriptions',
@@ -106,6 +113,13 @@ const part = {
               },
             },
             {
+              field: 'serial_report',
+              placeholder: 'Serial Reporting?',
+              style: {
+                width: '80%',
+              },
+            },            
+            {
               field: 'revision',
               placeholder: 'Revision',
               style: {
@@ -141,7 +155,7 @@ const part = {
               },
             },
           ],
-          format: [[0, 1], [2, 3], [4, 5], [6]],
+          format: [[0, 1, 2], [3, 4], [5, 6], [7]],
         },
       ],
     },
@@ -216,6 +230,11 @@ const part = {
       inputMethod: 'bool',
       sorter: true,
     },
+    serial_report: {
+      dataIndex: 'serial_report',
+      inputMethod: 'bool',
+      sorter: true,
+    },    
     part_status: {
       updateable: true,
       insertable: true,

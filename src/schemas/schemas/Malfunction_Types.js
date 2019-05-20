@@ -3,7 +3,7 @@ The label in forms is determents by <FormattedMessage id=forms+entity+field /> f
 */
 const malfunction_types = {
   entity: 'malfunction',
-  title: 'Malfunctions',
+  title: 'Malfunction Types',
   forms: {
     insert: {
       steps: [
