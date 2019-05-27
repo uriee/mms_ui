@@ -34,6 +34,7 @@ export default class NoticeIcon extends PureComponent {
   onItemClick = (item, tabProps) => {
     const { onItemClick } = this.props;
     const { clickClose } = item;
+    console.log('!!!!',item, tabProps)  
     onItemClick(item, tabProps);
     if (clickClose) {
       this.popover.click();
@@ -82,6 +83,7 @@ export default class NoticeIcon extends PureComponent {
       const len = list && list.length ? list.length : 0;
       const msgCount = count || count === 0 ? count : len;
       const tabTitle = msgCount > 0 ? `${title} (${msgCount})` : title;
+    
       return (
         <TabPane tab={tabTitle} key={name}>
           <List
@@ -122,8 +124,9 @@ export default class NoticeIcon extends PureComponent {
   };
 
   render() {
+   
     const { className, count, popupVisible, bell } = this.props;
-    const { visible } = this.state;
+    const { visible, liveCount } = this.state;
     const noticeButtonClass = classNames(className, styles.noticeButton);
     const notificationBox = this.getNotificationBox();
     const NoticeBellIcon = bell || <Icon type="bell" className={styles.icon} />;

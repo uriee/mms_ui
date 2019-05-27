@@ -120,6 +120,8 @@ export async function update(params) {
   });
 }
 
+
+
 export async function updatePermissions(params) {
   console.log('********in update Permissions*********:', params);
   var ret;
@@ -130,6 +132,19 @@ export async function updatePermissions(params) {
       data: {
         routes,
       },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function post(params) {
+  console.log(`********in ${params.link}*********:`, params);
+  var ret;
+  try {
+    ret = await mrequest(`${Logic}mymes/${params.link}`, {
+      method: 'POST',
+      data: params,
     });
   } catch (error) {
     console.error(error);
@@ -353,12 +368,15 @@ export async function fakeRegister(params) {
   });
 }
 
+
 export async function queryNotices(params = {}) {
   console.log('!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', params);
-  return await axios.get(`${Logic}mymes/notifications`);
-  //request(`/api/notices?${stringify(params)}`);
-  //return request(`${Logic}mymes/notifications`);
+  const x = await mrequest(`${Logic}mymes/notifications?`);
+  console.log("lalalalalalalal",x)
+  return x
+  //return await axios.get(`${Logic}mymes/notifications?`);
 }
+
 /*
 export async function queryNotices(params) {
   const ret = await mrequest(`${Logic}mymes/notifications`, {

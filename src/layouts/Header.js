@@ -7,6 +7,10 @@ import router from 'umi/router';
 import GlobalHeader from '@/components/GlobalHeader';
 import TopNavHeader from '@/components/TopNavHeader';
 import styles from './Header.less';
+import openSocket from 'socket.io-client'
+
+const userName = JSON.parse(localStorage.getItem('user')).username 
+const socket = openSocket('http://localhost:5000',{ query: `usr=${userName}` });
 
 const { Header } = Layout;
 
@@ -14,6 +18,8 @@ class HeaderView extends Component {
   state = {
     visible: true,
   };
+
+  first = true
 
   static getDerivedStateFromProps(props, state) {
     if (!props.autoHideHeader && !state.visible) {
@@ -84,6 +90,13 @@ class HeaderView extends Component {
     }
   };
 
+  handleFirst = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'global/fetchNotices',
+    });    
+  }
+
   handScroll = () => {
     const { autoHideHeader } = this.props;
     const { visible } = this.state;
@@ -114,6 +127,15 @@ class HeaderView extends Component {
   };
 
   render() {
+    const handleFirst = this.handleFirst
+    socket.on('new msg', function(msg){
+      console.log('~NEW MESSAGE!~ ',msg)
+      handleFirst()
+    })
+    if(this.first) {
+      handleFirst()
+      this.first = false
+    }
     const { isMobile, handleMenuCollapse, setting } = this.props;
     const { navTheme, layout, fixedHeader } = setting;
     const { visible } = this.state;
@@ -153,9 +175,10 @@ class HeaderView extends Component {
 export default connect(({ user, global, setting, loading }) => ({
   currentUser: user.currentUser,
   collapsed: global.collapsed,
-  fetchingMoreNotices: loading.effects['global/fetchMoreNotices'],
+  fetchingMoreNotices:  loading.effects['global/fetchNotices'],//loading.effects['global/fetchMoreNotices'],
   fetchingNotices: loading.effects['global/fetchNotices'],
   loadedAllNotices: global.loadedAllNotices,
   notices: global.notices,
+  noticeCount : global.noticeCount,
   setting,
 }))(HeaderView);

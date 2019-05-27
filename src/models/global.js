@@ -1,4 +1,4 @@
-import { queryNotices, fetchRoutes } from '@/services/api';
+import { queryNotices, fetchRoutes , post  } from '@/services/api';
 
 export default {
   namespace: 'global',
@@ -20,19 +20,44 @@ export default {
     },
 
     *fetchNotices(_, { call, put }) {
-      const userId = JSON.parse(localStorage.user).id
-      const data = yield call(queryNotices,{userId: userId});
-      console.log("!!@@##$$:",data.data)
+      const data = yield call(queryNotices);
       yield put({
         type: 'saveNotices',
-        payload: data.data,
+        payload: data,
       });
+      /*
       yield put({
         type: 'user/changeNotifyCount',
         payload: data.data.length,
       });
+      */
     },
 
+    *changeNoticeReadState({ payload }, { call, put }) {
+      const dta = yield call(post,{link : 'markNotificationAsRead' , id : payload});
+      const data = yield call(queryNotices);
+      yield put({
+        type: 'saveNotices',
+        payload: data,
+      });           
+    },
+    /*
+        *changeNoticeReadState({ payload }, { put, select }) {
+      const notices = yield select(state =>
+        state.global.notices.map(item => {
+          const notice = { ...item };
+          if (notice.id === payload) {
+            notice.read = true;
+          }
+          return notice;
+        })
+      );
+      yield put({
+        type: 'saveNotices',
+        payload: notices,
+      });
+    },
+*/
     *clearNotices({ payload }, { put, select }) {
       yield put({
         type: 'saveClearedNotices',
@@ -63,6 +88,7 @@ export default {
       return {
         ...state,
         notices: payload,
+        noticeCount: payload.length
       };
     },
     saveClearedNotices(state, { payload }) {

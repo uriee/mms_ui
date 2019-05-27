@@ -4,38 +4,43 @@ import { Spin, Tag, Menu, Icon, Avatar, Tooltip } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import NoticeIcon from '../NoticeIcon';
+import router from 'umi/router';
+import { Logic } from '@/defaultSettings';
 import HeaderSearch from '../HeaderSearch';
 import HeaderDropdown from '../HeaderDropdown';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
 
 export default class GlobalHeaderRight extends PureComponent {
+
   getNoticeData() {
     const { notices = [] } = this.props;
     if (notices.length === 0) {
       return {};
     }
     const newNotices = notices.map(notice => {
-      const newNotice = { ...notice };
+      const newNotice = { ...notice }; 
+      const onExtraClick = newNotice.extra && newNotice.schema && ((e) => {e.stopPropagation();  router.push(`/router/${newNotice.schema}?name=${newNotice.extra.props.children}`)})
       if (newNotice.datetime) {
         newNotice.datetime = moment(notice.datetime).fromNow();
       }
-      if (newNotice.id) {
-        newNotice.key = newNotice.id;
+      if (newNotice.identifier) {
+        newNotice.key = newNotice.identifier;
       }
-      if (newNotice.extra && newNotice.status) {
+      if (newNotice.extra  ) {
         const color = {
           todo: '',
           processing: 'blue',
           urgent: 'red',
           doing: 'gold',
-        }[newNotice.status];
+        }[newNotice.status] || 'green'
         newNotice.extra = (
-          <Tag color={color} style={{ marginRight: 0 }}>
+          <Tag color={color} style={{ marginRight: 0 }} onClick={onExtraClick}>
             {newNotice.extra}
           </Tag>
         );
       }
+
       return newNotice;
     });
     return groupBy(newNotices, 'type');
@@ -62,6 +67,7 @@ export default class GlobalHeaderRight extends PureComponent {
       payload: id,
     });
   };
+
 
   fetchMoreNotices = tabProps => {
     const { list, name } = tabProps;
@@ -151,13 +157,13 @@ export default class GlobalHeaderRight extends PureComponent {
           </a>
         </Tooltip>
 
-        { 1 &&         <NoticeIcon
+        <NoticeIcon
           className={styles.action}
-          count={currentUser.unreadCount}
+          count = {this.props.noticeCount} // {currentUser.unreadCount}
           onItemClick={(item, tabProps) => {
-            console.log(item, tabProps); // eslint-disable-line
-            this.changeReadState(item, tabProps);
+            this.changeReadState(item, tabProps)
           }}
+
           locale={{
             emptyText: formatMessage({ id: 'component.noticeIcon.empty' }),
             clear: formatMessage({ id: 'component.noticeIcon.clear' }),
@@ -197,7 +203,7 @@ export default class GlobalHeaderRight extends PureComponent {
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
             {...loadMoreProps}
           />
-        </NoticeIcon>}
+        </NoticeIcon>
 
         {currentUser.name ? (
           <HeaderDropdown overlay={menu}>
