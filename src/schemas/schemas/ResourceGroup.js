@@ -4,6 +4,14 @@ The label in forms is determents by <FormattedMessage id=forms+entity+field /> f
 const resourceGroup = {
   entity: 'resource_group',
   title: 'Resource Groups',
+
+  functions: [
+    {
+      name: 'Clone',
+      function: 'clone',
+    },
+  ],
+    
   forms: {
     insert: {
       steps: [
