@@ -10,10 +10,10 @@ module.exports = {
   menu: {
     disableLocal: true,
   },
-  title: '',
+  title: 'Smart Fact',
   pwa: false,
   // your iconfont Symbol Scrip Url
   // eg：//at.alicdn.com/t/font_1039637_btcrd5co4w.js
   iconfontUrl: '',
-  Logic: 'http://192.9.200.101/'//'https://bmkil.smart-fact.com/''https://demo.smart-fact.com/'
+  Logic: 'http://192.9.200.70:4001/'//'http://192.9.200.101/'//'https://bmkil.smart-fact.com/''https://demo.smart-fact.com/'
 };

@@ -9,7 +9,7 @@ const FooterView = () => (
       links={[
         {
           key: 'cbt',
-          title: 'Smart-Fact',
+          title: 'Smart Fact',
           href: 'https://Smart-Fact.com',
           blankTarget: true,
         },
