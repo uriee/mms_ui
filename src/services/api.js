@@ -66,6 +66,10 @@ export async function fetch_dash(params) {
   return x.data;
 }
 
+export async function queryNotices(params = {}) {
+  return await mrequest(`${Logic}mymes/notifications?`);
+}
+
 export async function insert(params) {
   const entity = params.entity;
   const ret = await mrequest(`${Logic}mymes/insert`, {
@@ -368,27 +372,6 @@ export async function fakeRegister(params) {
   });
 }
 
-
-export async function queryNotices(params = {}) {
-  console.log('!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', params);
-  const x = await mrequest(`${Logic}mymes/notifications?`);
-  console.log("lalalalalalalal",x)
-  return x
-  //return await axios.get(`${Logic}mymes/notifications?`);
-}
-
-/*
-export async function queryNotices(params) {
-  const ret = await mrequest(`${Logic}mymes/notifications`, {
-    method: 'POST',
-    data: {
-      ...params,
-    },
-  });
-  console.log('ret  queryNotices api:', ret);
-  return ret;
-}
-*/
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
 }

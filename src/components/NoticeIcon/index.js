@@ -97,7 +97,7 @@ export default class NoticeIcon extends PureComponent {
             onClick={item => this.onItemClick(item, child.props)}
             onLoadMore={event => this.onLoadMore(child.props, event)}
             scrollToLoad={scrollToLoad}
-            showClear={showClear}
+            showClear={false} //{showClear}
             skeletonCount={skeletonCount}
             skeletonProps={skeletonProps}
             title={title}
