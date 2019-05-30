@@ -193,6 +193,7 @@ export default {
   'schemas.serial_status': 'Work Order Status',      
   'schemas.availability_profile': 'Availability Profile',  
   'schemas.mnt_plan': 'Maintenance Plan',
+  'pages.serial_report' : 'Report Serials',
   'pages.quantitative' : 'Quantitative',
   'pages.parent_serial' : "Parent WorkOrder",
   "pages.ext_status" : 'External Status',
