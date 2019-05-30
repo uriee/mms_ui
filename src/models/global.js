@@ -25,12 +25,6 @@ export default {
         type: 'saveNotices',
         payload: data,
       });
-      /*
-      yield put({
-        type: 'user/changeNotifyCount',
-        payload: data.data.length,
-      });
-      */
     },
 
     *changeNoticeReadState({ payload }, { call, put }) {

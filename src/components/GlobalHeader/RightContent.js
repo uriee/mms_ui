@@ -15,7 +15,7 @@ export default class GlobalHeaderRight extends PureComponent {
 
   getNoticeData() {
     const { notices = [] } = this.props;
-    if (notices.length === 0) {
+    if (!notices.length) {
       return {};
     }
     const newNotices = notices.map(notice => {

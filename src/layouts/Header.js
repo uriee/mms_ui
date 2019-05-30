@@ -33,6 +33,15 @@ class HeaderView extends Component {
 
   componentDidMount() {
     document.addEventListener('scroll', this.handScroll, { passive: true });
+    const handleFirst = this.handleFirst
+    socket.on('new msg', function(msg){
+      console.log('~NEW MESSAGE!~ ',msg)
+      handleFirst()
+    })
+    if(this.first) {
+      handleFirst()
+      this.first = false
+    }    
   }
 
   componentWillUnmount() {
@@ -128,15 +137,6 @@ class HeaderView extends Component {
   };
 
   render() {
-    const handleFirst = this.handleFirst
-    socket.on('new msg', function(msg){
-      console.log('~NEW MESSAGE!~ ',msg)
-      handleFirst()
-    })
-    if(this.first) {
-      handleFirst()
-      this.first = false
-    }
     const { isMobile, handleMenuCollapse, setting } = this.props;
     const { navTheme, layout, fixedHeader } = setting;
     const { visible } = this.state;
