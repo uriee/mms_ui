@@ -31,6 +31,7 @@ import NumberInfo from '@/components/NumberInfo';
 import numeral from 'numeral';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import { getTimeDistance } from '@/utils/utils';
+import workOrders from './WOcards.js'
 
 import styles from './Analysis.less';
 
@@ -224,109 +225,6 @@ class Analysis extends Component {
       </div>
     );
 
-    const WOStats = serial_stats => (
-      <Row key="WoRow" gutter={24}>
-        {serial_stats.map(wo => (
-          <Col key={'WoCol' + wo.name} {...serialStatsProps}>
-            <ChartCard
-              key={'WoCard' + wo.name}
-              loading={loading}
-              bordered={true}
-              title="Work Order Stats"
-              style={{ marginTop: 24 }}
-              action={
-                <Tooltip
-                  title={
-                    <FormattedMessage id="app.analysis.introduce" defaultMessage="introduce" />
-                  }
-                >
-                  <Icon type="info-circle-o" />
-                </Tooltip>
-              }
-              total={`${wo.name} : ${parseInt(wo.avg * 100)}%`}
-              footer={
-                <div style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                  <FormattedMessage
-                    id="app.analysis.wofepPercent"
-                    defaultMessage="Finished End Products"
-                  />
-                  <span className={styles.trendText}>{parseInt(wo.min * 100)}%</span>
-                </div>
-              }
-              contentHeight={46}
-            >
-              <MiniProgress
-                percent={wo ? wo.avg * 100 : 0}
-                strokeWidth={16}
-                target={100}
-                color="#4372A2"
-              />
-            </ChartCard>
-          </Col>
-        ))}
-      </Row>
-    );
-
-    const ResourceChartOld = () => (
-      <Card loading={loading} bordered={false} bodyStyle={{ padding: 0 }}>
-      <div className={styles.salesCard}>
-        <Tabs tabBarExtraContent={salesExtra} size="large" tabBarStyle={{ marginBottom: 24 }}>
-          <TabPane
-            tab={<FormattedMessage id="app.analysis.placements" defaultMessage="Placements" />}
-            key="placements"
-          >
-            <Row>
-              <Col xl={23} lg={12} md={12} sm={24} xs={24}>
-                <div className={styles.salesBar}>
-                  <Bar
-                    height={295}
-                    title={
-                      <FormattedMessage
-                        id="app.analysis.placements"
-                        defaultMessage="Placements"
-                      />
-                    }
-                    data={work_report_placements}
-                  />
-                </div>
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane
-            tab={<FormattedMessage id="app.analysis.products" defaultMessage="Products" />}
-            key="views"
-          >
-            <Row>
-              <Col xl={23} lg={12} md={12} sm={24} xs={24}>
-                <div className={styles.salesBar}>
-                  <Bar
-                    height={292}
-                    title={
-                      <FormattedMessage
-                        id="app.analysis.visits-trend"
-                        defaultMessage="Products"
-                      />
-                    }
-                    data={work_report_products}
-                  />
-                </div>
-              </Col>
-              <Col xl={8} lg={12} md={12} sm={24} xs={24}>
-                <div className={styles.salesRank}>
-                  <h4 className={styles.rankingTitle}>
-                    <FormattedMessage
-                      id="app.analysis.visits-ranking"
-                      defaultMessage="Visits Ranking"
-                    />
-                  </h4>
-                </div>
-              </Col>
-            </Row>
-          </TabPane>
-        </Tabs>
-      </div>
-    </Card>      
-    )
 
     const ResourceChart = () => (
       <Card loading={loading} bordered={false} bodyStyle={{ padding: 0 }}>
@@ -399,15 +297,6 @@ class Analysis extends Component {
       lg: 12,
       xl: 6,
       style: { marginBottom: 24 },
-    };
-
-    const serialStatsProps = {
-      xs: 24,
-      sm: 12,
-      md: 12,
-      lg: 12,
-      xl: 6,
-      style: { marginBottom: 2 },
     };
 
     return (
@@ -555,7 +444,7 @@ class Analysis extends Component {
           </Col>
         </Row>
         {ResourceChart()}
-        {WOStats(serial_stats)}
+        {workOrders(serial_stats,loading)}
       </GridContent>
     );
   }

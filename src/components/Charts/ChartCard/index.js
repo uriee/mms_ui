@@ -13,6 +13,9 @@ const renderTotal = total => {
     case 'function':
       totalDom = <div className={styles.total}>{total()}</div>;
       break;
+      case 'object':
+        totalDom = <a className={styles.total} onClick={total.link}>{total.text}</a>;
+        break;      
     default:
       totalDom = <div className={styles.total}>{total}</div>;
   }

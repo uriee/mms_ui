@@ -14,14 +14,14 @@ export default class SelectLang extends PureComponent {
     const selectedLang = getLocale();
     const langMenu = (
       <Menu className={styles.menu} selectedKeys={[selectedLang]} onClick={this.changLang}>
+        <Menu.Item key="en-US">
+          <FormattedMessage id="lang.english" />
+        </Menu.Item>        
         <Menu.Item key="he-IL">
           <FormattedMessage id="lang.hebrew" />
         </Menu.Item>
         <Menu.Item key="de-DE">
           <FormattedMessage id="lang.german" />
-        </Menu.Item>
-        <Menu.Item key="en-US">
-          <FormattedMessage id="lang.english" />
         </Menu.Item>
       </Menu>
     );
