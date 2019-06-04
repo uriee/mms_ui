@@ -246,12 +246,11 @@ class CreateForm extends PureComponent {
         break;
 
       case 'cascader':
-                console.log("AAA In casacsder",this.props.cascaders,this.props.choosers,this.props.choosers[field.chooser] )
-        const cascadeMap = this.props.cascaders && this.props.cascaders[field.chooser];
-        console.log('----------------------1 ',field.chooser,  this.props.cascaders && this.props.cascaders[field.chooser], this.props.cascaders )       
-        var cascadeData = groupBy(this.props.choosers[field.chooser], cascadeMap[0]);
-        var cascadeData2 = treefy(this.props.choosers[field.chooser],['resourcename','serialname'] ).children;
-        cascadeData = Object.keys(cascadeData).map(x => ({
+        const options = this.props.choosers[field.chooser]
+        const cascadeMap = this.props.cascaders && this.props.cascaders[field.chooser];   
+        var cascadeData = options && groupBy(options, cascadeMap[0]);
+        var cascadeData2 = options && treefy(options,['resourcename','serialname'] ).children;
+        cascadeData = cascadeData && Object.keys(cascadeData).map(x => ({
           value: x,
           label: x,
           children: cascadeData[x].map(x1 => ({
@@ -260,7 +259,7 @@ class CreateForm extends PureComponent {
           })),
         }));
         
-        console.log('----------------------2 ',cascadeMap,cascadeData,cascadeData2)
+
         formField = (
           <Cascader
             key={`cascade_${field.dataIndex}`}
