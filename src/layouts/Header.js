@@ -7,12 +7,7 @@ import router from 'umi/router';
 import GlobalHeader from '@/components/GlobalHeader';
 import TopNavHeader from '@/components/TopNavHeader';
 import styles from './Header.less';
-import openSocket from 'socket.io-client'
-import { Logic } from '@/defaultSettings';
 
-const userName = localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).username 
-//const socket = openSocket('http://localhost:5000',{ query: `usr=${userName}` });
-const socket = openSocket(Logic,{ query: `usr=${userName}` });
 const { Header } = Layout;
 
 class HeaderView extends Component {
@@ -34,6 +29,7 @@ class HeaderView extends Component {
   componentDidMount() {
     document.addEventListener('scroll', this.handScroll, { passive: true });
     const handleFirst = this.handleFirst
+    const {socket} = this.props
     socket.on('new msg', function(msg){
       console.log('~NEW MESSAGE!~ ',msg)
       handleFirst()

@@ -14,6 +14,13 @@ import SiderMenu from '@/components/SiderMenu';
 import getPageTitle from '@/utils/getPageTitle';
 import styles from './BasicLayout.less';
 import router from 'umi/router';
+import openSocket from 'socket.io-client'
+import { Logic } from '@/defaultSettings';
+//import SocketContext from '@/components/socketContext'
+
+const userName = localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).username 
+const socket = openSocket('http://localhost:5000',{ query: `usr=${userName}` });
+//const socket = openSocket(Logic,{ query: `usr=${userName}` });
 
 // lazy load SettingDrawer
 const SettingDrawer = React.lazy(() => import('@/components/SettingDrawer'));
@@ -185,12 +192,13 @@ class BasicLayout extends React.Component {
             ...this.getLayoutStyle(),
             minHeight: '100vh',
           }}
-        >
+        > 
           <Header
             menuData={menuData}
             handleMenuCollapse={this.handleMenuCollapse}
             logo={logo}
             isMobile={isMobile}
+            socket={socket}
             {...this.props}
           />
           <Content className={styles.content} style={contentStyle}>
@@ -224,7 +232,7 @@ export default connect(({ global, setting, menu: menuModel }) => ({
   breadcrumbNameMap: menuModel.breadcrumbNameMap,
   ...setting,
 }))(props => (
-  <Media query="(max-width: 599px)">
-    {isMobile => <BasicLayout {...props} isMobile={isMobile} />}
-  </Media>
+    <Media query="(max-width: 599px)">
+      {isMobile => <BasicLayout {...props} isMobile={isMobile} />}
+    </Media>
 ));
