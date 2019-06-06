@@ -5,6 +5,14 @@ const equipment = {
   loadable: true,
   entity: 'equipment',
   title: 'Equipments',
+  
+  functions: [
+    {
+      name: 'Clone',
+      function: 'clone',
+    },
+  ],
+
   forms: {
     insert: {
       steps: [
