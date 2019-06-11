@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { AsyncLoadBizCharts } from '@/components/Charts/AsyncLoadBizCharts';
+import { WidthProvider, Responsive } from "react-grid-layout";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import {
@@ -54,6 +55,78 @@ class Analysis extends Component {
     rangePickerValue: getTimeDistance('week'),
     loading: true,
   };
+
+  layout = []
+  newCouter =  0
+  breakpoint = 0
+  cols = 0
+  
+
+  layoutProps = {
+    className: "layout",
+    cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
+    rowHeight: 100
+  };
+
+  onAddItem = () =>  {
+    /*eslint no-console: 0*/
+    console.log("adding", "dash" + this.newCounter);
+    this.layout.concat({
+        i: "dash" + this.newCounter,
+        x: (this.layout.length * 2) % (this.cols || 12),
+        y: Infinity, // puts it at the bottom
+        w: 2,
+        h: 2
+      })
+      this.newCounter =  this.newCounter + 1
+  }
+  
+
+  // We're using the cols coming back from this to calculate where to add new items.
+  onBreakpointChange = (breakpoint, cols) => {
+    this.setState({
+      breakpoint: breakpoint,
+      cols: cols
+    });
+  }
+
+  onRemoveItem = (i) => {
+    console.log("removing", i);
+    this.layout = this.layout.filter(cell => cell.i != i)
+  }
+
+  createElement = (el) => {
+    const removeStyle = {
+      position: "absolute",
+      right: "2px",
+      top: 0,
+      cursor: "pointer"
+    };
+    const i = 'dash' + el.i
+    const html = el.html
+    return (
+      <div key={i} data-grid={el}>
+        <span className="text">{i}</span>
+        <span
+          className="remove"
+          style={removeStyle}
+          onClick={this.onRemoveItem(i)}
+        >
+          x
+        </span>
+      </div>
+    );
+  }
+
+  onBreakpointChange(breakpoint, cols) {
+    this.breakpoint =  breakpoint,
+    this.cols =  cols
+  }
+
+  onLayoutChange(layout) {
+    this.props.onLayoutChange(layout);
+    this.layout =  layout
+  }  
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -262,36 +335,6 @@ class Analysis extends Component {
               
     const activeKey = currentTabKey || (offlineData[0] && offlineData[0].name);
 
-    const CustomTab = ({ data, currentTabKey: currentKey }) => (
-      <Row gutter={8} style={{ width: 138, margin: '8px 0' }}>
-        <Col span={12}>
-          <NumberInfo
-            title={data.name}
-            subTitle={
-              <FormattedMessage
-                id="app.analysis.conversion-rate"
-                defaultMessage="Conversion Rate"
-              />
-            }
-            gap={2}
-            total={`${data.cvr * 100}%`}
-            theme={currentKey !== data.name && 'light'}
-          />
-        </Col>
-        <Col span={12} style={{ paddingTop: 36 }}>
-          <Pie
-            animate={false}
-            color={currentKey !== data.name && '#BDE4FF'}
-            inner={0.55}
-            tooltip={false}
-            margin={[0, 0, 0, 0]}
-            percent={data.cvr * 100}
-            height={64}
-          />
-        </Col>
-      </Row>
-    );
-
     const topColResponsiveProps = {
       xs: 24,
       sm: 12,
@@ -302,6 +345,7 @@ class Analysis extends Component {
     };
 
     return (
+      <div>
       <GridContent>
         <Row gutter={24}>
           <Col {...topColResponsiveProps}>
@@ -448,6 +492,12 @@ class Analysis extends Component {
         {ResourceChart()}
         {workOrders(serial_stats,loading)}
       </GridContent>
+      <div>
+
+          {this.layout.map(el => this.createElement(el))}
+
+      </div>
+      </div>
     );
   }
 }

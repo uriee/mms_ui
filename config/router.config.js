@@ -42,7 +42,7 @@ export default [
           {
             path: '/dashboard/monitor',
             name: 'monitor',
-            component: './Result/Success',
+            component: './Dashboard/Monitor',
           },
           {
             path: '/dashboard/workplace',

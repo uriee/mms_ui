@@ -20,7 +20,7 @@ const serialStatsProps = {
     md: 12,
     lg: 12,
     xl: 6,
-    style: { marginBottom: 2 },
+   
   };
 
 const WOLink = (wo) =>  () => router.push(`/router/serials?name=${wo}`)
@@ -34,7 +34,7 @@ export default (serial_stats,loading) => (
               loading={loading}
               bordered={true}
               title="Work Order Stats"
-              style={{ marginTop: 24 }}
+              style={{ marginTop: 8 }}
               action={
                 <Tooltip
                   title={
@@ -55,7 +55,7 @@ export default (serial_stats,loading) => (
                   <span className={styles.trendText}>{parseInt(wo.min * 100)}%</span>
                 </div>
               }
-              contentHeight={46}
+              contentHeight={70}
             >
               <MiniProgress
                 percent={wo ? wo.avg * 100 : 0}
