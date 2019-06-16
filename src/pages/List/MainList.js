@@ -6,6 +6,8 @@ import { Logic } from '@/defaultSettings';
 import moment from 'moment-timezone';
 import { BugReporter } from 'simple-bug-reporter';
 import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
+
+
 import {
   Row,
   Col,
@@ -348,6 +350,36 @@ class TableList extends PureComponent {
     });
   };
 
+  print = async (schema,data) => {
+    console.log( 'heyyy-------------',schema,data)  
+    let post = { list : data.list.map((x,i) => ({id: i, ...x}))}
+    post.total =  post.length
+    const body = JSON.stringify({schema : schema, data : post})
+    fetch(`${Logic}mymes/test`, { 
+      body: 'xxx='+body,
+      headers: { "Content-Type": "application/x-www-form-urlencoded" } ,     
+      method: 'POST'
+    }).then(res => {
+      console.log(res)
+        return res
+            .arrayBuffer()
+            .then(res => {
+                const blob = new Blob([res], { type: 'application/pdf' })
+                console.log(blob)
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'file.pdf');
+                document.body.appendChild(link);
+                link.click()      
+                console.log(res,url) 
+            })
+            .catch(e => alert(e))
+    })/* 
+    const ret = .post(`${Logic}mymes/html2pdf`,{html : domElement.toString()}).then(res => { 
+    */
+  }
+
   //shows the update item from
   handleUpdateModalVisible = (flag, record) => {
     this.setState({
@@ -387,7 +419,7 @@ class TableList extends PureComponent {
     values.sig_user =
       JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
     values.parent = this.state.formValues.parent;
-    console.log("ccccccccccccccccccccccccccccc:", Object.assign(values, { lang_id: lang_id, entity: this.entity },constants))
+
     dispatch({
       type: 'action/add',
       payload: Object.assign(values, { lang_id: lang_id, entity: this.entity },constants),
@@ -551,9 +583,9 @@ class TableList extends PureComponent {
     const { expandForm } = this.state;
     return expandForm
       ? this.renderMainForm(0, this.columns.length - 1)
-      : lang[getLocale()].align === 'left'
-      ? this.renderMainForm(0, 2)
-      : this.renderMainForm(this.columns.length - 3, this.columns.length - 1);
+//      : lang[getLocale()].align === 'left'
+      : this.renderMainForm(0, 2)
+ //     : this.renderMainForm(this.columns.length - 3, this.columns.length - 1);
   }
 
   myList = data => (
@@ -654,7 +686,7 @@ class TableList extends PureComponent {
       });
     }
 
-    console.log('DATA', this.state, location, localStorage.getItem('lastEntity'), getLocale());
+    console.log('DATA', data);
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
     this.formFields = formFields(this.schema.fields);
     if (data.entity !== this.entity) return <span />;
@@ -677,11 +709,13 @@ class TableList extends PureComponent {
 
     return (
       <PageHeaderWrapper title={this.schema.title}>
+
         <Card bordered={false}>
           <div className={styles.tableList}>
             {!this.schema.noFilter && <div className={styles.tableListForm}>{this.renderForm()}</div>}
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)} />
+              <Button style={{float : 'right'}}icon="file-pdf"  onClick={() => this.print('serials',data)} />
               {selectedRows.length > 0 && (
                 <span>
                   <Dropdown overlay={menu}>
@@ -696,18 +730,22 @@ class TableList extends PureComponent {
                 <h2 style={{ textAlign: 'center' }}> {localStorage.getItem('lastEntity')} </h2>
               )}
             </div>
-            {data.list[0] === undefined
-              ? ''
-              : window.innerWidth < 1000
-              ? this.myList(data.list)
-              : this.myTable(selectedRows, loading, data)}
+              
+                {data.list[0] === undefined
+                  ? ''
+                  : window.innerWidth < 1000
+                  ? this.myList(data.list)
+                  : this.myTable(selectedRows, loading, data)}
           </div>
+          
           <a onClick={() => this.flipShowBugReporter()}>
             <Icon type="exclamation-circle" />
           </a>
         </Card>
+                
         {this.schema.forms.insert ? (
-          <MainForm
+
+          <MainForm 
             {...parentMethods}
             ModalVisible={modalVisible}
             values={this.insertKey}
@@ -735,6 +773,7 @@ class TableList extends PureComponent {
             formType="update"
           />
         ) : null}
+
         {this.state.showBugReporter ? (
           <BugReporter
             name={JSON.stringify({ ...this.props, ...this.state })}
