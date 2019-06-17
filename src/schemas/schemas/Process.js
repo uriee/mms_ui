@@ -4,6 +4,14 @@ The label in forms is determents by <FormattedMessage id=forms+entity+field /> f
 const process = {
   entity: 'process',
   title: 'Process',
+
+  functions: [
+    {
+      name: 'Clone',
+      function: 'clone',
+    },
+  ],
+
   forms: {
     insert: {
       steps: [
@@ -30,7 +38,7 @@ const process = {
               style: {
                 width: '80%',
               },
-            },            
+            },
 
             {
               field: 'erpproc',
@@ -40,7 +48,7 @@ const process = {
               },
             },
           ],
-          format: [[0, 1 ,2], [3]],
+          format: [[0, 1, 2], [3]],
         },
         {
           title: 'Descriptions',
@@ -96,7 +104,7 @@ const process = {
               style: {
                 width: '80%',
               },
-            },            
+            },
 
             {
               field: 'erpproc',
@@ -175,7 +183,7 @@ const process = {
       dataIndex: 'serial_report',
       inputMethod: 'bool',
       sorter: true,
-    },      
+    },
     erpproc: {
       dataIndex: 'erpproc',
       inputMethod: 'input',

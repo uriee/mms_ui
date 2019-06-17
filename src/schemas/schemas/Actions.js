@@ -5,6 +5,14 @@ const actions = {
   loadable: true,
   entity: 'action',
   title: 'Actions',
+
+  functions: [
+    {
+      name: 'Clone',
+      function: 'clone',
+    },
+  ],
+
   forms: {
     insert: {
       steps: [
@@ -31,7 +39,7 @@ const actions = {
               style: {
                 width: '80%',
               },
-            },            
+            },
 
             {
               field: 'erpact',
@@ -39,16 +47,16 @@ const actions = {
               style: {
                 width: '80%',
               },
-            },              
+            },
             {
-                field: 'quantitative',
-                placeholder: 'Quantitative?',
-                style: {
-                  width: '80%',
-                },                
+              field: 'quantitative',
+              placeholder: 'Quantitative?',
+              style: {
+                width: '80%',
+              },
             },
           ],
-          format: [[0, 1, 2], [3,4]],
+          format: [[0, 1, 2], [3, 4]],
         },
         {
           title: 'Descriptions',
@@ -104,7 +112,7 @@ const actions = {
               style: {
                 width: '80%',
               },
-            },            
+            },
 
             {
               field: 'erpact',
@@ -118,10 +126,10 @@ const actions = {
               placeholder: 'Quantitative?',
               style: {
                 width: '80%',
-              },                
-          },            
+              },
+            },
           ],
-          format: [[0, 1, 2], [3,4]],
+          format: [[0, 1, 2], [3, 4]],
         },
         {
           title: 'Descriptions',
@@ -194,12 +202,12 @@ const actions = {
       dataIndex: 'serial_report',
       inputMethod: 'bool',
       sorter: true,
-    },      
+    },
     quantitative: {
       dataIndex: 'quantitative',
       inputMethod: 'bool',
       sorter: true,
-    },    
+    },
     erpact: {
       dataIndex: 'erpact',
       inputMethod: 'input',
