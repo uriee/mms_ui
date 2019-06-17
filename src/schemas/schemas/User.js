@@ -1,6 +1,14 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
+const checkPassword = (rule, value, callback) => {
+  console.log('~~~~~~~~',rule, value, callback)
+  if (!(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value)) && value ) {
+    callback('Minimum eight characters, at least one letter and one number');
+  }
+  callback();
+};
+
 const user = {
   entity: 'user',
   title: 'Users',
@@ -39,13 +47,13 @@ const user = {
             },
             {
               field: 'password2',
-              placeholder: 'Repeat Password',
+              placeholder: 'Enter Password',
               style: {
                 width: '80%',
               },
-            },
+            },            
           ],
-          format: [[0], [1]],
+          format: [[0],[1]],
         },
       ],
     },
@@ -103,6 +111,26 @@ const user = {
           ],
           format: [[0]],
         },
+        {
+          title: 'Password',
+          fields: [             
+            {
+              field: 'password',
+              placeholder: 'Enter Password',
+              style: {
+                width: '80%',
+              },
+            },            
+            {
+              field: 'password2',
+              placeholder: 'Repeat Password',
+              style: {
+                width: '80%',
+              }
+            }
+          ],
+          format: [[0],[1]],
+        },        
       ],
     },
   },
@@ -190,8 +218,12 @@ const user = {
           message: 'This field is required',
         },
         {
-          min: 4,
-          message: ' minimum 4 character',
+          validator : checkPassword,
+          message: 'Minimum eight characters, at least one letter and one number',
+        },        
+        {
+          min: 8,
+          message: ' minimum 8 character',
         },
       ],
     },
@@ -200,15 +232,18 @@ const user = {
       align: 'right',
       inputRules: [
         {
-          required: true,
-          message: 'This field is required',
+          validator : checkPassword,
+          message: 'Minimum eight characters, at least one letter and one number',
         },
         {
-          min: 2,
-          message: ' minimum 4 character',
+          min: 8,
+          message: ' minimum 8 character',
         },
       ],
-    },
+    },    
   },
 };
+
+
+
 export { user };

@@ -156,12 +156,23 @@ class CreateForm extends PureComponent {
     });
   };
 
+  checkPass = (rule, value, callback) => {
+    const { form } = this.props;
+    const password = form.getFieldValue('password')
+    console.log('~~~---~~~~~',password, value)
+    if (value != password) {
+      callback('error');
+    }
+    callback();
+  };
+
   getFormItemFromSchema = fieldData => {
     const fieldName = fieldData.field;
     if (this.props.formType === 'insert' && fieldName === 'description' && lang[getLocale()].id === 1) return <span/>
     const fieldStyle = fieldData.style;
     const { form, fields } = this.props;
     const field = fields[fieldName];
+    if (fieldName === 'password2') field.inputRules = [{validator : this.checkPass,  message: 'Passwords Do not match'} ]
     const placeHolder = fieldData.placeholder || field.title;
     const formVals = this.state.formVals;
     let formField = null;
