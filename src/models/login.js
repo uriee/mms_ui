@@ -4,6 +4,7 @@ import { accountLogin, fakeAccountLogin, getFakeCaptcha } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
+import { setLocale } from 'umi/locale';
 
 export default {
   namespace: 'login',
@@ -39,8 +40,9 @@ export default {
             return;
           }
         }
-        redirect = redirect && redirect.includes('login') ? false : redirect //fixed bug when redirecting back to user/login  
+        redirect = redirect && redirect.includes('login') ? false : redirect; //fixed bug when redirecting back to user/login
         yield put(routerRedux.replace(redirect || '/'));
+        if (localStorage.umi_locale !== response.locale) setLocale(response.locale);
       }
     },
 

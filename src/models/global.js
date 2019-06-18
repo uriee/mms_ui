@@ -1,4 +1,4 @@
-import { queryNotices, fetchRoutes , post  } from '@/services/api';
+import { queryNotices, fetchRoutes, post } from '@/services/api';
 
 export default {
   namespace: 'global',
@@ -28,12 +28,17 @@ export default {
     },
 
     *changeNoticeReadState({ payload }, { call, put }) {
-      const dta = yield call(post,{link : 'markNotificationAsRead' , id : payload});
+      const dta = yield call(post, { link: 'markNotificationAsRead', id: payload });
       const data = yield call(queryNotices);
       yield put({
         type: 'saveNotices',
         payload: data,
-      });           
+      });
+    },
+
+    *changeUserLang({ payload }, { call, put }) {
+      console.log('123~~~~~~~~~~', payload);
+      const dta = yield call(post, { link: 'changeUserLang', locale: payload });
     },
     /*
         *changeNoticeReadState({ payload }, { put, select }) {
@@ -82,7 +87,7 @@ export default {
       return {
         ...state,
         notices: payload,
-        noticeCount: payload.length
+        noticeCount: payload.length,
       };
     },
     saveClearedNotices(state, { payload }) {

@@ -12,28 +12,34 @@ import SelectLang from '../SelectLang';
 import styles from './index.less';
 
 export default class GlobalHeaderRight extends PureComponent {
-
   getNoticeData() {
     const { notices = [] } = this.props;
     if (!notices.length) {
       return {};
     }
     const newNotices = notices.map(notice => {
-      const newNotice = { ...notice }; 
-      const onExtraClick = newNotice.extra && newNotice.schema && ((e) => {e.stopPropagation();  router.push(`/router/${newNotice.schema}?name=${newNotice.extra.props.children}`)})
+      const newNotice = { ...notice };
+      const onExtraClick =
+        newNotice.extra &&
+        newNotice.schema &&
+        (e => {
+          e.stopPropagation();
+          router.push(`/router/${newNotice.schema}?name=${newNotice.extra.props.children}`);
+        });
       if (newNotice.datetime) {
         newNotice.datetime = moment(notice.datetime).fromNow();
       }
       if (newNotice.identifier) {
         newNotice.key = newNotice.identifier;
       }
-      if (newNotice.extra  ) {
-        const color = {
-          todo: '',
-          processing: 'blue',
-          urgent: 'red',
-          doing: 'gold',
-        }[newNotice.status] || 'green'
+      if (newNotice.extra) {
+        const color =
+          {
+            todo: '',
+            processing: 'blue',
+            urgent: 'red',
+            doing: 'gold',
+          }[newNotice.status] || 'green';
         newNotice.extra = (
           <Tag color={color} style={{ marginRight: 0 }} onClick={onExtraClick}>
             {newNotice.extra}
@@ -67,7 +73,6 @@ export default class GlobalHeaderRight extends PureComponent {
       payload: id,
     });
   };
-
 
   fetchMoreNotices = tabProps => {
     const { list, name } = tabProps;
@@ -163,11 +168,10 @@ export default class GlobalHeaderRight extends PureComponent {
 
         <NoticeIcon
           className={styles.action}
-          count = {this.props.noticeCount} // {currentUser.unreadCount}
+          count={this.props.noticeCount} // {currentUser.unreadCount}
           onItemClick={(item, tabProps) => {
-            this.changeReadState(item, tabProps)
+            this.changeReadState(item, tabProps);
           }}
-
           locale={{
             emptyText: formatMessage({ id: 'component.noticeIcon.empty' }),
             clear: formatMessage({ id: 'component.noticeIcon.clear' }),
@@ -224,7 +228,7 @@ export default class GlobalHeaderRight extends PureComponent {
         ) : (
           <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
         )}
-        <SelectLang className={styles.action} />
+        <SelectLang className={styles.action} dispatch={this.props.dispatch} />
       </div>
     );
   }

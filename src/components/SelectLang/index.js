@@ -7,6 +7,12 @@ import styles from './index.less';
 
 export default class SelectLang extends PureComponent {
   changeLang = ({ key }) => {
+    const { dispatch } = this.props;
+    console.log('321:', key, this.props);
+    dispatch({
+      type: 'global/changeUserLang',
+      payload: key,
+    });
     setLocale(key);
   };
 
@@ -25,7 +31,7 @@ export default class SelectLang extends PureComponent {
       'de-DE': '🇩🇪',
     };
     const langMenu = (
-      <Menu className={styles.menu} selectedKeys={[selectedLang]} onClick={this.changeLang}>
+      <Menu className={styles.menu} selectedKeys={[selectedLang]} onClick={e => this.changeLang(e)}>
         {locales.map(locale => (
           <Menu.Item key={locale}>
             <span role="img" aria-label={languageLabels[locale]}>
