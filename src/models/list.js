@@ -1,4 +1,5 @@
-import { queryFakeList, removeFakeList, addFakeList, updateFakeList } from '@/services/api';
+
+//import { queryFakeList, removeFakeList, addFakeList, updateFakeList } from '@/services/api';
 
 export default {
   namespace: 'list',
@@ -8,6 +9,7 @@ export default {
   },
 
   effects: {
+    /*
     *fetch({ payload }, { call, put }) {
       const response = yield call(queryFakeList, payload);
       yield put({
@@ -50,5 +52,6 @@ export default {
         list: state.list.concat(action.payload),
       };
     },
+    */
   },
 };
