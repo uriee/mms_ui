@@ -3,11 +3,10 @@ import request from '@/utils/request';
 import mrequest from '@/utils/mrequest';
 import axios from 'axios';
 import { Logic } from '@/defaultSettings';
-//const Logic = 'http://3.16.188.229/'
-//const Logic = 'http://192.9.200.101/'
+
 const timeChartify = (data, interval) =>
   data.map(x => ({ ...x ,
-    /*x: Date(dateString.replace(' ', 'T'))*/
+
     x:
       interval === 'day' || interval === 'week'
         ? x.x.slice(5, 10)
@@ -26,20 +25,30 @@ export function fetch(params) {
   try {
     x = myGet(`${Logic}mymes/${command}?${stringify(params)}`, entity);
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
   return x;
 }
 
-export function fetchTags(params) {
+export async function fetchWorkPaths() {
   let x;
-  const entity = params.entity;
   try {
-    x = myGet(`${Logic}mymes/tags?${stringify(params)}`, entity);
+    x = await myGet(`${Logic}mymes/workPaths?`);
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
-  return x;
+  return x.list;
+}
+
+
+export async function fetchWR(path) {
+  let x;
+  try {
+    x = await myGet(`${Logic}mymes/fetchWR?resourcename=${path[0]}&serialname=${path[1]}&actname=${path[2]}`);
+  } catch (e) {
+    console.error(e);
+  }
+  return x.list;
 }
 
 export async function fetchResources() {
@@ -47,7 +56,7 @@ export async function fetchResources() {
   try {
     x = await myGet(`${Logic}mymes/resources?`);
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
   return x;
 }
@@ -58,7 +67,7 @@ export async function fetch_dash(params) {
   try {
     x = await mrequest(`${Logic}mymes/dash/?${stringify(params)}`,{method : 'GET'});
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
   x.data['work_report_placements'] = timeChartify( x.data['work_report_placements'], params.interval );
   x.data['work_report_products'] = timeChartify(x.data['work_report_products'], params.interval);
@@ -100,7 +109,7 @@ export async function sendFunction(params) {
       ...params,
     },
   });
-  console.log('ret sendFunction api:', ret);
+  console.error('ret sendFunction api:', ret);
   return ret;
 }
 
@@ -115,7 +124,6 @@ export async function fetchRoutes() {
 }
 
 export async function update(params) {
-  console.log('********in update*********:', params);
   return await mrequest(`${Logic}mymes/update`, {
     method: 'POST',
     data: {
@@ -127,7 +135,6 @@ export async function update(params) {
 
 
 export async function updatePermissions(params) {
-  console.log('********in update Permissions*********:', params);
   var ret;
   try {
     const routes = JSON.stringify(params.routes);
@@ -143,7 +150,6 @@ export async function updatePermissions(params) {
 }
 
 export async function post(params) {
-  console.log(`********in ${params.link}*********:`, params);
   var ret;
   try {
     ret = await mrequest(`${Logic}mymes/${params.link}`, {
@@ -156,7 +162,6 @@ export async function post(params) {
 }
 
 export async function updateResources(params) {
-  console.log('********in updateResourceGroups*********:', params);
   var ret;
   try {
     ret = await mrequest(`${Logic}mymes/updateResources`, {
@@ -170,14 +175,13 @@ export async function updateResources(params) {
 
 export async function accountLogin(params) {
   let x = { currenrAuthority: 'guest' };
-  console.log('accountLogin', params);
   try {
     x = await mrequest(`${Logic}mymes/signin`, {
       method: 'POST',
       data: params,
     });
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 
   return x;
@@ -186,8 +190,6 @@ export async function accountLogin(params) {
 import { parse } from 'url';
 
 const myGet = async (url, entity) => {
-  console.log('in myGet1', url, entity);
-
   let dataSource = await mrequest(url, {
     method: 'GET',
   });
@@ -196,7 +198,7 @@ const myGet = async (url, entity) => {
   dataSource = dataSource.main;
   const params = parse(url, true).query;
   if (dataSource === undefined) return 0;
-  console.log('in myGet2', dataSource, params);
+
   if (params.sorter) {
     let s = params.sorter.split('_');
     let direction = s[s.length - 1];

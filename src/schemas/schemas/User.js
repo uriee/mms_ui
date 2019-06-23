@@ -2,9 +2,15 @@
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
 const checkPassword = (rule, value, callback) => {
-  console.log('~~~~~~~~',rule, value, callback)
   if (!(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value)) && value ) {
     callback('Minimum eight characters, at least one letter and one number');
+  }
+  callback();
+};
+
+const checkEmail = (rule, value, callback) => {
+  if (!(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(value)) && value ) {
+    callback('The Input must be an Email');
   }
   callback();
 };
@@ -180,6 +186,10 @@ const user = {
           required: true,
           message: 'This field is required',
         },
+        {
+          validator : checkEmail,
+          message: 'The Input must be an Email',
+        },        
       ],
     },
     title: {
