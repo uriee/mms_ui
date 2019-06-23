@@ -27,7 +27,6 @@ import {
   Tag,
   Checkbox,
   List,
-  notification,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -356,8 +355,9 @@ class TableList extends PureComponent {
     post.total =  post.length
     const body = JSON.stringify({schema : schema, data : post})
     fetch(`${Logic}mymes/test`, { 
-      body: 'xxx='+body,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" } ,     
+      body: body,
+      //headers: { "Content-Type": "application/x-www-form-urlencoded" } , 
+      headers: {"Content-Type": "application/json"} ,
       method: 'POST'
     }).then(res => {
       console.log(res)
