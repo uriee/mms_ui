@@ -80,6 +80,11 @@ export default [
             name: 'report',
           },
           {
+            path: '/production/workReport',
+            component: './List/WorkReport',
+            name: 'workreport',
+          },          
+          {
             path: '/production/identifiers',
             name: 'serials',
             component: './List/MainList',

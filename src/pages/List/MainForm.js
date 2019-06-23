@@ -24,9 +24,9 @@ import {
   Tag,
   Checkbox,
   TimePicker,
-  notification,
   Cascader,
 } from 'antd';
+import { groupBy, treefy } from '@/utils/utils';
 
 const lang = {
   'en-US': { id: 1, align: 'left' },
@@ -36,34 +36,6 @@ const lang = {
 
 const { RangePicker } = DatePicker;
 
-const groupBy = function(xs, key) {
-  return xs.reduce(function(rv, x) {
-    (rv[x[key]] = rv[x[key]] || []).push(x);
-    return rv;
-  }, {});
-};
-
-/***
-* treefy : format recursivly the data from db to fit into UI cascaders
-* @xs : data entries
-* @keys :  the order of data cascading 
-* @name : nedded for recursion never to be used (allways = 'root')
-*/
-var treefy = (xs, keys,name='root') =>  {
-  var ret = {}
-  ret.label = ret.value = name
-  ret.children = xs.map(x=> ({value : Object.values(x)[0],label : Object.values(x)[0]}))
-  if (keys.length === 0 ) return  ret
-  const [,...Keys] = keys
-  const children =  xs.reduce(function(rv, x) {
-      const y = {...x};
-      delete y[keys[0]];
-      (rv[x[keys[0]]] = rv[x[keys[0]]] || []).push(y);
-      return rv
-  }, {})   
-  ret.children  =  Object.keys(children).map(x=> treefy(children[x],Keys,x)) 
-  return ret
-};
 
 const FormItem = Form.Item;
 const { Step } = Steps;
