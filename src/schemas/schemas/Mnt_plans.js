@@ -54,6 +54,7 @@ const mnt_plans = {
             {
               field: 'description',
               placeholder: 'Description in English',
+              translated : true,
               style: {
                 width: '80%',
               },

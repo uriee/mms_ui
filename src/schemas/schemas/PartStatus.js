@@ -27,6 +27,7 @@ const partStatus = {
             {
               field: 'description',
               placeholder: 'Description in English',
+              translated : true,
               style: {
                 width: '80%',
               },

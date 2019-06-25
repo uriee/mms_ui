@@ -139,8 +139,8 @@ class CreateForm extends PureComponent {
   };
 
   getFormItemFromSchema = fieldData => {
-    const fieldName = fieldData.field;
-    if (this.props.formType === 'insert' && fieldName === 'description' && lang[getLocale()].id === 1) return <span/>
+    const fieldName = fieldData.field; 
+      if (fieldData.translated && lang[getLocale()].id === 1) return <span/>    
     const fieldStyle = fieldData.style;
     const { form, fields } = this.props;
     const field = fields[fieldName];
@@ -152,7 +152,6 @@ class CreateForm extends PureComponent {
       formVals[field.dataIndex] === false ? false : formVals[field.dataIndex] || field.defaultValue;
     let layout = {};
     let tagArray = [];
-
     switch (field.inputMethod) {
       case 'input':
         formField = <Input placeholder={placeHolder} style={fieldStyle} />;

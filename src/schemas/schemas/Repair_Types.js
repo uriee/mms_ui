@@ -20,6 +20,7 @@ const repair_types = {
             {
               field: 'description',
               placeholder: 'Description',
+              translated : true,
               style: {
                 width: '80%',
               },

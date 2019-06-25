@@ -48,6 +48,7 @@ const repairs = {
             {
               field: 'details',
               placeholder: 'Details',
+              translated : true,
               style: {
                 width: '80%',
               },

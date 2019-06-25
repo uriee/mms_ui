@@ -56,6 +56,7 @@ const equipment = {
             {
               field: 'description',
               placeholder: 'Description in Other languages',
+              translated : true,
               style: {
                 width: '80%',
               },

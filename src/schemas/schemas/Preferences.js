@@ -1,9 +1,6 @@
-/*
-The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
-*/
 const preferences = {
   entity: 'preferences',
-  title: 'Preferencess',
+  title: 'Preferences',
   defaultKey: 'name',
   nodelete: true,
   forms: {
@@ -15,14 +12,23 @@ const preferences = {
             {
               field: 'name',
               placeholder: 'Name',
+              style: {
+                width: '80%',
+              },              
             },
             {
               field: 'description',
               placeholder: 'Description',
+              style: {
+                width: '80%',
+              },              
             },
             {
               field: 'value',
               placeholder: 'Value',
+              style: {
+                width: '80%',
+              },              
             },
           ],
           format: [[0, 2], [1]],

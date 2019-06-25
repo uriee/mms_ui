@@ -20,6 +20,7 @@ const malfunction_types = {
             {
               field: 'description',
               placeholder: 'Description',
+              translated : true,
               style: {
                 width: '80%',
               },
@@ -69,7 +70,6 @@ const malfunction_types = {
       dataIndex: 'name',
       inputMethod: 'input',
       sorter: true,
-      align: 'right',
       inputRules: [
         {
           required: true,
@@ -82,16 +82,13 @@ const malfunction_types = {
       ],
     },
     description: {
-      type: 'text',
       dataIndex: 'description',
       inputMethod: 'input',
       sorter: true,
-      align: 'right',
     },
     description_t: {
       inputMethod: 'textArea',
       sorter: true,
-      align: 'right',
       required: false,
       inputRules: [
         {

@@ -41,6 +41,7 @@ const availabilityProfile = {
             {
               field: 'description',
               placeholder: 'Description',
+              translated : true,
               style: {
                 width: '40%',
               },
