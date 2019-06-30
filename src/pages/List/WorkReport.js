@@ -27,7 +27,8 @@ import {
   Progress,
   List,
   Table,
-  Switch
+  Switch,
+  Select
 
 } from 'antd';
 const { Column, ColumnGroup } = Table;
@@ -146,7 +147,7 @@ class WorkReport extends PureComponent {
     }    
 
     const { dispatch } = this.props;
-    var values = {entity: 'work_report' , resourcename: this.props.workReport.path[0] , serialname : this.props.workReport.path[1], actname : this.props.workReport.path[2] ,quant: 1 , identifier : this.state.serial}
+    var values = {parent_schema :'work_report' , entity: 'work_report' , resourcename: this.props.workReport.path[0] , serialname : this.props.workReport.path[1], actname : this.props.workReport.path[2] ,quant: 1 , identifier : this.state.serial}
     values.sig_date = moment()
     //.tz('Asia/Jerusalem')
     .format();
@@ -206,7 +207,7 @@ class WorkReport extends PureComponent {
                 </Col>  
             </Row>            
             {this.state.balance > 0  && <Progress percent={parseInt((this.state.quant-this.state.balance)/this.state.quant*100)} />}
-            {this.state.balance > 0  && <span>
+            {this.state.balance > 0  && <span >
                     <Row style={{margin : 16}}> 
                         <Switch color='red' onChange={this.handleMainSwitchChange} checked={this.state.mainSwitch} checkedChildren="Fault Report" unCheckedChildren="Work Report" /> 
                     </Row>
@@ -224,6 +225,44 @@ class WorkReport extends PureComponent {
 
                     </Col>
                 </Row> 
+                    {this.state.mainSwitch && <Row>
+                      <Col span={12}>
+                        <Select
+                          showSearch
+                          style={{ width: '95%' }}
+                          placeholder="Select"
+                          optionFilterProp="children"
+                          filterOption={(input, option) =>
+                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                          }
+                        >
+                          {this.props.workReport.type &&
+                            this.props.workReport.type.map(option => (
+                                <Option key={option.name} value={option.name}>
+                                  {option.name}
+                                </Option>
+                              ))}
+                        </Select>   
+                      </Col>
+                      <Col span={12}>
+                        <Select
+                          showSearch
+                          style={{ width: '95%' }}
+                          placeholder="Select"
+                          optionFilterProp="children"
+                          filterOption={(input, option) =>
+                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                          }
+                        >
+                          {this.props.workReport.loc &&
+                            this.props.workReport.loc.map(option => (
+                                <Option key={option.location} value={option.location}>
+                                  {option.location}
+                                </Option>
+                              ))}
+                        </Select>   
+                      </Col>                    
+                  </Row>}
             </span>
             }
             { this.state.balance > 0  && this.props.workReport && this.props.workReport.wr && <Table dataSource={this.props.workReport.wr} style={{margin : 32}}>

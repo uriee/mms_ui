@@ -89,7 +89,7 @@ class TableList extends PureComponent {
     this.schemaChange();
     if (!this.schema || !this.schema.fields.id)
       throw new Error('The schema does not have an id field!');
-    const params = this.props.location ? this.props.location.query : {};
+    const params = this.props.location.query || {}
 
     this.insertKey = {}; //this.insetrKey passes to the insert form in order to allow insertion of new child rows in parent-child entities
     if (this.schema.defaultKey) {
@@ -103,11 +103,6 @@ class TableList extends PureComponent {
       payload: { ...params, entity: this.entity },
     });
   }
-
-
-    componentWillUnmount(){
-      if (this.insertKey.hasOwnProperty('name') || this.insertKey.hasOwnProperty('parent'))  localStorage.setItem('lastEntity', '')
-    }
 
   /*---  change the schema in page loading ---*/
   schemaChange = () => {
@@ -140,11 +135,10 @@ class TableList extends PureComponent {
           ) : link ? (
             <a
               onClick={() => {
-                localStorage.setItem('lastEntity', z.name);
                 const query = link.includes('?') ? '' : '?'
                 return x
                   ? router.push(`${link}${query}name=${x.split(':')[0] || z.name}`)
-                  : router.push(`${link}${query}parent=${z.id}`);
+                  : router.push(`${link}${query}parent=${z.id}&parentSchema=${this.entity}&parentName=${z.name}`);
               }}
             >
               {x ? x.toString() : <Icon type="double-right" color="mgenta" />}
@@ -413,12 +407,12 @@ class TableList extends PureComponent {
 
     let lang_id = lang[getLocale()].id;
     values.name = values.name || this.state.formValues.name;
-    values.sig_date = moment()
-      //.tz('Asia/Jerusalem')
-      .format();
-    values.sig_user =
-      JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
+    values.sig_date = moment().format() //.tz('Asia/Jerusalem')
+    values.sig_user = JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
+    values.parent_schema = this.schema.parentSchema || this.props.location.query.parentSchema || ''
     values.parent = this.state.formValues.parent;
+
+   // values.flag = JSON.parse(localStorage.getItem('lastEntity')).schema === 'fault' ? 1 : 0
 
     dispatch({
       type: 'action/add',
@@ -620,14 +614,14 @@ class TableList extends PureComponent {
               .map((x, i) => {
                 const obj = this.schema.fields[x];
                 if (!obj.link) return <span />;
-                var link = `${obj.link}?parent=${item.id}`;
+                var link = `${obj.link}?parent=${item.id}&parentSchema=${this.entity}&parentName=${item.name}`;
                 return (
                   <Button
                     style={{ marginTop: 12, marginLeft: 8, color: '#fa8c16' }}
                     color="#fa8c16"
                     key={item.name + 'div' + i}
                     onClick={() => {
-                      localStorage.setItem('lastEntity', item.name);
+                      //localStorage.setItem('lastEntity', JSON.stringify({name : item.name, schema :this.entity}));
                       router.push(`${link}`);
                     }}
                   >
@@ -675,6 +669,7 @@ class TableList extends PureComponent {
 
     if (this.state.formValues.name != location.query.name) {
       const params = this.props.location ? this.props.location.query : {};
+      
       const { dispatch } = this.props;
       this.setState({
         ...this.state,
@@ -727,7 +722,7 @@ class TableList extends PureComponent {
               )}
               {(this.insertKey.hasOwnProperty('name') ||
                 this.insertKey.hasOwnProperty('parent')) && (
-                <h2 style={{ textAlign: 'center' }}> {localStorage.getItem('lastEntity')} </h2>
+                <h2 style={{ textAlign: 'center' }}> {this.props.location.query.parentName} </h2>
               )}
             </div>
               
