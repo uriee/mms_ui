@@ -95,6 +95,7 @@ class TagView extends PureComponent {
       equipment: { link: 'equipments', color: 'orange' },
       resource_group: { link: 'resource_groups', color: 'blue' },
       place: { link: 'places', color: 'geekblue' },
+      fault: { link: 'fault', color: 'geekblue' },      
       part: { link: 'part', color: 'gold' },
       dept: { link: 'departments', color: 'cyan' },
       availability_profile: { link: 'availability_profiles', color: 'lime' },
@@ -265,13 +266,10 @@ class TagView extends PureComponent {
       location,
     } = this.props;
     console.log('DATA', this.state, location);
-
     if (this.state.formValues.tags != location.query.tags) {
       const params = this.props.location ? this.props.location.query : {};
       const { dispatch } = this.props;
-      console.log('@@@@@@@@@@@@@@:', this.state, params, location);
       this.setState({ ...this.state, formValues: { tags: location.query.tags } });
-      console.log('@@@@@@@@@@@@@@:', this.state, params, location);
       dispatch({
         type: 'action/fetch',
         payload: { entity: 'tags', ...this.props.location.query },

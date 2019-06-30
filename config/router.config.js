@@ -376,10 +376,29 @@ export default [
         path: '/qa',
         routes: [
           {
-            path: '/qa/malf',
-            name: 'malf',
-            component: './Result/Success',
+            path: '/qa/fault',
+            name: 'fault',
+            component: './List/MainList',
+            params: {
+              entity: 'fault',
+            },
           },
+          {
+            path: '/qa/fault_type',
+            name: 'fault_type',
+            component: './List/MainList',
+            params: {
+              entity: 'fault_type',
+            },
+          },
+          {
+            path: '/qa/fault_status',
+            name: 'fault_status',
+            component: './List/MainList',
+            params: {
+              entity: 'fault_status',
+            },
+          },                    
           {
             path: '/qa/tests',
             name: 'tests',
@@ -620,6 +639,29 @@ export default [
               entity: 'mnt_plan_items',
             },
           },
+          {
+            path: '/router/fault',
+            component: './List/MainList',
+            params: {
+              entity: 'fault',
+            },
+          },
+          {
+            path: '/router/fault_type',
+            name: 'fault_type',
+            component: './List/MainList',
+            params: {
+              entity: 'fault_type',
+            },
+          },  
+          {
+            path: '/router/fault_status',
+            name: 'fault_status',
+            component: './List/MainList',
+            params: {
+              entity: 'fault_status',
+            },
+          },                   
           {
             component: './List/MainList',
             path: '/router/serials',
