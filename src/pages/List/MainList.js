@@ -320,6 +320,7 @@ class TableList extends PureComponent {
         ...fieldsValue,
         ...parent,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
+        parentSchema : this.props.location.query.parentSchema || ''
       };
 
       const filterString = Object.keys(values)
@@ -464,6 +465,8 @@ class TableList extends PureComponent {
       payload: {
         keys: rows.map(row => row.id),
         entity: this.entity,
+        parent:  this.props.location.query.parent,
+        parent_schema:  this.props.location.query.parentSchema,
       },
       callback: test => {
         this.setState({

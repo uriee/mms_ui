@@ -34,6 +34,7 @@ import { bom } from './schemas/Bom.js';
 import { iden } from './schemas/Iden.js';
 import { identifier } from './schemas/Identifier.js';
 import { preferences } from './schemas/Preferences.js';
+import { numerators } from './schemas/Numerators.js';
 import { fault } from './schemas/fault.js';
 import { fault_type } from './schemas/Fault_Types.js';
 import { fault_status } from './schemas/Fault_Statuses.js';
@@ -75,6 +76,7 @@ const schemas = {
   work_report: work_report,
   identifier: identifier,
   preferences: preferences,
+  numerators,
   fault,
   fault_status,
   fault_type
