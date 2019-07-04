@@ -13,6 +13,7 @@ const lang = {
   'de-DE': { id: 3, align: 'left' },
 };
 
+
 import {
   Row,
   Col,
@@ -28,11 +29,10 @@ import {
   List,
   Table,
   Switch,
-  Select
-
+  Select,
 } from 'antd';
 const { Column, ColumnGroup } = Table;
-
+const {Option} = Select
 /* eslint react/no-multi-comp:0 */
 @connect(({ action, workReport, loading }) => ({
     workReport,
@@ -47,7 +47,9 @@ class WorkReport extends PureComponent {
       quant : 0 ,
       amount : 0,
       serial : '',
-      mainSwitch : false
+      faultSwitch : false,
+      location: '',
+      type : ''
     };  
   }
 
@@ -69,17 +71,21 @@ class WorkReport extends PureComponent {
      entry && this.setState({balance : entry.balance, quant : entry.quant})     
      
   };
-
+ 
   handleAmountChange = e => {
       const value = e.target.value
       this.setState({ amount: value });
    };
+   handleLocationChange = value => {
+    this.setState({ location: value });
+    };  
+    handleTypeChange = value => {
+      this.setState({ type: value });
+    };    
    handleAmountClick= e => {
-       console.log(e.keyCode)
         if (e.key === 'Enter') this.handleAddAmount()       
    }
    handleSerialClick= e => {
-    console.log(e.keyCode)
      if (e.key === 'Enter') this.handleAddSerial()       
    }
 
@@ -88,8 +94,8 @@ class WorkReport extends PureComponent {
     this.setState({ serial: value })
     }   
 
-    handleMainSwitchChange = (checked) => {
-        this.setState({ mainSwitch: checked })
+    handleFaultSwitchChange = (checked) => {
+        this.setState({ faultSwitch: checked ,type: '', location: ''})
     }
 
     getEntry = path => {
@@ -104,7 +110,7 @@ class WorkReport extends PureComponent {
             type: `workReport/fetchWR`,
             payload: {path : this.props.workReport.path},
         }).then(x => {
-            this.setState({serial : null ,amount : 0, mainSwitch : false })
+            this.setState({serial : null ,amount : 0, faultSwitch : false, type: '', location: '' })
         });
     }
 
@@ -115,23 +121,39 @@ class WorkReport extends PureComponent {
         notification.error({ message: `Wrong Amount`, description: 'The Amount must be Positive',})
         return
     }
-    if (this.state.balance >= value) {
-        const { dispatch } = this.props;
-        var values = {entity: 'work_report' , resourcename: this.props.workReport.path[0] , serialname : this.props.workReport.path[1], actname : this.props.workReport.path[2] ,quant: value}
-        values.sig_date = moment()
-        //.tz('Asia/Jerusalem')
-        .format();
-        values.sig_user =
-        JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
+    if (value > this.state.balance ) {
+      notification.error({ message: `Wrong Amount`, description: 'insufficient balance',})
+      return
+    }    
 
-        dispatch({
-        type: 'action/add',
-        payload: values
-        //callback: this.setBalance(value),
-        }).then(res => {
-            this.setBalance(value)
-          });
+    const { dispatch } = this.props;
+    var values = {
+      resourcename: this.props.workReport.path[0] ,
+      serialname : this.props.workReport.path[1],
+      actname : this.props.workReport.path[2],
+      quant: value,
+      location : this.state.location,
+      type_name : this.state.type,
+      description : 'Automatic'
     }
+
+    values.entity = this.state.faultSwitch ? 'fault' : 'work_report'
+    values.parent_schema = this.state.faultSwitch ? 'fault' : 'work_report'        
+    values.sig_date = moment()
+    //.tz('Asia/Jerusalem')
+    .format();
+    values.sig_user =
+    JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
+    console.log("~~~~~~~~~~~~~~~~~~~~~123~~~~~~~~~~~~~~",values)
+    dispatch({
+    type: 'action/add',
+    payload: values
+    //callback: this.setBalance(value),
+    }).then(res => {
+        this.setBalance(value)
+    });
+
+    return 
   };
 
   handleAddSerial = (e) => {
@@ -145,9 +167,20 @@ class WorkReport extends PureComponent {
         notification.error({ message: `No Balance`, description: 'All the amount had been already reported',})
         return
     }    
-
     const { dispatch } = this.props;
-    var values = {parent_schema :'work_report' , entity: 'work_report' , resourcename: this.props.workReport.path[0] , serialname : this.props.workReport.path[1], actname : this.props.workReport.path[2] ,quant: 1 , identifier : this.state.serial}
+    var values = {
+        resourcename: this.props.workReport.path[0] ,
+        serialname : this.props.workReport.path[1],
+        actname : this.props.workReport.path[2],
+        quant: 1,
+        identifier : this.state.serial,
+        location : this.state.location,
+        type_name : this.state.type,
+        description : 'Automatic'
+    }
+
+    values.entity = this.state.faultSwitch ? 'fault' : 'work_report'
+    values.parent_schema = this.state.faultSwitch ? 'fault' : 'work_report' 
     values.sig_date = moment()
     //.tz('Asia/Jerusalem')
     .format();
@@ -186,7 +219,24 @@ class WorkReport extends PureComponent {
         })),
         })); this.props.workOrder
     }
-       
+ const columns = [
+   { title : "Type", dataIndex : "", key :"sig-date" ,       render(text, record) {
+      const color = record.row_type === 'fault' ? '#fff1f0' : ''
+      const text1 = record.row_type === 'fault' ? 'Fault' : 'Work Repot'
+        return {
+          props: {
+            style: { background: color },
+          },
+          children: <div>{text1}</div>,
+        };
+      }
+    },
+    { title : "S/N", dataIndex : "serial" },    
+   { title : "Date", dataIndex : "sig_date"},
+   {title : "User Name", dataIndex : "username" },
+   { title : "Quantity", dataIndex : "quant" },
+   { title : "Resource", dataIndex : "resourcename" },
+ ]       
     return (
       <PageHeaderWrapper title="Work Report">
         <Card bordered={true}>
@@ -205,12 +255,53 @@ class WorkReport extends PureComponent {
                 <Col span={12}>
                     {this.state.balance > 0  &&  <span style={{float : 'right'}}>Balance : {this.state.balance}</span> }    
                 </Col>  
-            </Row>            
+            </Row>
+                        
             {this.state.balance > 0  && <Progress percent={parseInt((this.state.quant-this.state.balance)/this.state.quant*100)} />}
             {this.state.balance > 0  && <span >
                     <Row style={{margin : 16}}> 
-                        <Switch color='red' onChange={this.handleMainSwitchChange} checked={this.state.mainSwitch} checkedChildren="Fault Report" unCheckedChildren="Work Report" /> 
+                        <Switch color='red' onChange={this.handleFaultSwitchChange} checked={this.state.faultSwitch} checkedChildren="Fault Report" unCheckedChildren="Work Report" /> 
                     </Row>
+                    {this.state.faultSwitch && <Row style={{marginTop : 24}}>
+                      <Col span={8}  style={{marginLeft : 8}}>
+                        <Select
+                          showSearch
+                          onChange={this.handleTypeChange}
+                          style={{ width: '75%' }}
+                          placeholder="Fault Type"
+                          optionFilterProp="children"
+                          filterOption={(input, option) =>
+                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                          }
+                        >
+                          {this.props.workReport.type &&
+                            this.props.workReport.type.map(option => (
+                                <Option key={option.name} value={option.name}>
+                                  {option.name}
+                                </Option>
+                              ))}
+                        </Select>   
+                      </Col>
+                      <Col span={8}  style={{marginLeft : 32}}>
+                        <Select
+                          showSearch
+                          onChange={this.handleLocationChange}
+                          style={{ width: '75%' }}
+                          placeholder="Fault Location"
+                          optionFilterProp="children"
+                          filterOption={(input, option) =>
+                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                          }
+                        >
+                          {this.props.workReport.loc &&
+                            this.props.workReport.loc.map(option => (
+                                <Option key={option.location} value={option.location}>
+                                  {option.location}
+                                </Option>
+                              ))}
+                        </Select>   
+                      </Col>                    
+                  </Row>}                    
                     <Row style={{marginTop : 24}}> 
                         <Col span={6} style={{margin : 8}}>  <Input placeholder="Amount" value={this.state.amount || null} onKeyDown={this.handleAmountClick} onChange={this.handleAmountChange}></Input> </Col> 
                         <Col span={2} style={{margin : 8}}>  
@@ -225,54 +316,9 @@ class WorkReport extends PureComponent {
 
                     </Col>
                 </Row> 
-                    {this.state.mainSwitch && <Row>
-                      <Col span={12}>
-                        <Select
-                          showSearch
-                          style={{ width: '95%' }}
-                          placeholder="Select"
-                          optionFilterProp="children"
-                          filterOption={(input, option) =>
-                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                          }
-                        >
-                          {this.props.workReport.type &&
-                            this.props.workReport.type.map(option => (
-                                <Option key={option.name} value={option.name}>
-                                  {option.name}
-                                </Option>
-                              ))}
-                        </Select>   
-                      </Col>
-                      <Col span={12}>
-                        <Select
-                          showSearch
-                          style={{ width: '95%' }}
-                          placeholder="Select"
-                          optionFilterProp="children"
-                          filterOption={(input, option) =>
-                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                          }
-                        >
-                          {this.props.workReport.loc &&
-                            this.props.workReport.loc.map(option => (
-                                <Option key={option.location} value={option.location}>
-                                  {option.location}
-                                </Option>
-                              ))}
-                        </Select>   
-                      </Col>                    
-                  </Row>}
             </span>
             }
-            { this.state.balance > 0  && this.props.workReport && this.props.workReport.wr && <Table dataSource={this.props.workReport.wr} style={{margin : 32}}>
-                <Column title="Date" dataIndex="sig_date" key="sig-date" />
-                <Column title="User Name" dataIndex="username" key="username" />
-                <Column title="Quantity" dataIndex="quant" key="quant" />
-                <Column title="Resource" dataIndex="resourcename" key="resourcename" />
-                <Column title="S/N" dataIndex="serial" key="serial" />
-            </Table>
-            }
+            { this.state.balance > 0  && this.props.workReport && this.props.workReport.wr && <Table rowKeys="Id" dataSource={this.props.workReport.wr} style={{margin : 32}} columns={columns}/> }
 
         </Card>
       </PageHeaderWrapper>

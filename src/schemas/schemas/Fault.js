@@ -66,14 +66,14 @@ const fault = {
           title: 'Details',
           fields: [
             {
-              field: 'resource_name',
+              field: 'resourcename',
               style: {
                 width: '80%',
                 align: 'center',
               },
             },
             {
-                field: 'serial_name',
+                field: 'serialname',
                 style: {
                   width: '80%',
                   align: 'center',
@@ -158,14 +158,14 @@ const fault = {
             title: 'Details',
             fields: [
               {
-                field: 'resource_name',
+                field: 'resourcename',
                 style: {
                   width: '80%',
                   align: 'center',
                 },
               },
               {
-                  field: 'serial_name',
+                  field: 'serialname',
                   style: {
                     width: '80%',
                     align: 'center',
@@ -264,8 +264,8 @@ const fault = {
             },
         ],
     },
-    resource_name: {
-      dataIndex: 'resource_name',
+    resourcename: {
+      dataIndex: 'resourcename',
       link: '/router/resources',
       type: 'text',
       sorter: true,
@@ -278,8 +278,8 @@ const fault = {
         },
       ],
     },
-    serial_name: {
-        dataIndex: 'serial_name',
+    serialname: {
+        dataIndex: 'serialname',
         link: '/router/serials',
         type: 'text',
         sorter: true,
@@ -315,8 +315,8 @@ const fault = {
       inputMethod: 'tags',
       align: 'right',
     },
-    user_name: {
-        dataIndex: 'user_name',
+    username: {
+        dataIndex: 'username',
         sorter: true,
       },    
   },
