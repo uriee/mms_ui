@@ -478,6 +478,14 @@ export default [
             },
           },
           {
+            path: '/admin/numerators',
+            name: 'numerators',
+            component: './List/MainList',
+            params: {
+              entity: 'numerators',
+            },
+          },          
+          {
             path: '/admin/permissions',
             name: 'Edit Permissions',
             component: './List/Permissions',

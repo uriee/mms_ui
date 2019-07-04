@@ -1,10 +1,9 @@
 import axios from 'axios';
-import { notification } from 'antd';
 import router from 'umi/router';
 import hash from 'hash.js';
 import { isAntdPro } from './utils';
 import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
-import { message } from 'antd';
+import { notification, message } from 'antd';
 
 const getLang = () => {
   const langs = { 'en-US': 1, 'he-IL': 2, 'de-DE': 3 };
