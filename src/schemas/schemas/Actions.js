@@ -34,14 +34,6 @@ const actions = {
               },
             },
             {
-              field: 'serial_report',
-              placeholder: 'Serial Reporting?',
-              style: {
-                width: '80%',
-              },
-            },
-
-            {
               field: 'erpact',
               placeholder: 'Erp Acts',
               style: {
@@ -50,13 +42,20 @@ const actions = {
             },
             {
               field: 'quantitative',
-              placeholder: 'Quantitative?',
+              placeholder: '',
               style: {
                 width: '80%',
               },
             },
+            {
+              field: 'serialize',
+              placeholder: '',
+              style: {
+                width: '80%',
+              },
+            },            
           ],
-          format: [[0, 1, 2], [3, 4]],
+          format: [[0, 1], [2, 3, 4]],
         },
         {
           title: 'Descriptions',
@@ -107,13 +106,6 @@ const actions = {
                 width: '80%',
               },
             },
-            {
-              field: 'serial_report',
-              placeholder: 'Serial Reporting?',
-              style: {
-                width: '80%',
-              },
-            },
 
             {
               field: 'erpact',
@@ -124,13 +116,18 @@ const actions = {
             },
             {
               field: 'quantitative',
-              placeholder: 'Quantitative?',
               style: {
                 width: '80%',
               },
             },
+            {
+              field: 'serialize',
+              style: {
+                width: '80%',
+              },
+            },            
           ],
-          format: [[0, 1, 2], [3, 4]],
+          format: [[0, 1], [2, 3, 4]],
         },
         {
           title: 'Descriptions',
@@ -209,6 +206,11 @@ const actions = {
       inputMethod: 'bool',
       sorter: true,
     },
+    serialize: {
+      dataIndex: 'serialize',
+      inputMethod: 'bool',
+      sorter: true,
+    },    
     erpact: {
       dataIndex: 'erpact',
       inputMethod: 'input',

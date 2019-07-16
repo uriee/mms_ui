@@ -34,8 +34,14 @@ const serial_act = {
               field: 'balance',
               placeholder: 'Balance',
             },
+            {
+              field: 'quantitative',
+            }, 
+            {
+              field: 'serialize',
+            },                       
           ],
-          format: [[0, 1], [2, 3]],
+          format: [[0, 1], [2, 3] ,[4, 5]],
         },
       ],
     },
@@ -58,8 +64,14 @@ const serial_act = {
                 width: '80%',
               },
             },
+            {
+              field: 'quantitative',
+            }, 
+            {
+              field: 'serialize',
+            },             
           ],
-          format: [[0, 1]],
+          format: [[0, 1], [2, 3]],
         },
       ],
     },
@@ -113,6 +125,16 @@ const serial_act = {
       inputMethod: 'number',
       sorter: true,
     },
+    quantitative: {
+      dataIndex: 'quantitative',
+      inputMethod: 'bool',
+      sorter: true,
+    },
+    serialize: {
+      dataIndex: 'serialize',
+      inputMethod: 'bool',
+      sorter: true,
+    },    
     act_resources: {
       link: '/router/serialActResources?type=3&',
       son: true,

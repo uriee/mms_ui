@@ -197,6 +197,7 @@ export default {
   'schemas.serial_status': 'Work Order Status',      
   'schemas.availability_profile': 'Availability Profile',  
   'schemas.mnt_plan': 'Maintenance Plan',
+  'pages.serialize' : 'Serialize',
   'pages.fault_name' : "Fault No'",
   'pages.row_type' : 'Entity Type',
   'pages.prefix' : 'Prefix',

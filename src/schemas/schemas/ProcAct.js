@@ -26,8 +26,14 @@ const proc_act = {
                 width: '80%',
               },
             },
+            {
+              field: 'quantitative',
+            }, 
+            {
+              field: 'serialize',
+            },             
           ],
-          format: [[0, 1]],
+          format: [[0, 1], [2, 3]],
         },
       ],
     },
@@ -50,8 +56,14 @@ const proc_act = {
                 width: '80%',
               },
             },
+            {
+              field: 'quantitative',
+            }, 
+            {
+              field: 'serialize',
+            },             
           ],
-          format: [[0, 1]],
+          format: [[0, 1], [2, 3]],
         },
       ],
     },
@@ -89,6 +101,16 @@ const proc_act = {
         },
       ],
     },
+    quantitative: {
+      dataIndex: 'quantitative',
+      inputMethod: 'bool',
+      sorter: true,
+    },
+    serialize: {
+      dataIndex: 'serialize',
+      inputMethod: 'bool',
+      sorter: true,
+    },    
     act_resources: {
       link: '/router/processActResources?type=2&',
       son: true,
