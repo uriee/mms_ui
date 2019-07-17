@@ -33,14 +33,6 @@ const process = {
               },
             },
             {
-              field: 'serial_report',
-              placeholder: 'Serial Reporting?',
-              style: {
-                width: '80%',
-              },
-            },
-
-            {
               field: 'erpproc',
               placeholder: 'Erp Acts',
               style: {
@@ -48,7 +40,7 @@ const process = {
               },
             },
           ],
-          format: [[0, 1, 2], [3]],
+          format: [[0, 1], [2]],
         },
         {
           title: 'Descriptions',
@@ -100,14 +92,6 @@ const process = {
               },
             },
             {
-              field: 'serial_report',
-              placeholder: 'Serial Reporting?',
-              style: {
-                width: '80%',
-              },
-            },
-
-            {
               field: 'erpproc',
               placeholder: 'Erp Acts',
               style: {
@@ -115,7 +99,7 @@ const process = {
               },
             },
           ],
-          format: [[0, 1, 2], [3]],
+          format: [[0, 1], [2]],
         },
         {
           title: 'Descriptions',
@@ -177,11 +161,6 @@ const process = {
     },
     active: {
       dataIndex: 'active',
-      inputMethod: 'bool',
-      sorter: true,
-    },
-    serial_report: {
-      dataIndex: 'serial_report',
       inputMethod: 'bool',
       sorter: true,
     },

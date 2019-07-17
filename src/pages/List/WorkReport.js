@@ -45,6 +45,8 @@ class WorkReport extends PureComponent {
     this.state = {
       balance:  0,
       quant : 0 ,
+      quantitative : true,
+      serialize : true,
       amount : 0,
       serial : '',
       faultSwitch : false,
@@ -68,7 +70,7 @@ class WorkReport extends PureComponent {
       payload: {path},
     });      
      const entry = this.getEntry(path)  
-     entry && this.setState({balance : entry.balance, quant : entry.quant})     
+     entry && this.setState({balance : entry.balance, quant : entry.quant, serialize: entry.serialize, quantitative : entry.quantitative})     
      
   };
  
@@ -115,7 +117,7 @@ class WorkReport extends PureComponent {
     }
 
   handleAddAmount = () => {
-    const value = parseInt(this.state.amount)
+    const value = parseInt(this.state.quantitative ? this.state.amount : this.state.balance)
 
     if (value <= 0 ) {
         notification.error({ message: `Wrong Amount`, description: 'The Amount must be Positive',})
@@ -303,18 +305,21 @@ class WorkReport extends PureComponent {
                       </Col>                    
                   </Row>}                    
                     <Row style={{marginTop : 24}}> 
-                        <Col span={6} style={{margin : 8}}>  <Input placeholder="Amount" value={this.state.amount || null} onKeyDown={this.handleAmountClick} onChange={this.handleAmountChange}></Input> </Col> 
+                        <Col span={6} style={{margin : 8}}>  <Input placeholder="Amount" value={this.state.quantitative ?  this.state.amount || null : this.state.balance } onKeyDown={this.handleAmountClick} onChange={this.handleAmountChange} disabled={!this.state.quantitative }></Input> </Col> 
                         <Col span={2} style={{margin : 8}}>  
                         <Button type="primary" style={{marginRight : 8}} onClick={ this.handleAddAmount}>+</Button> 
 
                         </Col>
 
 
-                    <Col span={6} style={{margin : 8}}>  <Input placeholder="Serial"  value={this.state.serial || null} onKeyDown={this.handleSerialClick} onChange={this.handleSerialChange}></Input> </Col> 
+                    {this.state.serialize && <span>
+                    <Col span={6} style={{margin : 8}}>
+                      <Input placeholder="Serial"  value={this.state.serial || null} onKeyDown={this.handleSerialClick} onChange={this.handleSerialChange}></Input>
+                    </Col> 
                     <Col span={2} style={{margin : 8}}>  
-                    <Button type="primary" style={{marginRight : 8}} onClick={this.handleAddSerial}>+</Button> 
-
+                      <Button type="primary" style={{marginRight : 8}} onClick={this.handleAddSerial}>+</Button> 
                     </Col>
+                    </span>}
                 </Row> 
             </span>
             }

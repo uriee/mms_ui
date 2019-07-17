@@ -34,8 +34,7 @@ const part = {
               },
             },
             {
-              field: 'serial_report',
-              placeholder: 'Serial Reporting?',
+              field: 'serialize',
               style: {
                 width: '80%',
               },
@@ -114,8 +113,7 @@ const part = {
               },
             },
             {
-              field: 'serial_report',
-              placeholder: 'Serial Reporting?',
+              field: 'serialize',
               style: {
                 width: '80%',
               },
@@ -231,8 +229,8 @@ const part = {
       inputMethod: 'bool',
       sorter: true,
     },
-    serial_report: {
-      dataIndex: 'serial_report',
+    serialize: {
+      dataIndex: 'serialize',
       inputMethod: 'bool',
       sorter: true,
     },    
