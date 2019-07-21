@@ -12,7 +12,7 @@ const fault = {
           fields: [
             {
               field: 'fault_name',
-              placeholder: 'fault Name',
+              placeholder: 'fault Name(optional)',
               style: {
                 width: '80%',
               },
@@ -207,10 +207,6 @@ const fault = {
       inputMethod: 'input',
       sorter: true,
       inputRules: [
-        {
-          required: true,
-          message: 'This field is required',
-        },
         {
           min: 2,
           message: ' minimum 2 character',

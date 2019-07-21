@@ -29,6 +29,14 @@ const identifier = {
       dataIndex: 'name',
       required: false,
     },
+    serial_id: {
+      dataIndex: 'serial_id',
+      required: false,
+    }, 
+    act_id: {
+      dataIndex: 'act_id',
+      required: false,
+    },         
     identifier: {
       dataIndex: 'identifier',
       inputMethod: 'input',
@@ -40,6 +48,10 @@ const identifier = {
         },
       ],
     },
+    identifier_links: {
+      link: '/router/identifier_links',
+      son: true,
+    },     
   },
 };
 export { identifier };

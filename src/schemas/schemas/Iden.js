@@ -13,22 +13,14 @@ const iden = {
       dataIndex: 'name',
       sorter: true,
     },
-    serial_name: {
-      dataIndex: 'serial_name',
+    created_at: {
+      dataIndex: 'created_at',
       sorter: true,
     },
-    act_name: {
-      dataIndex: 'act_name',
-      sorter: true,
-    },
-    user_name: {
-      dataIndex: 'user_name',
-      sorter: true,
-    },
-    sig_date: {
-      dataIndex: 'sig_date',
-      sorter: true,
-    },
+    identifier_links: {
+      link: '/router/identifier_links',
+      son: true,
+    },     
   },
 };
 export { iden };

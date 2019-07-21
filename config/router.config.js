@@ -696,6 +696,14 @@ export default [
           },
           {
             component: './List/MainList',
+            path: '/router/identifier_links',
+            params: {
+              entity: 'identifier_links',
+            },
+            name: 'identifier_links',
+          },          
+          {
+            component: './List/MainList',
             path: '/router/kit',
             params: {
               entity: 'kit',

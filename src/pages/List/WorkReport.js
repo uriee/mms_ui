@@ -105,8 +105,8 @@ class WorkReport extends PureComponent {
         return entry && entry[0]
     }
 
-    setBalance = value => {
-        this.setState({ balance: this.state.balance - value })
+    setBalance = (value) => {
+        this.setState({ balance: this.state.balance - value * (this.state.faultSwitch ? 0 : 1) })
         const { dispatch } = this.props;     
         dispatch({
             type: `workReport/fetchWR`,
@@ -150,7 +150,6 @@ class WorkReport extends PureComponent {
     dispatch({
     type: 'action/add',
     payload: values
-    //callback: this.setBalance(value),
     }).then(res => {
         this.setBalance(value)
     });
@@ -224,7 +223,7 @@ class WorkReport extends PureComponent {
  const columns = [
    { title : "Type", dataIndex : "", key :"sig-date" ,       render(text, record) {
       const color = record.row_type === 'fault' ? '#fff1f0' : ''
-      const text1 = record.row_type === 'fault' ? 'Fault' : 'Work Repot'
+      const text1 = record.row_type === 'fault' ? 'Fault' : 'Work Report'
         return {
           props: {
             style: { background: color },

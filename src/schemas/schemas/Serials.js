@@ -292,10 +292,6 @@ const serials = {
     tags: {
       inputMethod: 'tags',
     },
-    kit_items: {
-      link: '/router/kit',
-      son: true,
-    },
     actions: {
       link: '/router/serial_act',
       son: true,
@@ -304,6 +300,10 @@ const serials = {
       link: '/router/work_report',
       son: true,
     },
+    kit_items: {
+      link: '/router/kit',
+      son: true,
+    },    
     parent_serial: {
       dataIndex: 'parent_serial_name',
       link: '/router/serials',
