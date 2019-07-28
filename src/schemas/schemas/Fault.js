@@ -85,7 +85,14 @@ const fault = {
                 style: {
                   width: '80%',
                 },
-            },            
+            },  
+            {
+              field: 'location',
+              placeholder: 'Location',
+              style: {
+                width: '80%',
+              },
+            },                      
             {
               field: 'open_date',
               placeholder: 'Open Date',
@@ -101,7 +108,7 @@ const fault = {
               },
             },
           ],
-          format: [[0, 1],[2], [3, 4]],
+          format: [[0, 1],[2, 3], [4, 5]],
         },
       ],
     },
@@ -177,7 +184,14 @@ const fault = {
                   style: {
                     width: '80%',
                   },
-              },            
+              }, 
+              {
+                field: 'location',
+                placeholder: 'Location',
+                style: {
+                  width: '80%',
+                },
+              },                         
               {
                 field: 'open_date',
                 placeholder: 'Open Date',
@@ -193,7 +207,7 @@ const fault = {
                 },
               },
             ],
-            format: [[0, 1],[2], [3, 4]],
+            format: [[0, 1],[2, 3], [4, 5]],
           },
       ],
     },
@@ -274,6 +288,12 @@ const fault = {
         },
       ],
     },
+   location: {
+      dataIndex: 'location',
+      type: 'text',
+      sorter: true,
+      inputMethod: 'input',
+    },    
     serialname: {
         dataIndex: 'serialname',
         link: '/router/serials',
