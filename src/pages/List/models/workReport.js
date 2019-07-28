@@ -21,7 +21,11 @@ export default {
 
     *fetchWR({ payload }, { call, put }) {
       const response = yield call(fetchWR, payload.path);
-      var ret = {wr : response.WR,loc :response.loc, type : response.type,   path : payload.path}
+      var ret = { wr : response.WR,
+                  loc :response.loc,
+                  type : response.type,
+                  path : payload.path,
+                  son_identifiers :  response.son_identifiers }
 
       yield put({
         type: 'save',

@@ -51,7 +51,8 @@ class WorkReport extends PureComponent {
       serial : '',
       faultSwitch : false,
       location: '',
-      type : ''
+      type : '',
+      sonIdentifiers : {}
     };  
   }
 
@@ -77,19 +78,32 @@ class WorkReport extends PureComponent {
   handleAmountChange = e => {
       const value = e.target.value
       this.setState({ amount: value });
-   };
-   handleLocationChange = value => {
+  }
+
+  handleLocationChange = value => {
     this.setState({ location: value });
-    };  
-    handleTypeChange = value => {
+  }
+
+  handleSonIdentifierChange = (value) => {
+    const x = value.split('|')
+    const partname = x[0]
+    const identifier = x[1]
+    let ret = {...this.state.sonIdentifiers}
+    ret[partname] = identifier
+    this.setState({ sonIdentifiers: ret });
+  } 
+
+  handleTypeChange = value => {
       this.setState({ type: value });
-    };    
-   handleAmountClick= e => {
+  }
+
+  handleAmountClick= e => {
         if (e.key === 'Enter') this.handleAddAmount()       
-   }
-   handleSerialClick= e => {
+  }
+
+  handleSerialClick= e => {
      if (e.key === 'Enter') this.handleAddSerial()       
-   }
+  }
 
    handleSerialChange = e => {
     const value = e.target.value       
@@ -112,7 +126,14 @@ class WorkReport extends PureComponent {
             type: `workReport/fetchWR`,
             payload: {path : this.props.workReport.path},
         }).then(x => {
-            this.setState({serial : null ,amount : 0, faultSwitch : false, type: '', location: '' })
+            this.setState({
+              serial : null,
+              amount : 0,
+              faultSwitch : false,
+              type: '',
+              location: '' ,
+              sonIdentifiers : {}
+            })
         });
     }
 
@@ -146,7 +167,6 @@ class WorkReport extends PureComponent {
     .format();
     values.sig_user =
     JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
-    console.log("~~~~~~~~~~~~~~~~~~~~~123~~~~~~~~~~~~~~",values)
     dispatch({
     type: 'action/add',
     payload: values
@@ -167,7 +187,14 @@ class WorkReport extends PureComponent {
     if (this.state.balance < 1 ) {
         notification.error({ message: `No Balance`, description: 'All the amount had been already reported',})
         return
-    }    
+    } 
+
+    const sons = this.props.workReport.son_identifiers && this.props.workReport.son_identifiers.every(x=> !!this.state.sonIdentifiers[x.name])
+    if ( this.props.workReport.son_identifiers && this.props.workReport.son_identifiers[0] && !sons) {
+      notification.error({ message: `Missing data`, description: 'All Son Identifiers must be specified',})
+      return      
+    }
+
     const { dispatch } = this.props;
     var values = {
         resourcename: this.props.workReport.path[0] ,
@@ -177,7 +204,8 @@ class WorkReport extends PureComponent {
         identifier : this.state.serial,
         location : this.state.location,
         type_name : this.state.type,
-        description : 'Automatic'
+        description : 'Automatic',
+        son_identifiers : this.state.sonIdentifiers
     }
 
     values.entity = this.state.faultSwitch ? 'fault' : 'work_report'
@@ -193,8 +221,7 @@ class WorkReport extends PureComponent {
     payload: values
     }).then(res => {
         this.setBalance(1)
-      })
-
+      }) 
   };  
 
   
@@ -237,7 +264,34 @@ class WorkReport extends PureComponent {
    {title : "User Name", dataIndex : "username" },
    { title : "Quantity", dataIndex : "quant" },
    { title : "Resource", dataIndex : "resourcename" },
- ]       
+ ]   
+ 
+  const son_identifiers =  this.props.workReport.son_identifiers && this.props.workReport.son_identifiers.map(x =>
+    (
+      <Row style={{margin : 8}}>
+
+          <Select
+            showSearch
+            onChange={this.handleSonIdentifierChange}
+            style={{ width: '100%' ,marginLeft : 8}}
+            placeholder={x.name}
+            optionFilterProp="children"
+            value = {this.state.sonIdentifiers[x.name] ? this.state.sonIdentifiers[x.name] : undefined}
+            filterOption={(input, option) =>
+              option.props.children.toLowerCase().indexOf(input.toUpperCase()) >= 0
+            }
+          >
+            { x.identifiers.map(option => (
+                  <Option key={x.name +'|'+option} value={x.name +'|'+option}>
+                    {option}
+                  </Option>
+                ))}
+          </Select>
+      </Row>  
+    )
+  )
+
+
     return (
       <PageHeaderWrapper title="Work Report">
         <Card bordered={true}>
@@ -278,7 +332,7 @@ class WorkReport extends PureComponent {
                           {this.props.workReport.type &&
                             this.props.workReport.type.map(option => (
                                 <Option key={option.name} value={option.name}>
-                                  {option.name}
+                                  {option.name} :  {option.description}
                                 </Option>
                               ))}
                         </Select>   
@@ -301,14 +355,17 @@ class WorkReport extends PureComponent {
                                 </Option>
                               ))}
                         </Select>   
-                      </Col>                    
+                      </Col>  
+
                   </Row>}                    
                     <Row style={{marginTop : 24}}> 
+                    {!this.state.serialize && <span>
                         <Col span={6} style={{margin : 8}}>  <Input placeholder="Amount" value={this.state.quantitative ?  this.state.amount || null : this.state.balance } onKeyDown={this.handleAmountClick} onChange={this.handleAmountChange} disabled={!this.state.quantitative }></Input> </Col> 
                         <Col span={2} style={{margin : 8}}>  
                         <Button type="primary" style={{marginRight : 8}} onClick={ this.handleAddAmount}>+</Button> 
 
                         </Col>
+                    </span>}
 
 
                     {this.state.serialize && <span>
@@ -319,6 +376,12 @@ class WorkReport extends PureComponent {
                       <Button type="primary" style={{marginRight : 8}} onClick={this.handleAddSerial}>+</Button> 
                     </Col>
                     </span>}
+
+                    {son_identifiers && !this.state.faultSwitch && <span>
+                    <Col span={12} >
+                        {son_identifiers}
+                    </Col>   
+                    </span>}                                      
                 </Row> 
             </span>
             }
