@@ -12,7 +12,7 @@ const repairs = {
           fields: [
             {
               field: 'repair_name',
-              placeholder: 'Repair Name',
+              placeholder: 'Repair Name (Optional)',
               style: {
                 width: '80%',
               },
@@ -176,12 +176,8 @@ const repairs = {
       align: 'right',
       inputRules: [
         {
-          required: true,
-          message: 'This field is required',
-        },
-        {
-          min: 2,
-          message: ' minimum 2 character',
+          min: 5,
+          message: ' minimum 5 character',
         },
       ],
     },

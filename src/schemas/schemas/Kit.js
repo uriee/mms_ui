@@ -13,7 +13,7 @@ const kit = {
           fields: [
             {
               field: 'partname',
-              placeholder: 'End Date',
+              placeholder: 'Part Name',
               style: {
                 width: '80%',
               },

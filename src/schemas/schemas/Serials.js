@@ -12,7 +12,7 @@ const serials = {
           fields: [
             {
               field: 'serial_name',
-              placeholder: 'Serial Name',
+              placeholder: 'Serial Name (Optional)',
               style: {
                 width: '80%',
               },
@@ -203,12 +203,8 @@ const serials = {
       sorter: true,
       inputRules: [
         {
-          required: true,
-          message: 'This field is required',
-        },
-        {
-          min: 2,
-          message: ' minimum 2 character',
+          min: 5,
+          message: ' minimum 5 character',
         },
       ],
     },
