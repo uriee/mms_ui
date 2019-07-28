@@ -10,7 +10,10 @@ const identifier_links = {
   fields: {
     id: {
         required: false,
-      },      
+      },  
+    row_type :  {
+        dataIndex: 'row_type',
+    },          
     created_at :  {
         dataIndex: 'created_at',
     }, 
@@ -19,10 +22,15 @@ const identifier_links = {
     }, 
     serial_name: {
       dataIndex: 'serial_name',
+      link: '/router/serials',      
     },
     resource_name :  {
         dataIndex: 'resource_name',
-      },               
+    },        
+    fault_name :  {
+        dataIndex: 'fault_name',
+        link: '/router/fault',        
+    },             
   },
 };
 export { identifier_links };
