@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import router from 'umi/router';
 import moment from 'moment';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
+import { formatMessage, getLocale } from 'umi/locale';
 import { groupBy, treefy } from '@/utils/utils';
 
 const lang = {
@@ -50,8 +50,9 @@ class WorkReport extends PureComponent {
       amount : 0,
       serial : '',
       faultSwitch : false,
-      location: '',
-      type : '',
+      location: null,
+      type : null,
+      fix : null,
       sonIdentifiers : {}
     };  
   }
@@ -97,6 +98,10 @@ class WorkReport extends PureComponent {
       this.setState({ type: value });
   }
 
+  handleFixChange = value => {
+    this.setState({ fix: value });
+}
+
   handleAmountClick= e => {
         if (e.key === 'Enter') this.handleAddAmount()       
   }
@@ -111,7 +116,7 @@ class WorkReport extends PureComponent {
     }   
 
     handleFaultSwitchChange = (checked) => {
-        this.setState({ faultSwitch: checked ,type: '', location: ''})
+        this.setState({ faultSwitch: checked ,type: '',fix: '', location: ''})
     }
 
     getEntry = path => {
@@ -120,20 +125,23 @@ class WorkReport extends PureComponent {
     }
 
     setBalance = (value) => {
-        this.setState({ balance: this.state.balance - value * (this.state.faultSwitch ? 0 : 1) })
-        const { dispatch } = this.props;     
+        //this.setState({ balance: this.state.balance - value * (this.state.faultSwitch ? 0 : 1) })
+        const { dispatch } = this.props;    
+        console.log("popopo))):",value,this.state)         
         dispatch({
             type: `workReport/fetchWR`,
             payload: {path : this.props.workReport.path},
         }).then(x => {
             this.setState({
-              serial : null,
+              serial : this.state.faultSwitch ? this.state.serial : null ,
+              balance: this.state.balance - value * (this.state.faultSwitch ? 0 : 1),
               amount : 0,
-              faultSwitch : false,
-              type: '',
-              location: '' ,
+              type: null,
+              fix: null,
+              location: null ,
               sonIdentifiers : {}
-            })
+            }) 
+            console.log("popopo1:",x,this.state)                    
         });
     }
 
@@ -157,6 +165,7 @@ class WorkReport extends PureComponent {
       quant: value,
       location : this.state.location,
       type_name : this.state.type,
+      fix: this.state.fix,
       description : 'Automatic'
     }
 
@@ -190,7 +199,7 @@ class WorkReport extends PureComponent {
     } 
 
     const sons = this.props.workReport.son_identifiers && this.props.workReport.son_identifiers.every(x=> !!this.state.sonIdentifiers[x.name])
-    if ( this.props.workReport.son_identifiers && this.props.workReport.son_identifiers[0] && !sons) {
+    if ( !this.state.faultSwitch && this.props.workReport.son_identifiers && this.props.workReport.son_identifiers[0] && !sons) {
       notification.error({ message: `Missing data`, description: 'All Son Identifiers must be specified',})
       return      
     }
@@ -204,6 +213,7 @@ class WorkReport extends PureComponent {
         identifier : this.state.serial,
         location : this.state.location,
         type_name : this.state.type,
+        fix: this.state.fix,
         description : 'Automatic',
         son_identifiers : this.state.sonIdentifiers
     }
@@ -248,9 +258,9 @@ class WorkReport extends PureComponent {
         })); this.props.workOrder
     }
  const columns = [
-   { title : "Type", dataIndex : "", key :"sig-date" ,       render(text, record) {
+   { title : formatMessage({ id: `pages.report_type` }), dataIndex : "", key :"sig-date" ,       render(text, record) {
       const color = record.row_type === 'fault' ? '#fff1f0' : ''
-      const text1 = record.row_type === 'fault' ? 'Fault' : 'Work Report'
+      const text1 = record.row_type === 'fault' ? formatMessage({ id: `pages.fault` }) : formatMessage({ id: `pages.work_report` })
         return {
           props: {
             style: { background: color },
@@ -259,11 +269,16 @@ class WorkReport extends PureComponent {
         };
       }
     },
-    { title : "S/N", dataIndex : "serial" },    
-   { title : "Date", dataIndex : "sig_date"},
-   {title : "User Name", dataIndex : "username" },
-   { title : "Quantity", dataIndex : "quant" },
-   { title : "Resource", dataIndex : "resourcename" },
+    { title :  formatMessage({ id: `pages.identifier` }), dataIndex : "serial" },    
+   { title :  formatMessage({ id: `pages.open_date` }), dataIndex : "sig_date"},
+   {title :  formatMessage({ id: `pages.username` }), dataIndex : "username" },
+   { title :  formatMessage({ id: `pages.quant` }), dataIndex : "quant" },
+   { title :  formatMessage({ id: `pages.resource_name` }), dataIndex : "resourcename" },
+   { title :  formatMessage({ id: `pages.action_name` }), dataIndex : "actname" },    
+   { title :  formatMessage({ id: `pages.fault_type` }), dataIndex : "type" },  
+   { title :  formatMessage({ id: `pages.fix` }), dataIndex : "fix" },     
+   { title :  formatMessage({ id: `pages.location` }), dataIndex : "location" },      
+   { title :  formatMessage({ id: `pages.sent` }), dataIndex : "sent" },    
  ]   
  
   const son_identifiers =  this.props.workReport.son_identifiers && this.props.workReport.son_identifiers.map(x =>
@@ -293,7 +308,7 @@ class WorkReport extends PureComponent {
 
 
     return (
-      <PageHeaderWrapper title="Work Report">
+      <PageHeaderWrapper title={formatMessage({ id: `pages.work_report` })}>
         <Card bordered={true}>
            
             <Row>
@@ -315,15 +330,42 @@ class WorkReport extends PureComponent {
             {this.state.balance > 0  && <Progress percent={parseInt((this.state.quant-this.state.balance)/this.state.quant*100)} />}
             {this.state.balance > 0  && <span >
                     <Row style={{margin : 16}}> 
-                        <Switch color='red' onChange={this.handleFaultSwitchChange} checked={this.state.faultSwitch} checkedChildren="Fault Report" unCheckedChildren="Work Report" /> 
+                        <Switch color='red' onChange={this.handleFaultSwitchChange} checked={this.state.faultSwitch} checkedChildren={formatMessage({ id: `pages.fault_report` })} unCheckedChildren={formatMessage({ id: `pages.work_report` })} /> 
                     </Row>
-                    {this.state.faultSwitch && <Row style={{marginTop : 24}}>
-                      <Col span={8}  style={{marginLeft : 8}}>
+                   
+                    <Row style={{marginTop : 24}}> 
+                    {!this.state.serialize && <span>
+                        <Col span={6} style={{margin : 8}}>  <Input placeholder="Amount" value={this.state.quantitative ?  this.state.amount || null : this.state.balance } onKeyDown={this.handleAmountClick} onChange={this.handleAmountChange} disabled={!this.state.quantitative }></Input> </Col> 
+                        <Col span={2} style={{margin : 8}}>  
+                    {!this.state.faultSwitch && <Button type="primary" style={{marginRight : 8}} onClick={ this.handleAddAmount}>+</Button> }
+
+                        </Col>
+                    </span>}
+
+
+                    {this.state.serialize && <span>
+                    <Col span={6} style={{margin : 8}}>
+                      <Input placeholder={formatMessage({ id: `pages.identifier` })}  value={this.state.serial || null} onKeyDown={this.handleSerialClick} onChange={this.handleSerialChange}></Input>
+                    </Col> 
+                    <Col span={2} style={{margin : 8}}>  
+                    {!this.state.faultSwitch && <Button type="primary" style={{marginRight : 8}} onClick={this.handleAddSerial}>+</Button> }
+                    </Col>
+                    </span>}
+
+                    {son_identifiers && !this.state.faultSwitch && <span>
+                    <Col span={12} >
+                        {son_identifiers}
+                    </Col>   
+                    </span>}                                      
+                </Row> 
+                {this.state.faultSwitch && <Row style={{marginTop : 24}}>
+                      <Col span={6}  style={{marginLeft : 8}}>
                         <Select
                           showSearch
                           onChange={this.handleTypeChange}
-                          style={{ width: '75%' }}
-                          placeholder="Fault Type"
+                           style={{ width: '90%' }}
+                          placeholder={formatMessage({ id: `pages.fault_type` })}
+                          value = {this.state.type ?this.state.type : undefined}
                           optionFilterProp="children"
                           filterOption={(input, option) =>
                             option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -337,12 +379,34 @@ class WorkReport extends PureComponent {
                               ))}
                         </Select>   
                       </Col>
-                      <Col span={8}  style={{marginLeft : 32}}>
+                      <Col span={6}  style={{marginLeft : 8}}>
+                        <Select
+                          showSearch
+                          onChange={this.handleFixChange}
+                          value={this.state.fix || undefined}
+                          style={{ width: '90%' }}
+                          placeholder={formatMessage({ id: `pages.fix` })}
+                        
+                          optionFilterProp="children"
+                          filterOption={(input, option) =>
+                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                          }
+                        >
+                          {this.props.workReport.fix &&
+                            this.props.workReport.fix.map(option => (
+                                <Option key={option.name} value={option.name}>
+                                  {option.name} :  {option.description}
+                                </Option>
+                              ))}
+                        </Select>   
+                      </Col>                      
+                      <Col span={6}  style={{marginLeft : 32}}>
                         <Select
                           showSearch
                           onChange={this.handleLocationChange}
-                          style={{ width: '75%' }}
-                          placeholder="Fault Location"
+                          style={{ width: '90%' }}
+                          value={this.state.location || undefined}                          
+                          placeholder={formatMessage({ id: `pages.fault_location` })}
                           optionFilterProp="children"
                           filterOption={(input, option) =>
                             option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -356,33 +420,10 @@ class WorkReport extends PureComponent {
                               ))}
                         </Select>   
                       </Col>  
-
-                  </Row>}                    
-                    <Row style={{marginTop : 24}}> 
-                    {!this.state.serialize && <span>
-                        <Col span={6} style={{margin : 8}}>  <Input placeholder="Amount" value={this.state.quantitative ?  this.state.amount || null : this.state.balance } onKeyDown={this.handleAmountClick} onChange={this.handleAmountChange} disabled={!this.state.quantitative }></Input> </Col> 
-                        <Col span={2} style={{margin : 8}}>  
-                        <Button type="primary" style={{marginRight : 8}} onClick={ this.handleAddAmount}>+</Button> 
-
-                        </Col>
-                    </span>}
-
-
-                    {this.state.serialize && <span>
-                    <Col span={6} style={{margin : 8}}>
-                      <Input placeholder="Serial"  value={this.state.serial || null} onKeyDown={this.handleSerialClick} onChange={this.handleSerialChange}></Input>
-                    </Col> 
-                    <Col span={2} style={{margin : 8}}>  
-                      <Button type="primary" style={{marginRight : 8}} onClick={this.handleAddSerial}>+</Button> 
-                    </Col>
-                    </span>}
-
-                    {son_identifiers && !this.state.faultSwitch && <span>
-                    <Col span={12} >
-                        {son_identifiers}
-                    </Col>   
-                    </span>}                                      
-                </Row> 
+                      <Col span={4}>
+                        <Button type="danger"  onClick={this.state.serialize ? this.handleAddSerial : this.handleAddAmount }>+</Button>
+                      </Col>
+                  </Row>}                 
             </span>
             }
             { this.state.balance > 0  && this.props.workReport && this.props.workReport.wr && <Table rowKeys="Id" dataSource={this.props.workReport.wr} style={{margin : 32}} columns={columns}/> }

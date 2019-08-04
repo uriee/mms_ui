@@ -390,7 +390,7 @@ export default [
             params: {
               entity: 'fault_type',
             },
-          },
+          },        
           {
             path: '/qa/fault_status',
             name: 'fault_status',
@@ -400,9 +400,12 @@ export default [
             },
           },                    
           {
-            path: '/qa/tests',
-            name: 'tests',
-            component: './Result/Success',
+            path: '/qa/fix',
+            name: 'fix',
+            component: './List/MainList',
+            params: {
+              entity: 'fix',
+            },
           },
           {
             path: '/qa/calibrations',
@@ -661,7 +664,31 @@ export default [
             params: {
               entity: 'fault_type',
             },
-          },  
+          },
+          {
+            path: '/router/fault_type_actions',
+            name: 'fault_type_actions',
+            component: './List/MainList',
+            params: {
+              entity: 'fault_type_actions',
+            },
+          }, 
+          {
+            path: '/router/fix_actions',
+            name: 'fix_actions',
+            component: './List/MainList',
+            params: {
+              entity: 'fix_actions',
+            },
+          }, 
+          {
+            path: '/router/fix',
+            name: 'fix',
+            component: './List/MainList',
+            params: {
+              entity: 'fix',
+            },
+          },                               
           {
             path: '/router/fault_status',
             name: 'fault_status',

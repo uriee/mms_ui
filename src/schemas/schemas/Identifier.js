@@ -48,6 +48,11 @@ const identifier = {
         },
       ],
     },
+    parent_identifier: {
+      dataIndex: 'parent_identifier',
+      inputMethod: 'input',
+      sorter: true,
+    },    
     identifier_links: {
       link: '/router/identifier_links',
       son: true,

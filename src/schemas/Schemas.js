@@ -38,7 +38,10 @@ import { preferences } from './schemas/Preferences.js';
 import { numerators } from './schemas/Numerators.js';
 import { fault } from './schemas/fault.js';
 import { fault_type } from './schemas/Fault_Types.js';
+import { fault_type_actions } from './schemas/FaultTypeAct.js';
 import { fault_status } from './schemas/Fault_Statuses.js';
+import { fix } from './schemas/Fix.js';
+import { fix_actions } from './schemas/FixAct.js';
 
 const schemas = {
   emp,
@@ -80,8 +83,11 @@ const schemas = {
   numerators,
   fault,
   fault_status,
+  fault_type_actions,
   fault_type,
-  identifier_links
+  identifier_links,
+  fix,
+  fix_actions
 };
 
 export default schemas;

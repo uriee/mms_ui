@@ -1,9 +1,10 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
-const fault_status = {
-  entity: 'fault_status',
-  title: 'faultunction statuses',
+const fix = {
+  loadable : true,  
+  entity: 'fix',
+  title: 'Fix',
   forms: {
     insert: {
       steps: [
@@ -11,30 +12,25 @@ const fault_status = {
           title: 'Details',
           fields: [
             {
-              field: 'fault_status_name',
-              placeholder: 'fault status Name',
+              field: 'name',
+              placeholder: 'Fix Name (optional)',
               style: {
                 width: '80%',
               },
             },
             {
-                field: 'active',
-                style: {
-                  width: '80%',
-                },
-            },
-            {
-              field: 'first',
+              field: 'extname',
+              placeholder: 'External Name',
               style: {
                 width: '80%',
               },
-            },  
+            },            
             {
-              field: 'sendable',
+              field: 'active',
               style: {
                 width: '80%',
               },
-            },                                   
+            },            
             {
               field: 'description',
               placeholder: 'Description',
@@ -51,7 +47,7 @@ const fault_status = {
               },
             },
           ],
-          format: [[0],[1,2,3], [4], [5]],
+          format: [[0,2], [1], [3], [4]],
         },
       ],
     },
@@ -61,39 +57,34 @@ const fault_status = {
           title: 'Identifiers',
           fields: [
             {
-              field: 'fault_status_name',
-              placeholder: 'fault status Name',
+              field: 'name',
+              placeholder: 'faultunction Type Name',
               style: {
                 width: '80%',
               },
             },
             {
-                field: 'active',
-                style: {
-                  width: '80%',
-                },
-            },  
-            {
-              field: 'first',
+              field: 'active',
               style: {
                 width: '80%',
               },
             }, 
             {
-              field: 'sendable',
+              field: 'extname',
+              placeholder: 'External Name',
               style: {
                 width: '80%',
               },
-            },                                 
+            },                        
             {
               field: 'description',
               placeholder: 'Description',
               style: {
                 width: '80%',
               },
-            },
+            },           
           ],
-          format: [[0],[1,2,3], [4]],
+          format: [[0,1], [2], [3]],
         },
       ],
     },
@@ -102,17 +93,13 @@ const fault_status = {
     id: {
       required: false,
     },
-    fault_status_name: {
+    name: {
       dataIndex: 'name',
       inputMethod: 'input',
       sorter: true,
       inputRules: [
         {
-          required: true,
-          message: 'This field is required',
-        },
-        {
-          min: 2,
+          min: 1,
           message: ' minimum 2 character',
         },
       ],
@@ -138,20 +125,19 @@ const fault_status = {
       ],
     },
     active: {
-        dataIndex: 'active',
-        inputMethod: 'bool',
-        sorter: true,
-      },  
-    first: {
-        dataIndex: 'first',
-        inputMethod: 'bool',
-        sorter: true,
-      },   
-    sendable: {
-        dataIndex: 'sendable',
-        inputMethod: 'bool',
-        sorter: true,
-      },             
+      dataIndex: 'active',
+      inputMethod: 'bool',
+      sorter: true,
+    }, 
+    extname: {
+      dataIndex: 'extname',
+      inputMethod: 'input',
+      sorter: true,
+    },
+    fix_actions: {
+      link: '/router/fix_actions',
+      son: true,
+    },             
   },
 };
-export { fault_status };
+export { fix };

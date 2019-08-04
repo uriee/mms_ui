@@ -24,6 +24,7 @@ export default {
       var ret = { wr : response.WR,
                   loc :response.loc,
                   type : response.type,
+                  fix : response.fix,                  
                   path : payload.path,
                   son_identifiers :  response.son_identifiers }
 

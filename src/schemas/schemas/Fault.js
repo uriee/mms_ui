@@ -32,6 +32,13 @@ const fault = {
               },
             },
             {
+              field: 'fix',
+              placeholder: 'fix',
+              style: {
+                width: '80%',
+              },
+            },            
+            {
               field: 'tags',
               placeholder: 'Tags',
               style: {
@@ -39,7 +46,7 @@ const fault = {
               },
             },
           ],
-          format: [[0], [1, 2], [3]],
+          format: [[0], [1, 2, 3], [4]],
         },
         {
           title: 'Description',
@@ -94,7 +101,7 @@ const fault = {
               },
             },                      
             {
-              field: 'open_date',
+              field: 'sig_date',
               placeholder: 'Open Date',
               style: {
                 width: '80%',
@@ -139,6 +146,13 @@ const fault = {
                 },
               },
               {
+                field: 'fix',
+                placeholder: 'fix',
+                style: {
+                  width: '80%',
+                },
+              },              
+              {
                 field: 'tags',
                 placeholder: 'Tags',
                 style: {
@@ -146,7 +160,7 @@ const fault = {
                 },
               },
             ],
-            format: [[0], [1, 2], [3]],
+            format: [[0], [1, 2, 3], [4]],
           },
         {
           title: 'Description',
@@ -193,7 +207,7 @@ const fault = {
                 },
               },                         
               {
-                field: 'open_date',
+                field: 'sig_date',
                 placeholder: 'Open Date',
                 style: {
                   width: '80%',
@@ -228,7 +242,6 @@ const fault = {
       ],
     },
     description: {
-      type: 'text',
       dataIndex: 'description',
       inputMethod: 'input',
       sorter: true,
@@ -261,23 +274,23 @@ const fault = {
         },
       ],
     },
+    fix: {
+      dataIndex: 'fix_name',
+      link: '/router/fix',
+      sorter: true,
+      inputMethod: 'select',
+      chooser: 'fix',
+    },    
     status: {
         dataIndex: 'status_name',
         link: '/router/fault_status',
         sorter: true,
         inputMethod: 'select',
         chooser: 'fault_status',
-        inputRules: [
-            {
-            required: true,
-            message: 'This field is required',
-            },
-        ],
     },
     resourcename: {
       dataIndex: 'resourcename',
       link: '/router/resources',
-      type: 'text',
       sorter: true,
       inputMethod: 'select',
       chooser: 'resource',
@@ -290,14 +303,12 @@ const fault = {
     },
    location: {
       dataIndex: 'location',
-      type: 'text',
       sorter: true,
       inputMethod: 'input',
     },    
     serialname: {
         dataIndex: 'serialname',
         link: '/router/serials',
-        type: 'text',
         sorter: true,
         inputMethod: 'select',
         chooser: 'serial',
@@ -307,9 +318,13 @@ const fault = {
             message: 'This field is required',
           },
         ],
-      },    
-    open_date: {
-        dataIndex: 'open_date',
+      }, 
+    identifier: {
+        link: '/router/identifier',
+        son: true,
+    },          
+    sig_date: {
+        dataIndex: 'sig_date',
         inputMethod: 'timestamp',
         sorter: true,
     },    
@@ -322,11 +337,7 @@ const fault = {
         dataIndex: 'quant',
         inputMethod: 'number',
         sorter: true,
-    }, 
-    identifier: {
-      link: '/router/identifier',
-      son: true,
-    },           
+    },          
     tags: {
       inputMethod: 'tags',
       align: 'right',

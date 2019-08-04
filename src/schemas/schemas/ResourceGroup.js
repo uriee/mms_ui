@@ -81,8 +81,16 @@ const resourceGroup = {
                 align: 'center',
               },
             },
+            {
+              field: 'extname',
+              placeholder: 'ERP Code',
+              style: {
+                width: '80%',
+                align: 'center',
+              },
+            },            
           ],
-          format: [[0]],
+          format: [[0,1]],
         },
       ],
     },
@@ -146,8 +154,16 @@ const resourceGroup = {
                 width: '100%',
               },
             },
+            {
+              field: 'extname',
+              placeholder: 'ERP Code',
+              style: {
+                width: '80%',
+                align: 'center',
+              },
+            },             
           ],
-          format: [[0]],
+          format: [[0,1]],
         },
       ],
     },
@@ -232,7 +248,16 @@ const resourceGroup = {
       inputMethod: 'tags',
       align: 'right',
     },
-
+    extname: {
+      inputMethod: 'input',
+      align: 'right',
+      inputRules: [
+        {
+          max: 3,
+          message: ' maximum 3 character',
+        },
+      ],      
+    },
     resource_types: {
       dataIndex: 'resource_types',
       required: false,

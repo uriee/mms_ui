@@ -133,7 +133,11 @@ const fault_type = {
       dataIndex: 'extname',
       inputMethod: 'input',
       sorter: true,
-    },         
+    },
+    fault_type_actions: {
+      link: '/router/fault_type_actions',
+      son: true,
+    },             
   },
 };
 export { fault_type };

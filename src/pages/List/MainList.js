@@ -5,7 +5,7 @@ import router from 'umi/router';
 import { Logic } from '@/defaultSettings';
 import moment from 'moment-timezone';
 import { BugReporter } from 'simple-bug-reporter';
-import { formatMessage, FormattedMessage, getLocale } from 'umi/locale';
+import { formatMessage,  getLocale } from 'umi/locale';
 
 
 import {
