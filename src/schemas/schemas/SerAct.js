@@ -39,9 +39,16 @@ const serial_act = {
             }, 
             {
               field: 'serialize',
-            },                       
+            }, 
+            {
+              field: 'batch_size',
+              placeholder: 'Batch Size',
+              style: {
+                width: '80%',
+              },              
+            },                                  
           ],
-          format: [[0, 1], [2, 3] ,[4, 5]],
+          format: [[0, 1], [2, 3] ,[4, 5,6]],
         },
       ],
     },
@@ -69,9 +76,16 @@ const serial_act = {
             }, 
             {
               field: 'serialize',
-            },             
+            },
+            {
+              field: 'batch_size',
+              placeholder: 'Batch Size',
+              style: {
+                width: '80%',
+              },              
+            },                         
           ],
-          format: [[0, 1], [2, 3]],
+          format: [[0, 1], [2, 3, 4]],
         },
       ],
     },
@@ -134,7 +148,12 @@ const serial_act = {
       dataIndex: 'serialize',
       inputMethod: 'bool',
       sorter: true,
-    },    
+    },
+    batch_size: {
+      dataIndex: 'batch_size',
+      inputMethod: 'number',
+      sorter: true,
+    },         
     act_resources: {
       link: '/router/serialActResources?type=3&',
       son: true,

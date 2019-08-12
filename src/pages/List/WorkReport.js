@@ -33,6 +33,14 @@ import {
 } from 'antd';
 const { Column, ColumnGroup } = Table;
 const {Option} = Select
+
+const initBatchArray = (size) => {
+  if (!size) return null
+  const a = new Array(size)
+  for (var i = 0; i < a.length; i++) {a[i] = i+1}
+  return a
+}
+
 /* eslint react/no-multi-comp:0 */
 @connect(({ action, workReport, loading }) => ({
     workReport,
@@ -44,6 +52,8 @@ class WorkReport extends PureComponent {
 
     this.state = {
       balance:  0,
+      batch_size : 0,
+      batch_array : [],
       quant : 0 ,
       quantitative : true,
       serialize : true,
@@ -53,6 +63,8 @@ class WorkReport extends PureComponent {
       location: null,
       type : null,
       fix : null,
+      secondary : '',
+      mac_address : '',
       sonIdentifiers : {}
     };  
   }
@@ -72,7 +84,14 @@ class WorkReport extends PureComponent {
       payload: {path},
     });      
      const entry = this.getEntry(path)  
-     entry && this.setState({balance : entry.balance, quant : entry.quant, serialize: entry.serialize, quantitative : entry.quantitative})     
+     entry && this.setState({
+       balance : entry.balance,
+       batch_size : entry.batch_size,
+       batch_array :  initBatchArray(entry.batch_size),
+       quant : entry.quant,
+       serialize: entry.serialize,
+       quantitative : entry.quantitative
+      })     
      
   };
  
@@ -110,10 +129,25 @@ class WorkReport extends PureComponent {
      if (e.key === 'Enter') this.handleAddSerial()       
   }
 
-   handleSerialChange = e => {
+  handleSerialChange = e => {
     const value = e.target.value       
     this.setState({ serial: value })
-    }   
+  }   
+
+  handleMacChange = e => {
+    const value = e.target.value       
+    this.setState({ mac_address: value })
+  }   
+
+  handleSecondaryChange = e => {
+    const value = e.target.value       
+    this.setState({ secondary: value })
+  }   
+
+  handleBatchExcludeChange = value => {   
+    this.setState({ batch_array: value })
+  }      
+
 
     handleFaultSwitchChange = (checked) => {
         this.setState({ faultSwitch: checked ,type: '',fix: '', location: ''})
@@ -127,14 +161,15 @@ class WorkReport extends PureComponent {
     setBalance = (value) => {
         //this.setState({ balance: this.state.balance - value * (this.state.faultSwitch ? 0 : 1) })
         const { dispatch } = this.props;    
-        console.log("popopo))):",value,this.state)         
+        
         dispatch({
             type: `workReport/fetchWR`,
             payload: {path : this.props.workReport.path},
         }).then(x => {
             this.setState({
               serial : this.state.faultSwitch ? this.state.serial : null ,
-              balance: this.state.balance - value * (this.state.faultSwitch ? 0 : 1),
+              balance: this.state.balance - value * (this.state.faultSwitch ? 0 : 1) ,
+              batch_array : initBatchArray(this.state.batch_size),
               amount : 0,
               type: null,
               fix: null,
@@ -146,7 +181,9 @@ class WorkReport extends PureComponent {
     }
 
   handleAddAmount = () => {
-    const value = parseInt(this.state.quantitative ? this.state.amount : this.state.balance)
+    const batch_amount = batch_amount && this.state.batch_array.length
+    const amount = this.state.amount  * (batch_amount || 1 )
+    const value = parseInt(this.state.quantitative ? amount : this.state.balance)
 
     if (value <= 0 ) {
         notification.error({ message: `Wrong Amount`, description: 'The Amount must be Positive',})
@@ -188,16 +225,20 @@ class WorkReport extends PureComponent {
 
   handleAddSerial = (e) => {
     const value = this.state.serial
+    const batch = this.state.batch_array 
 
     if (!value ) {
         notification.error({ message: `Wrong S/N`, description: 'You need to input a serial number',})
         return
     }
-    if (this.state.balance < 1 ) {
+    if (this.state.balance < 1 * (batch && batch.length || 1 )  ) {
         notification.error({ message: `No Balance`, description: 'All the amount had been already reported',})
         return
     } 
-
+    if (!(/^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/.test(this.state.mac_address)) && this.state.mac_address) {
+      notification.error({ message: `Input Error`, description: 'Mac Address format : xx:xx:xx:xx:xx:xx',})
+      return
+    }
     const sons = this.props.workReport.son_identifiers && this.props.workReport.son_identifiers.every(x=> !!this.state.sonIdentifiers[x.name])
     if ( !this.state.faultSwitch && this.props.workReport.son_identifiers && this.props.workReport.son_identifiers[0] && !sons) {
       notification.error({ message: `Missing data`, description: 'All Son Identifiers must be specified',})
@@ -209,8 +250,11 @@ class WorkReport extends PureComponent {
         resourcename: this.props.workReport.path[0] ,
         serialname : this.props.workReport.path[1],
         actname : this.props.workReport.path[2],
-        quant: 1,
+        quant: 1  * (batch && batch.length || 1 ),
         identifier : this.state.serial,
+        batch_array : this.state.batch_array,
+        mac_address : this.state.mac_address,
+        secondary : this.state.secondary,
         location : this.state.location,
         type_name : this.state.type,
         fix: this.state.fix,
@@ -220,17 +264,14 @@ class WorkReport extends PureComponent {
 
     values.entity = this.state.faultSwitch ? 'fault' : 'work_report'
     values.parent_schema = this.state.faultSwitch ? 'fault' : 'work_report' 
-    values.sig_date = moment()
-    //.tz('Asia/Jerusalem')
-    .format();
-    values.sig_user =
-    JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
+    values.sig_date = moment().format();
+    values.sig_user = JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
     
     dispatch({
     type: 'action/add',
     payload: values
     }).then(res => {
-        this.setBalance(1)
+        this.setBalance( this.state.batch_array && this.state.batch_array.length || 1 )
       }) 
   };  
 
@@ -306,6 +347,27 @@ class WorkReport extends PureComponent {
     )
   )
 
+  const batch_exclude =  this.state.batch_array && this.state.batch_array.length > 0  && 
+    (
+      <Row style={{margin : 8}}>
+
+          <Select
+            showSearch
+            mode="multiple"
+            onChange={this.handleBatchExcludeChange}
+            style={{ width: '100%' ,marginLeft : 8}}
+            placeholder='Exclude From Batch'
+            optionFilterProp="children"
+            value = {this.state.batch_array ? this.state.batch_array : undefined}
+          >
+            { initBatchArray(this.state.batch_size).map(option => (
+                  <Option key={option} value={option}>
+                    {option}
+                  </Option>
+                ))}
+          </Select>
+      </Row>  
+    )
 
     return (
       <PageHeaderWrapper title={formatMessage({ id: `pages.work_report` })}>
@@ -322,8 +384,11 @@ class WorkReport extends PureComponent {
                     onChange={this.handlePick}            
                 />
                 </Col>   
-                <Col span={12}>
-                    {this.state.balance > 0  &&  <span style={{float : 'right'}}>Balance : {this.state.balance}</span> }    
+                <Col span={8}>
+                    {this.state.batch_size > 0  &&  <span style={{float : 'right'}}>  {formatMessage({ id: `pages.batch_size` })} : {this.state.batch_size}</span> }    
+                </Col>                
+                <Col span={4}>
+                    {this.state.balance > 0  &&  <span style={{float : 'right'}}>{formatMessage({ id: `pages.balance` })} : {this.state.balance}</span> }    
                 </Col>  
             </Row>
                         
@@ -350,14 +415,27 @@ class WorkReport extends PureComponent {
                     <Col span={2} style={{margin : 8}}>  
                     {!this.state.faultSwitch && <Button type="primary" style={{marginRight : 8}} onClick={this.handleAddSerial}>+</Button> }
                     </Col>
+                    <Col span={6} style={{margin : 8}}>
+                    {!this.state.faultSwitch && <Input placeholder={formatMessage({ id: `pages.mac_address` })}  value={this.state.mac_address || null}  onChange={this.handleMacChange}></Input>}
+                    </Col> 
+                    <Col span={6} style={{margin : 8}}>
+                    {!this.state.faultSwitch &&<Input placeholder={formatMessage({ id: `pages.secondary` })}  value={this.state.secondary || null}  onChange={this.handleSecondaryChange}></Input>}
+                    </Col>                                         
                     </span>}
 
                     {son_identifiers && !this.state.faultSwitch && <span>
                     <Col span={12} >
                         {son_identifiers}
                     </Col>   
-                    </span>}                                      
+                    </span>}                                                         
                 </Row> 
+                {batch_exclude && !this.state.faultSwitch && <span>
+                   <Row>       
+                      <Col span={20} >
+                          {batch_exclude}
+                      </Col>   
+                   </Row>
+                    </span>}                 
                 {this.state.faultSwitch && <Row style={{marginTop : 24}}>
                       <Col span={6}  style={{marginLeft : 8}}>
                         <Select
@@ -367,8 +445,7 @@ class WorkReport extends PureComponent {
                           placeholder={formatMessage({ id: `pages.fault_type` })}
                           value = {this.state.type ?this.state.type : undefined}
                           optionFilterProp="children"
-                          filterOption={(input, option) =>
-                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                          filterOption={(input, option) => option.props.children[0].toLowerCase().indexOf(input.toLowerCase()) >= 0 || option.props.children[2].toLowerCase().indexOf(input.toLowerCase()) >= 0
                           }
                         >
                           {this.props.workReport.type &&
@@ -389,7 +466,7 @@ class WorkReport extends PureComponent {
                         
                           optionFilterProp="children"
                           filterOption={(input, option) =>
-                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            option.props.children[0].toLowerCase().indexOf(input.toLowerCase()) >= 0 || option.props.children[2].toLowerCase().indexOf(input.toLowerCase()) >= 0
                           }
                         >
                           {this.props.workReport.fix &&
@@ -423,7 +500,8 @@ class WorkReport extends PureComponent {
                       <Col span={4}>
                         <Button type="danger"  onClick={this.state.serialize ? this.handleAddSerial : this.handleAddAmount }>+</Button>
                       </Col>
-                  </Row>}                 
+                  </Row>}
+                                   
             </span>
             }
             { this.state.balance > 0  && this.props.workReport && this.props.workReport.wr && <Table rowKeys="Id" dataSource={this.props.workReport.wr} style={{margin : 32}} columns={columns}/> }

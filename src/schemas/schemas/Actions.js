@@ -196,11 +196,6 @@ const actions = {
       inputMethod: 'bool',
       sorter: true,
     },
-    serial_report: {
-      dataIndex: 'serial_report',
-      inputMethod: 'bool',
-      sorter: true,
-    },
     quantitative: {
       dataIndex: 'quantitative',
       inputMethod: 'bool',

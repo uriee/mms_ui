@@ -54,6 +54,13 @@ const part = {
               },
             },
             {
+              field: 'batch_size',
+              placeholder: 'Batch size',
+              style: {
+                width: '80%',
+              },
+            },            
+            {
               field: 'part_status',
               placeholder: 'Status',
               style: {
@@ -68,7 +75,7 @@ const part = {
               },
             },
           ],
-          format: [[0, 1, 2], [3, 4], [5], [6]],
+          format: [[0, 1, 2], [3, 4, 5], [6], [7]],
         },
         {
           title: 'Descriptions',
@@ -133,6 +140,13 @@ const part = {
               },
             },
             {
+              field: 'batch_size',
+              placeholder: 'Batch size',
+              style: {
+                width: '80%',
+              },
+            },            
+            {
               field: 'description',
               placeholder: 'Description',
               style: {
@@ -154,7 +168,7 @@ const part = {
               },
             },
           ],
-          format: [[0, 1, 2], [3, 4], [5, 6], [7]],
+          format: [[0, 1, 2], [3, 4, 5], [6, 7], [8]],
         },
       ],
     },
@@ -184,7 +198,6 @@ const part = {
     revision: {
       dataIndex: 'revision',
       inputMethod: 'input',
-      sorter: true,
       inputRules: [
         {
           required: true,
@@ -198,11 +211,7 @@ const part = {
       sorter: true,
     },
     description_t: {
-      updateable: false,
-      insertable: true,
       inputMethod: 'textArea',
-      sorter: true,
-      align: 'right',
       required: false,
       inputRules: [
         {
@@ -216,9 +225,7 @@ const part = {
       ],
     },
     description: {
-      updateable: false,
       dataIndex: 'description',
-      insertable: true,
       inputMethod: 'textArea',
       sorter: true,
       align: 'right',
@@ -233,10 +240,13 @@ const part = {
       dataIndex: 'serialize',
       inputMethod: 'bool',
       sorter: true,
-    },    
+    }, 
+    batch_size: {
+      dataIndex: 'batch_size',
+      inputMethod: 'number',
+      sorter: true,
+    },       
     part_status: {
-      updateable: true,
-      insertable: true,
       dataIndex: 'part_status',
       sorter: true,
       inputMethod: 'select',

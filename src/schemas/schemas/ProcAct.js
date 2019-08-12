@@ -31,9 +31,16 @@ const proc_act = {
             }, 
             {
               field: 'serialize',
-            },             
+            }, 
+            {
+              field: 'batch',
+              placeholder: 'Batch Size',
+              style: {
+                width: '80%',
+              },              
+            },                        
           ],
-          format: [[0, 1], [2, 3]],
+          format: [[0, 1], [2, 3, 4]],
         },
       ],
     },
@@ -61,9 +68,16 @@ const proc_act = {
             }, 
             {
               field: 'serialize',
-            },             
+            },
+            {
+              field: 'batch',
+              placeholder: 'Batch Size',
+              style: {
+                width: '80%',
+              },              
+            },                         
           ],
-          format: [[0, 1], [2, 3]],
+          format: [[0, 1], [2, 3, 4]],
         },
       ],
     },
@@ -111,6 +125,11 @@ const proc_act = {
       inputMethod: 'bool',
       sorter: true,
     },    
+    batch: {
+      dataIndex: 'batch',
+      inputMethod: 'bool',
+      sorter: true,
+    },      
     act_resources: {
       link: '/router/processActResources?type=2&',
       son: true,
