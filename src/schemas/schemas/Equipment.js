@@ -1,6 +1,13 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
+const checkMacAddress = (rule, value, callback) => {
+  if (!(/^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/.test(value)) && value ) {
+    callback('The Input must be a Mac Address');
+  }
+  callback();
+};
+
 const equipment = {
   loadable: true,
   entity: 'equipment',
@@ -249,12 +256,12 @@ const equipment = {
         {
           required: true,
           message: 'This field is required',
-        },
+        },        
         {
-          min: 2,
-          message: ' minimum 2 character',
+          validator: checkMacAddress,
+          message: 'This field is Mac Address',
         },
-      ],
+      ],      
     },
     active: {
       type: 'text',
