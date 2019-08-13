@@ -2,7 +2,7 @@ import React from 'react';
 import 'antd/dist/antd.css';
 import { Card, Upload, Button, Icon, message, Select, List, Input } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import schemas from '@/schemas/schemas.js';
+import schemas from '@/schemas/Schemas.js';
 import { Logic } from '@/defaultSettings';
 import mrequest from '@/utils/mrequest';
 import * as csv from 'csvtojson';

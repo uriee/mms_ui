@@ -31,7 +31,7 @@ import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './TableList.less';
 import MainForm from './MainForm.js';
-import schemas from '@/schemas/schemas.js';
+import schemas from '@/schemas/Schemas.js';
 
 const lang = {
   'en-US': { id: 1, align: 'left' },

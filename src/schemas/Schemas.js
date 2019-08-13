@@ -36,7 +36,7 @@ import { identifier } from './schemas/Identifier.js';
 import { identifier_links } from './schemas/Identifier_links.js';
 import { preferences } from './schemas/Preferences.js';
 import { numerators } from './schemas/Numerators.js';
-import { fault } from './schemas/fault.js';
+import { fault } from './schemas/Fault.js';
 import { fault_type } from './schemas/Fault_Types.js';
 import { fault_type_actions } from './schemas/FaultTypeAct.js';
 import { fault_status } from './schemas/Fault_Statuses.js';
