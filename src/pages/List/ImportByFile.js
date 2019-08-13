@@ -2,7 +2,7 @@ import React from 'react';
 import 'antd/dist/antd.css';
 import { Card, Upload, Button, Icon, message, Select, List, Input } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import schemas from '../../schemas/schemas.js';
+import schemas from '@/schemas/schemas.js';
 import { Logic } from '@/defaultSettings';
 import mrequest from '@/utils/mrequest';
 import * as csv from 'csvtojson';
@@ -49,7 +49,7 @@ class ImportDataByFile extends React.Component {
 
     const converter = csv({
       noheader: true,
-        trim : true,
+      trim: true,
       //  ignoreEmpty : true,
       //  checkColumn : true,
       headers: headers,
@@ -59,7 +59,7 @@ class ImportDataByFile extends React.Component {
 
     reader.onload = async function() {
       try {
-        const json = await converter.fromString(reader.result)
+        const json = await converter.fromString(reader.result);
 
         THIS.setState({
           uploading: true,
@@ -67,7 +67,7 @@ class ImportDataByFile extends React.Component {
 
         const ret = await mrequest(`${Logic}mymes/importdata`, {
           method: 'POST',
-          data: { data: json, entity : schemaName },
+          data: { data: json, entity: schemaName },
         });
 
         THIS.setState({
@@ -93,7 +93,7 @@ class ImportDataByFile extends React.Component {
 
     const props = {
       multiple: false,
-      accept : '.csv',
+      accept: '.csv',
       onRemove: file => {
         this.setState(state => {
           const index = state.fileList.indexOf(file);

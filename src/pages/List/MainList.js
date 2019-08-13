@@ -5,8 +5,7 @@ import router from 'umi/router';
 import { Logic } from '@/defaultSettings';
 import moment from 'moment-timezone';
 import { BugReporter } from 'simple-bug-reporter';
-import { formatMessage,  getLocale } from 'umi/locale';
-
+import { formatMessage, getLocale } from 'umi/locale';
 
 import {
   Row,
@@ -32,7 +31,7 @@ import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './TableList.less';
 import MainForm from './MainForm.js';
-import schemas from '../../schemas/schemas.js';
+import schemas from '@/schemas/schemas.js';
 
 const lang = {
   'en-US': { id: 1, align: 'left' },
@@ -89,7 +88,7 @@ class TableList extends PureComponent {
     this.schemaChange();
     if (!this.schema || !this.schema.fields.id)
       throw new Error('The schema does not have an id field!');
-    const params = this.props.location.query || {}
+    const params = this.props.location.query || {};
 
     this.insertKey = {}; //this.insetrKey passes to the insert form in order to allow insertion of new child rows in parent-child entities
     if (this.schema.defaultKey) {
@@ -119,8 +118,10 @@ class TableList extends PureComponent {
         key: `${field.dataIndex ? field.dataIndex : field.name}-${fi}`,
         sorter: field.sorter ? field.sorter : false /*if the table can be sotrted by this field*/,
         link: field.link ? field.link : false /*goto link when clicked upon*/,
-        linkParam : field.linkParam ? field.linkParam : false /*param to the link function - the existance of theis variable suggest that the link is not a string but a function that nedd to be invoked with this parametr*/,
-        son: field.son, /*if true this field  is a link to a sub form*/
+        linkParam: field.linkParam
+          ? field.linkParam
+          : false /*param to the link function - the existance of theis variable suggest that the link is not a string but a function that nedd to be invoked with this parametr*/,
+        son: field.son /*if true this field  is a link to a sub form*/,
         selectValues: field.selectValues
           ? field.selectValues
           : null /*in case you need to choose from constants in the schema*/,
@@ -129,16 +130,22 @@ class TableList extends PureComponent {
           ? field.width
           : 200 /*field.son ? formatMessage({ id: `pages.${field.name}` }).length * 7 : field.dataIndex === "name" ? 100 : 0,*/,
         render: (x, z) => {
-          const link  = field.link ? field.linkParam ? field.link(z[field.linkParam]) : field.link : false
+          const link = field.link
+            ? field.linkParam
+              ? field.link(z[field.linkParam])
+              : field.link
+            : false;
           return !x && !field.dataIndex ? (
             <span key={fi}></span>
           ) : link ? (
             <a
               onClick={() => {
-                const query = link.includes('?') ? '' : '?'
+                const query = link.includes('?') ? '' : '?';
                 return x
                   ? router.push(`${link}${query}name=${x.split(':')[0] || z.name}`)
-                  : router.push(`${link}${query}parent=${z.id}&parentSchema=${this.entity}&parentName=${z.name}`);
+                  : router.push(
+                      `${link}${query}parent=${z.id}&parentSchema=${this.entity}&parentName=${z.name}`
+                    );
               }}
             >
               {x ? x.toString() : <Icon type="double-right" color="mgenta" />}
@@ -159,7 +166,8 @@ class TableList extends PureComponent {
             x.replace('T', ' ').split('.')[0]
           ) : (
             x
-          )},
+          );
+        },
         align: lang[getLocale()] ? lang[getLocale()].align : 'left',
       }));
     this.columns.push({ title: '' });
@@ -188,7 +196,7 @@ class TableList extends PureComponent {
     <span key={`tags-${j}`}>
       {x.map((tag, i) => (
         <a key={`${tag}a-${j}-${i}`} onClick={() => router.push(`/router/tags?tags=${tag}`)}>
-          <Tag  style={{marginTop: 8}} color="blue" key={`${tag}-${j}-${i}`}>
+          <Tag style={{ marginTop: 8 }} color="blue" key={`${tag}-${j}-${i}`}>
             {tag}
           </Tag>
         </a>
@@ -197,7 +205,7 @@ class TableList extends PureComponent {
   );
   /* Renders the resources */
   resourcesRender = (x, z) => {
-    if (!x[0]) return <span/>
+    if (!x[0]) return <span />;
     const resourceTypeMap = {
       employee: { link: 'employees', color: 'green' },
       equipment: { link: 'equipments', color: 'orange' },
@@ -215,7 +223,7 @@ class TableList extends PureComponent {
             key={`atag-${z.name}-${tag}-${i}`}
             onClick={() => router.push(`/router/${links[i]}?name=${tag}`)}
           >
-            <Tag style={{marginTop: 8}} color={colors[i]} key={`rtag-${z.name}-${tag}-${i}`}>
+            <Tag style={{ marginTop: 8 }} color={colors[i]} key={`rtag-${z.name}-${tag}-${i}`}>
               {tag}
             </Tag>
           </a>
@@ -315,12 +323,12 @@ class TableList extends PureComponent {
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      const parent = this.state.formValues.parent ? { parent :this.state.formValues.parent } : {}
+      const parent = this.state.formValues.parent ? { parent: this.state.formValues.parent } : {};
       const values = {
         ...fieldsValue,
         ...parent,
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-        parentSchema : this.props.location.query.parentSchema || ''
+        parentSchema: this.props.location.query.parentSchema || '',
       };
 
       const filterString = Object.keys(values)
@@ -344,36 +352,36 @@ class TableList extends PureComponent {
     });
   };
 
-  print = async (schema,data) => {
-    console.log( 'heyyy-------------',schema,data)  
-    let post = { list : data.list.map((x,i) => ({id: i, ...x}))}
-    post.total =  post.length
-    const body = JSON.stringify({schema : schema, data : post})
-    fetch(`${Logic}mymes/test`, { 
+  print = async (schema, data) => {
+    console.log('heyyy-------------', schema, data);
+    let post = { list: data.list.map((x, i) => ({ id: i, ...x })) };
+    post.total = post.length;
+    const body = JSON.stringify({ schema: schema, data: post });
+    fetch(`${Logic}mymes/test`, {
       body: body,
-      //headers: { "Content-Type": "application/x-www-form-urlencoded" } , 
-      headers: {"Content-Type": "application/json"} ,
-      method: 'POST'
+      //headers: { "Content-Type": "application/x-www-form-urlencoded" } ,
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
     }).then(res => {
-      console.log(res)
-        return res
-            .arrayBuffer()
-            .then(res => {
-                const blob = new Blob([res], { type: 'application/pdf' })
-                console.log(blob)
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', 'file.pdf');
-                document.body.appendChild(link);
-                link.click()      
-                console.log(res,url) 
-            })
-            .catch(e => alert(e))
-    })/* 
+      console.log(res);
+      return res
+        .arrayBuffer()
+        .then(res => {
+          const blob = new Blob([res], { type: 'application/pdf' });
+          console.log(blob);
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', 'file.pdf');
+          document.body.appendChild(link);
+          link.click();
+          console.log(res, url);
+        })
+        .catch(e => alert(e));
+    }); /* 
     const ret = .post(`${Logic}mymes/html2pdf`,{html : domElement.toString()}).then(res => { 
     */
-  }
+  };
 
   //shows the update item from
   handleUpdateModalVisible = (flag, record) => {
@@ -387,12 +395,14 @@ class TableList extends PureComponent {
   handleAdd = values => {
     const { dispatch } = this.props;
 
-    const constants = {}
-    Object.keys(this.schema.fields).filter(x=> this.schema.fields[x].value).forEach(x=> constants[x] = this.schema.fields[x].value)
+    const constants = {};
+    Object.keys(this.schema.fields)
+      .filter(x => this.schema.fields[x].value)
+      .forEach(x => (constants[x] = this.schema.fields[x].value));
     this.schema.cascaders &&
       Object.keys(this.schema.cascaders).forEach(x => {
         //console.log('------',this.schema.cascaders[x],values,values[this.schema.cascaders[x][0]])
-        values[this.schema.cascaders[x][2]] = values[this.schema.cascaders[x][0]][2];        
+        values[this.schema.cascaders[x][2]] = values[this.schema.cascaders[x][0]][2];
         values[this.schema.cascaders[x][1]] = values[this.schema.cascaders[x][0]][1];
         values[this.schema.cascaders[x][0]] = values[this.schema.cascaders[x][0]][0];
       });
@@ -408,16 +418,17 @@ class TableList extends PureComponent {
 
     let lang_id = lang[getLocale()].id;
     values.name = values.name || this.state.formValues.name;
-    values.sig_date = moment().format() //.tz('Asia/Jerusalem')
-    values.sig_user = JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
-    values.parent_schema = this.schema.parentSchema || this.props.location.query.parentSchema || ''
+    values.sig_date = moment().format(); //.tz('Asia/Jerusalem')
+    values.sig_user =
+      JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username;
+    values.parent_schema = this.schema.parentSchema || this.props.location.query.parentSchema || '';
     values.parent = this.state.formValues.parent;
 
-   // values.flag = JSON.parse(localStorage.getItem('lastEntity')).schema === 'fault' ? 1 : 0
+    // values.flag = JSON.parse(localStorage.getItem('lastEntity')).schema === 'fault' ? 1 : 0
 
     dispatch({
       type: 'action/add',
-      payload: Object.assign(values, { lang_id: lang_id, entity: this.entity },constants),
+      payload: Object.assign(values, { lang_id: lang_id, entity: this.entity }, constants),
       callback: this.handleFormAfterIUD,
     });
 
@@ -465,8 +476,8 @@ class TableList extends PureComponent {
       payload: {
         keys: rows.map(row => row.id),
         entity: this.entity,
-        parent:  this.props.location.query.parent,
-        parent_schema:  this.props.location.query.parentSchema,
+        parent: this.props.location.query.parent,
+        parent_schema: this.props.location.query.parentSchema,
       },
       callback: test => {
         this.setState({
@@ -553,7 +564,9 @@ class TableList extends PureComponent {
             .map(col => (
               <Col md={8} sm={24} key={'mainform' + col.dataIndex}>
                 <FormItem label={col.title}>
-                  {getFieldDecorator(col.dataIndex)(<Input placeholder={col.title} style={{ float: 'right' , marginLeft: 8}}/>)}
+                  {getFieldDecorator(col.dataIndex)(
+                    <Input placeholder={col.title} style={{ float: 'right', marginLeft: 8 }} />
+                  )}
                 </FormItem>
               </Col>
             ))}
@@ -580,9 +593,9 @@ class TableList extends PureComponent {
     const { expandForm } = this.state;
     return expandForm
       ? this.renderMainForm(0, this.columns.length - 1)
-//      : lang[getLocale()].align === 'left'
-      : this.renderMainForm(0, 2)
- //     : this.renderMainForm(this.columns.length - 3, this.columns.length - 1);
+      : //      : lang[getLocale()].align === 'left'
+        this.renderMainForm(0, 2);
+    //     : this.renderMainForm(this.columns.length - 3, this.columns.length - 1);
   }
 
   myList = data => (
@@ -672,7 +685,7 @@ class TableList extends PureComponent {
 
     if (this.state.formValues.name != location.query.name) {
       const params = this.props.location ? this.props.location.query : {};
-      
+
       const { dispatch } = this.props;
       this.setState({
         ...this.state,
@@ -707,13 +720,18 @@ class TableList extends PureComponent {
 
     return (
       <PageHeaderWrapper title={this.schema.title}>
-
         <Card bordered={false}>
           <div className={styles.tableList}>
-            {!this.schema.noFilter && <div className={styles.tableListForm}>{this.renderForm()}</div>}
+            {!this.schema.noFilter && (
+              <div className={styles.tableListForm}>{this.renderForm()}</div>
+            )}
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)} />
-              <Button style={{float : 'right'}}icon="file-pdf"  onClick={() => this.print('serials',data)} />
+              <Button
+                style={{ float: 'right' }}
+                icon="file-pdf"
+                onClick={() => this.print('serials', data)}
+              />
               {selectedRows.length > 0 && (
                 <span>
                   <Dropdown overlay={menu}>
@@ -728,22 +746,21 @@ class TableList extends PureComponent {
                 <h2 style={{ textAlign: 'center' }}> {this.props.location.query.parentName} </h2>
               )}
             </div>
-              
-                {data.list[0] === undefined
-                  ? ''
-                  : window.innerWidth < 1000
-                  ? this.myList(data.list)
-                  : this.myTable(selectedRows, loading, data)}
+
+            {data.list[0] === undefined
+              ? ''
+              : window.innerWidth < 1000
+              ? this.myList(data.list)
+              : this.myTable(selectedRows, loading, data)}
           </div>
-          
+
           <a onClick={() => this.flipShowBugReporter()}>
             <Icon type="exclamation-circle" />
           </a>
         </Card>
-                
-        {this.schema.forms.insert ? (
 
-          <MainForm 
+        {this.schema.forms.insert ? (
+          <MainForm
             {...parentMethods}
             ModalVisible={modalVisible}
             values={this.insertKey}
