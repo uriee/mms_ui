@@ -50,6 +50,13 @@ const kit = {
               },
             },
             {
+              field: 'in_use',
+              placeholder: 'Used',
+              style: {
+                width: '80%',
+              },
+            },            
+            {
               field: 'lot',
               placeholder: 'lot',
               style: {
@@ -64,7 +71,7 @@ const kit = {
               },
             },
           ],
-          format: [[0], [1], [2]],
+          format: [[0], [1, 2], [3]],
         },
       ],
     },
@@ -93,6 +100,11 @@ const kit = {
       inputMethod: 'input',
       sorter: true,
     },
+    in_use: {
+      dataIndex: 'in_use',
+      inputMethod: 'bool',
+      sorter: true,
+    },    
     partname: {
       dataIndex: 'partname',
       inputMethod: 'input',
