@@ -57,7 +57,7 @@
     "prop-types": "^15.6.2",
     "qs": "^6.6.0",
     "rc-animate": "^2.6.0",
-    "react": "^16.7.0",
+    "react": "^16.9.0",
     "react-container-query": "^0.11.0",
     "react-copy-to-clipboard": "^5.0.1",
     "react-document-title": "^2.0.3",
@@ -70,7 +70,8 @@
     "redbox-react": "^1.6.0",
     "rollup": "^1.6.0",
     "simple-bug-reporter": "^1.0.2",
-    "socket.io-client": "^2.2.0"
+    "socket.io-client": "^2.2.0",
+    "webpack": "^4.39.1"
   },
   "devDependencies": {
     "@types/react": "^16.8.1",
