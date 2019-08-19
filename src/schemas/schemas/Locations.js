@@ -153,21 +153,6 @@ const locations = {
         },
       ],
     },
-    x: {
-      dataIndex: 'x',
-      inputMethod: 'number',
-      sorter: true,
-    },
-    z: {
-      dataIndex: 'z',
-      inputMethod: 'number',
-      sorter: true,
-    },
-    y: {
-      dataIndex: 'y',
-      inputMethod: 'number',
-      sorter: true,
-    },
     partname: {
       dataIndex: 'partname',
       inputMethod: 'input',
@@ -203,6 +188,21 @@ const locations = {
         },
       ],
     },
+    x: {
+      dataIndex: 'x',
+      inputMethod: 'number',
+      sorter: true,
+    },
+    y: {
+      dataIndex: 'y',
+      inputMethod: 'number',
+      sorter: true,
+    },
+    z: {
+      dataIndex: 'z',
+      inputMethod: 'number',
+      sorter: true,
+    },
   },
 };
-export { locations };
+export {locations} ;
