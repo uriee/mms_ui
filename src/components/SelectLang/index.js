@@ -8,7 +8,6 @@ import styles from './index.less';
 export default class SelectLang extends PureComponent {
   changeLang = ({ key }) => {
     const { dispatch } = this.props;
-    console.log('321:', key, this.props);
     dispatch({
       type: 'global/changeUserLang',
       payload: key,

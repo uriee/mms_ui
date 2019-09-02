@@ -118,7 +118,6 @@ class ImportDataByFile extends React.Component {
         {x.title}
       </Option>
     ));
-    console.log('------------------', schamasTypes, choose, this.state, this.props);
     return (
       <PageHeaderWrapper title="Import Data From A File">
         <Card bordered={true}>

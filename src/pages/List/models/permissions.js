@@ -13,7 +13,6 @@ export default {
     *fetch({ payload }, { call, put }) {
       payload = { entity: 'profile' };
       const response = yield call(fetch, payload);
-      console.log('~~~~~~~~~~~~~~~~~~', response, payload);
       const ret = response.list !== undefined ? response : { profiles: response };
       yield put({
         type: 'save',

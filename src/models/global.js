@@ -37,7 +37,6 @@ export default {
     },
 
     *changeUserLang({ payload }, { call, put }) {
-      console.log('123~~~~~~~~~~', payload);
       const dta = yield call(post, { link: 'changeUserLang', locale: payload });
     },
     /*

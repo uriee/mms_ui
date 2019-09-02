@@ -53,7 +53,6 @@ export default {
                   } ) )
       }
 
-      console.log('Dash PayLoad in the save Reducer:',payload);
       return {
         ...state,
         ...payload,

@@ -161,18 +161,7 @@ class BasicLayout extends React.Component {
       breadcrumbNameMap,
       fixedHeader,
     } = this.props;
-    /*
-    const crumbs = JSON.parse(localStorage.getItem('bread'))
-    const last_crumb = crumbs && crumbs.slice(crumbs.length-1,crumbs.length)[0]
-    const last_crumb_name = last_crumb.href && last_crumb.href.split('tags=')[1]
-    const params = this.props.location ? this.props.location.query : {};
-    
-    if(params.name != last_crumb_name) {
-      console.log("!~~~~~~~~~~~~~~~!@#~~~~~~~~~~~~~~~~~~!@#~~~~~~~~~~~~~~~~~~!@#")
-      this.forceUpdate();      
-    }
-    console.log('BasicLayout:', crumbs,last_crumb,last_crumb_name, params);
-*/
+
     const isTop = PropsLayout === 'topmenu';
     const contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
     const layout = (

@@ -38,7 +38,6 @@ import styles from './TableList.less';
 class TagView extends PureComponent {
   constructor(props) {
     super(props);
-    console.log('IN CONSTRUCTOR', this.props);
 
     this.columns = [
       {
@@ -197,7 +196,6 @@ class TagView extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    console.log('=========================:', this.props, this.columns);
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -265,7 +263,6 @@ class TagView extends PureComponent {
       loading,
       location,
     } = this.props;
-    console.log('DATA', this.state, location);
     if (this.state.formValues.tags != location.query.tags) {
       const params = this.props.location ? this.props.location.query : {};
       const { dispatch } = this.props;

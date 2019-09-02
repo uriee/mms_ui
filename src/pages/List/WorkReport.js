@@ -110,8 +110,6 @@ class WorkReport extends PureComponent {
   }
 
   handleSonIdentifierChange = (value) => {
-
-    console.log("~~~~~~~~~~~~~~",value)
     const x = value.split('|')
     const partname = x[0]
     const identifier = x[1]
@@ -119,9 +117,8 @@ class WorkReport extends PureComponent {
     const i = x[2]    
     let ret = {...this.state.sonIdentifiers}
     ret[partname] = ret[partname] || [] 
-    console.log('11:',x,ret[partname][i],this.state.sonIdentifiers)    
+
     ret[partname][i] = identifier
-    console.log('22:',x,ret[partname][i],this.state.sonIdentifiers)
     this.setState({ sonIdentifiers: ret });
   } 
 
@@ -209,8 +206,7 @@ class WorkReport extends PureComponent {
               sonIdentifiers : {},
               mac_address : null,
               secondary : null
-            }) 
-            console.log("popopo1:",x,this.state)                    
+            })                  
         });
     }
 

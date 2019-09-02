@@ -34,7 +34,6 @@ export default class NoticeIcon extends PureComponent {
   onItemClick = (item, tabProps) => {
     const { onItemClick } = this.props;
     const { clickClose } = item;
-    console.log('!!!!',item, tabProps)  
     onItemClick(item, tabProps);
     if (clickClose) {
       this.popover.click();
