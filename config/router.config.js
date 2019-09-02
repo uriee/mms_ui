@@ -93,6 +93,14 @@ export default [
             },
           },
           {
+            path: '/production/lotswap',
+            name: 'lot_swap',
+            component: './List/MainList',
+            params: {
+              entity: 'lot_swap',
+            },
+          },          
+          {
             path: '/production/standard',
             name: 'standard',
             component: './Result/Success',

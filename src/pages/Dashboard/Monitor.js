@@ -428,7 +428,8 @@ const placements = (work_report_placements) => (
   this.AddItem('4',workDone(wo_percent_total),0,0,2,2)
 
   console.log(this.layout.items,)
-  var originalLayouts = getFromLS("layouts").lg || [];
+  var layouts = getFromLS("layouts")
+  var originalLayouts = layouts && layouts.lg || [];
   console.log("------1",this.layout.items,originalLayouts)
   this.layout.items.forEach(x=> {
     const layout = originalLayouts.filter(c => c.i === x.i)[0]

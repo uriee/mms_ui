@@ -42,6 +42,7 @@ import { fault_type_actions } from './schemas/FaultTypeAct.js';
 import { fault_status } from './schemas/Fault_Statuses.js';
 import { fix } from './schemas/Fix.js';
 import { fix_actions } from './schemas/FixAct.js';
+import { lot_swap } from './schemas/LotSwap.js';
 
 const schemas = {
   emp,
@@ -87,7 +88,8 @@ const schemas = {
   fault_type,
   identifier_links,
   fix,
-  fix_actions
+  fix_actions,
+  lot_swap
 };
 
 export default schemas;
