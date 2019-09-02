@@ -110,7 +110,7 @@ class TableList extends PureComponent {
     this.columns = this.fields
       .filter(
         field => field.required !== false
-      ) /* field ont need to be shown in the table it is needded for input forms only */
+      ) /* field with require property false is needded for input forms only */
       .sort((a, b) => a.order > b.order)
       .map((field, fi) => ({
         title: formatMessage({ id: `pages.${field.name}` }),
@@ -128,7 +128,7 @@ class TableList extends PureComponent {
         //fixed: (field.dataIndex === "name" ? 'left' : /*field.son ? 'right' */'none'),
         width: field.width
           ? field.width
-          : 200 /*field.son ? formatMessage({ id: `pages.${field.name}` }).length * 7 : field.dataIndex === "name" ? 100 : 0,*/,
+          : 200, /*field.son ? formatMessage({ id: `pages.${field.name}` }).length * 7 : field.dataIndex === "name" ? 100 : 0,,*/
         render: (x, z) => {
           const link = field.link
             ? field.linkParam
@@ -171,11 +171,11 @@ class TableList extends PureComponent {
         align: lang[getLocale()] ? lang[getLocale()].align : 'left',
       }));
     this.columns.push({ title: '' });
-    this.columns = this.schema.forms.update
+    this.columns = this.schema.forms && this.schema.forms.update
       ? (this.columns = [
           {
             title: <Icon type="edit" />,
-            //fixed : 'right',
+            fixed : 'left',
             width: 40,
             render: (text, record) => (
               <Fragment>
@@ -759,7 +759,7 @@ class TableList extends PureComponent {
           </a>
         </Card>
 
-        {this.schema.forms.insert ? (
+        {this.schema.forms && this.schema.forms.insert ? (
           <MainForm
             {...parentMethods}
             ModalVisible={modalVisible}
@@ -774,7 +774,7 @@ class TableList extends PureComponent {
             formType="insert"
           />
         ) : null}
-        {this.schema.forms.update && stepFormValues && Object.keys(stepFormValues).length ? (
+        {this.schema.forms && this.schema.forms.update && stepFormValues && Object.keys(stepFormValues).length ? (
           <MainForm
             {...updateMethods}
             ModalVisible={updateModalVisible}
