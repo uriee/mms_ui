@@ -26,6 +26,7 @@ export default {
                   type : response.type,
                   fix : response.fix,                  
                   path : payload.path,
+                  kit : response.kit,
                   son_identifiers :  response.son_identifiers }
 
       yield put({
@@ -48,7 +49,13 @@ export default {
     *workReportSerialSub({ payload, callback }, { call }) {
     const response = yield call(updatePermissions, payload);
     if (callback) callback();
-    },        
+    },
+
+    *lot_swap({ payload, callback }, { call }) {
+      const response = yield call(updatePermissions, payload);
+           
+      if (callback) callback();
+    },         
   },
 
   reducers: {

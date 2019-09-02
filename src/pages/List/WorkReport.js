@@ -65,7 +65,12 @@ class WorkReport extends PureComponent {
       fix : null,
       secondary : '',
       mac_address : '',
-      sonIdentifiers : {}
+      kitSwitch : false,
+      kit1 : null,
+      kit2 : null,
+      sonIdentifiers : {},
+      kitPartName : '',
+      kitAction : null
     };  
   }
 
@@ -105,11 +110,18 @@ class WorkReport extends PureComponent {
   }
 
   handleSonIdentifierChange = (value) => {
+
+    console.log("~~~~~~~~~~~~~~",value)
     const x = value.split('|')
     const partname = x[0]
     const identifier = x[1]
+    if (identifier ==='N/A') return 
+    const i = x[2]    
     let ret = {...this.state.sonIdentifiers}
-    ret[partname] = identifier
+    ret[partname] = ret[partname] || [] 
+    console.log('11:',x,ret[partname][i],this.state.sonIdentifiers)    
+    ret[partname][i] = identifier
+    console.log('22:',x,ret[partname][i],this.state.sonIdentifiers)
     this.setState({ sonIdentifiers: ret });
   } 
 
@@ -127,6 +139,10 @@ class WorkReport extends PureComponent {
 
   handleSerialClick= e => {
      if (e.key === 'Enter') this.handleAddSerial()       
+  }
+
+  handleKit2Click= e => {
+    if (e.key === 'Enter') this.handleKitSubmition()       
   }
 
   handleSerialChange = e => {
@@ -149,9 +165,25 @@ class WorkReport extends PureComponent {
   }      
 
 
-    handleFaultSwitchChange = (checked) => {
+  handleFaultSwitchChange = (checked) => {
         this.setState({ faultSwitch: checked ,type: '',fix: '', location: ''})
-    }
+  }
+
+  handleKitSwitchChange = (checked) => {
+      this.setState({ kitSwitch: checked ,kit1: '',kit2: ''})
+  } 
+
+  handleKit1Change = value => {
+    const lot = this.props.workReport.kit.filter(x=> x.lot === value)[0]
+    const pn = lot && lot.partname
+    this.setState({ kit1: value ,kitPartName : pn});
+  }   
+
+  handleKit2Change = e => {
+    const value = e.target.value  
+    this.setState({ kit2: value });
+  }       
+  
 
     getEntry = path => {
         const entry = path && this.props.workReport.paths && Object.values(this.props.workReport.paths).filter(x=> x.resourcename === path[0] && x.serialname === path[1] && x.actname === path[2])
@@ -174,12 +206,86 @@ class WorkReport extends PureComponent {
               type: null,
               fix: null,
               location: null ,
-              sonIdentifiers : {}
+              sonIdentifiers : {},
+              mac_address : null,
+              secondary : null
             }) 
             console.log("popopo1:",x,this.state)                    
         });
     }
 
+    postKitSubmition = () => {
+  
+      const { dispatch } = this.props;    
+      
+      dispatch({
+          type: `workReport/fetchWR`,
+          payload: {path : this.props.workReport.path},
+      }).then(x => {
+          this.setState({
+            kit1 : null,
+            kit2: null
+          })                  
+      });
+  }
+
+  
+  handleKitSubmition = () => {
+    const { kit1,kit2 } = this.state  
+    if (!kit1 && kit2) {
+      notification.error({ message: `Wrong Lot`, description: 'At least one of the lots is empty.'})
+      return
+    }   
+    if (kit1 === kit2) {
+      notification.error({ message: `Wrong Lot`, description: 'This Two Lots are the same.'})
+      return
+    }        
+    const kit2Object = this.props.workReport.kit.filter(x=> x.lot === kit2)[0]
+    if (!kit2Object) {
+      notification.error({ message: `Wrong Lot`, description: 'This Lot do not belong to the current work order.'})
+      return
+    }    
+    const kit2PartName  = kit2Object && kit2Object.partname
+
+    if (kit2PartName !== this.state.kitPartName) {
+      notification.error({ message: `Wrong Lot`, description: 'This Lot has different PN than the former Lot.'})
+      return
+    } 
+    const posibleKit2 = this.props.workReport.kit.filter(x=> x.partname ===this.state.kitPartName && x.lot !== this.state.kit1 )
+    const posibleLots = posibleKit2.map(x => x.lot)
+    console.log("!~~~~~~",kit1,kit2,kit2Object,kit2PartName,this.state.kitPartName,posibleKit2,posibleLots)
+    if (!(posibleLots.includes(kit2))) {
+      notification.error({ message: `Wrong Lot`, description: 'This Lot do not belong to the current work order',})
+      return
+    }
+    const { dispatch } = this.props;
+    var values = {
+      entity : 'lot_swap',
+      resourcename: this.props.workReport.path[0] ,
+      serialname : this.props.workReport.path[1],
+      actname : this.props.workReport.path[2],
+      lot_old: kit1,
+      lot_new : kit2,
+      sig_user : JSON.parse(localStorage.getItem('user')) && JSON.parse(localStorage.getItem('user')).username
+    }
+
+    dispatch({
+    type: 'action/add',    
+    payload: values
+    }).then(x => {
+        this.postKitSubmition()
+    });
+   /*
+   dispatch({
+    type: `workReport/lot_swap`,
+    payload: {path : this.props.workReport.path},
+    }).then(x => {
+      this.postKitSubmition() 
+    });   
+*/
+    return 
+  };
+/* 190100098416 */
   handleAddAmount = () => {
     const batch_amount = batch_amount && this.state.batch_array.length
     const amount = this.state.amount  * (batch_amount || 1 )
@@ -240,6 +346,7 @@ class WorkReport extends PureComponent {
       return
     }
     const sons = this.props.workReport.son_identifiers && this.props.workReport.son_identifiers.every(x=> !!this.state.sonIdentifiers[x.name])
+
     if ( !this.state.faultSwitch && this.props.workReport.son_identifiers && this.props.workReport.son_identifiers[0] && !sons) {
       notification.error({ message: `Missing data`, description: 'All Son Identifiers must be specified',})
       return      
@@ -253,8 +360,8 @@ class WorkReport extends PureComponent {
         quant: 1  * (batch && batch.length || 1 ),
         identifier : this.state.serial,
         batch_array : this.state.batch_array,
-        mac_address : this.state.mac_address,
-        secondary : this.state.secondary,
+        mac_address : this.state.mac_address|| '',
+        secondary : this.state.secondary || '',
         location : this.state.location,
         type_name : this.state.type,
         fix: this.state.fix,
@@ -322,29 +429,30 @@ class WorkReport extends PureComponent {
    { title :  formatMessage({ id: `pages.sent` }), dataIndex : "sent" },    
  ]   
  
-  const son_identifiers =  this.props.workReport.son_identifiers && this.props.workReport.son_identifiers.map(x =>
-    (
-      <Row style={{margin : 8}}>
+  const son_identifiers =  this.props.workReport.son_identifiers && this.props.workReport.son_identifiers.map(x => new Array(x.coef).fill(x)
+    .map((son,i) =>  (
+                          <Row style={{margin : 8}}>
 
-          <Select
-            showSearch
-            onChange={this.handleSonIdentifierChange}
-            style={{ width: '100%' ,marginLeft : 8}}
-            placeholder={x.name}
-            optionFilterProp="children"
-            value = {this.state.sonIdentifiers[x.name] ? this.state.sonIdentifiers[x.name] : undefined}
-            filterOption={(input, option) =>
-              option.props.children.toLowerCase().indexOf(input.toUpperCase()) >= 0
-            }
-          >
-            { x.identifiers.map(option => (
-                  <Option key={x.name +'|'+option} value={x.name +'|'+option}>
-                    {option}
-                  </Option>
-                ))}
-          </Select>
-      </Row>  
-    )
+                              <Select
+                                showSearch
+                                onChange={this.handleSonIdentifierChange}
+                                style={{ width: '100%' ,marginLeft : 8}}
+                                placeholder={son.name}
+                                optionFilterProp="children"
+                                value = {this.state.sonIdentifiers[x.name] ? this.state.sonIdentifiers[son.name][i] : undefined}
+                                filterOption={(input, option) =>
+                                  option.props.children.toLowerCase().indexOf(input.toUpperCase()) >= 0
+                                }
+                              >
+                                { son.identifiers.map(option => (
+                                      <Option key={son.name +'|'+option} value={son.name +'|'+option +'|' +i}>
+                                        {option}
+                                      </Option>
+                                    ))}
+                              </Select>
+                          </Row>  
+                        )
+                      )
   )
 
   const batch_exclude =  this.state.batch_array && this.state.batch_array.length > 0  && 
@@ -394,10 +502,11 @@ class WorkReport extends PureComponent {
                         
             {this.state.balance > 0  && <Progress percent={parseInt((this.state.quant-this.state.balance)/this.state.quant*100)} />}
             {this.state.balance > 0  && <span >
-                    <Row style={{margin : 16}}> 
-                        <Switch color='red' onChange={this.handleFaultSwitchChange} checked={this.state.faultSwitch} checkedChildren={formatMessage({ id: `pages.fault_report` })} unCheckedChildren={formatMessage({ id: `pages.work_report` })} /> 
+                    <Row style={{margin : 24}}> 
+                        <Switch color='red' onChange={this.handleFaultSwitchChange} checked={this.state.faultSwitch} checkedChildren={formatMessage({ id: `pages.fault_report` })} unCheckedChildren={formatMessage({ id: `pages.work_report` })} />
+                        {!this.state.faultSwitch && <Switch style={{float : 'right'}} color='green' onChange={this.handleKitSwitchChange} checked={this.state.kitSwitch} checkedChildren={formatMessage({ id: `pages.kit_usage` })} unCheckedChildren={formatMessage({ id: `pages.work_orders` })} /> }                        
                     </Row>
-                   
+             {!this.state.kitSwitch && <span>
                     <Row style={{marginTop : 24}}> 
                     {!this.state.serialize && <span>
                         <Col span={6} style={{margin : 8}}>  <Input placeholder="Amount" value={this.state.quantitative ?  this.state.amount || null : this.state.balance } onKeyDown={this.handleAmountClick} onChange={this.handleAmountChange} disabled={!this.state.quantitative }></Input> </Col> 
@@ -435,7 +544,42 @@ class WorkReport extends PureComponent {
                           {batch_exclude}
                       </Col>   
                    </Row>
-                    </span>}                 
+                    </span>} 
+              </span>}
+                {this.state.kitSwitch && <Row>
+                  <Col span={10}  style={{marginLeft : 8}}>
+                        <Select
+                          showSearch
+                          onChange={this.handleKit1Change}
+                          value={this.state.kit1 || undefined}
+                          style={{ width: '90%' }}
+                          placeholder={formatMessage({ id: `pages.kit1` })}
+                        
+                          optionFilterProp="children"
+                          filterOption={(input, option) =>
+                            option.props.children[0].toLowerCase().indexOf(input.toLowerCase()) >= 0 || option.props.children[2].toLowerCase().indexOf(input.toLowerCase()) >= 0
+                          }
+                        >
+                          {this.props.workReport.kit &&
+                            this.props.workReport.kit.map(option => (
+                                <Option key={option.lot} value={option.lot}>
+                                  {option.lot} :  {option.partname}
+                                </Option>
+                              ))}
+                        </Select>   
+                      </Col>  
+                      <Col span={6}  style={{marginLeft : 8}}>
+                        <Input 
+                          placeholder={formatMessage({ id: `pages.kit2` })}
+                          value={this.state.kit2 || null}
+                          onKeyDown={this.handleKit2Click}
+                          onChange={this.handleKit2Change}>
+                        </Input>
+                      </Col> 
+                      <Col span={4}  style={{marginLeft : 8}}>
+                        <Button type="primary" style={{marginRight : 8}}>+</Button>
+                      </Col>                               
+                </Row>}
                 {this.state.faultSwitch && <Row style={{marginTop : 24}}>
                       <Col span={6}  style={{marginLeft : 8}}>
                         <Select
