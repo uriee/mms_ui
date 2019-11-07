@@ -20,7 +20,7 @@ const FilterGroup = ({
   };
 
   return (
-    <div className="fc-group">
+    <div  style={{ marginTop : 18, marginRight :10}}>
       <FilterGroupSettingsRow
         filterValue={filterValue}
         fields={fields}

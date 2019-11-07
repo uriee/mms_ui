@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import deepCopy from '../../utils/deepCopy';
 import DropDownMenu from '../DropDownMenu';
 import Consumer from '../../context';
+import { Row,Col,Button } from 'antd';
 
 const FilterGroupSettingsRow = ({
   filterValue, fields, onFilterValueChanged, groups, removeClick,
@@ -40,13 +41,10 @@ const FilterGroupSettingsRow = ({
     onFilterValueChanged(newFilterValue);
   };
 
-  const onAddMenuItemClick = name => (name === 'addCondition' ? addCondition() : addGroup());
-
-  const addMenuItems = [{ name: 'addCondition', caption: 'Add Condition' }, { name: 'addGroup', caption: 'Add Group' }];
-  const activeIndex = groups.findIndex(g => g.name === filterValue.groupName);
 
   return (
-    <div className="fc-group-settings-row">
+    <Row  className="fc-group-settings-row">
+       <Col span={1} style={{margin : 8}}>
       {
         removeClick && (
         <Consumer>
@@ -54,29 +52,11 @@ const FilterGroupSettingsRow = ({
         </Consumer>
         )
       }
-      <DropDownMenu
-        color="secondary"
-        activeIndex={activeIndex}
-        textField="caption"
-        keyField="name"
-        menuItems={groups}
-        onMenuItemClick={onGroupMenuItemClick}
-      />
-
-      <Consumer>
-        { value => (
-          <DropDownMenu
-            textField="caption"
-            activeIndex={1}
-            keyField="name"
-            menuItems={addMenuItems}
-            onMenuItemClick={onAddMenuItemClick}
-          >
-            <value.AddButton />
-          </DropDownMenu>
-        )}
-      </Consumer>
-    </div>
+      </Col>
+      <Col span={10} style={{margin : 8}}>{DropDownMenu(groups,onGroupMenuItemClick,'AND / OR',"And")}</Col>
+      <Col span={4} style={{margin : 8}}><Button onClick={addGroup}>Add Group</Button></Col>
+      <Col span={6} style={{margin : 8}}><Button onClick={addCondition}>Add Condition</Button></Col>
+    </Row>
   );
 };
 

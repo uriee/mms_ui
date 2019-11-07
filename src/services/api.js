@@ -61,6 +61,47 @@ export async function fetchResources() {
   return x;
 }
 
+export async function fetchTriggersSchemas() {
+  let x;
+  try {
+    x = await myGet(`${Logic}mymes/fetchTriggersSchemas?`);
+  } catch (e) {
+    console.error(e);
+  }
+  return x.list;
+}
+
+export async function fetchTriggersFields(params) {
+  let x;
+  try {
+    x = await myGet(`${Logic}mymes/fetchTriggersFields?schema=${params.schema}`);
+  } catch (e) {
+    console.error(e);
+  }
+  console.log("@@@@@@@@@@@@@@@:",x)
+  return x.list;
+}
+
+export async function insertTrigger(params) {
+  const ret = await mrequest(`${Logic}mymes/insertTrigger`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+  return ret;
+}
+
+export async function deleteTrigger(params) {
+  const ret = await mrequest(`${Logic}mymes/deleteTrigger`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+  return ret;
+}
+
 export async function fetch_dash(params) {
   let x;
   const data = params.data;

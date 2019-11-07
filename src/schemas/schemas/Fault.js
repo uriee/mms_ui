@@ -345,7 +345,17 @@ const fault = {
     username: {
         dataIndex: 'username',
         sorter: true,
-      },    
+    }, 
+    sent: {
+      dataIndex: 'sent',
+      sorter: true,
+      inputMethod: 'bool',      
+    },    
+    approved: {
+      dataIndex: 'approved',
+      sorter: true,
+      inputMethod: 'bool',      
+    },     
   },
 };
 export { fault };

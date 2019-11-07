@@ -13,7 +13,6 @@ const lang = {
   'de-DE': { id: 3, align: 'left' },
 };
 
-
 import {
   Row,
   Col,
@@ -271,17 +270,10 @@ class WorkReport extends PureComponent {
     }).then(x => {
         this.postKitSubmition()
     });
-   /*
-   dispatch({
-    type: `workReport/lot_swap`,
-    payload: {path : this.props.workReport.path},
-    }).then(x => {
-      this.postKitSubmition() 
-    });   
-*/
+
     return 
   };
-/* 190100098416 */
+
   handleAddAmount = () => {
     const batch_amount = batch_amount && this.state.batch_array.length
     const amount = this.state.amount  * (batch_amount || 1 )
@@ -641,12 +633,13 @@ class WorkReport extends PureComponent {
                         <Button type="danger"  onClick={this.state.serialize ? this.handleAddSerial : this.handleAddAmount }>+</Button>
                       </Col>
                   </Row>}
-                                   
+                                  
             </span>
             }
-            { this.state.balance > 0  && this.props.workReport && this.props.workReport.wr && <Table rowKeys="Id" dataSource={this.props.workReport.wr} style={{margin : 32}} columns={columns}/> }
+            { this.state.balance > 0  && this.props.workReport && this.props.workReport.wr && <Table rowKey="sig_date" dataSource={this.props.workReport.wr} style={{margin : 32}} columns={columns}/> }
 
         </Card>
+
       </PageHeaderWrapper>
     );
   }

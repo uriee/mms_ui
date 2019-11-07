@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FilterGroup from '../FilterGroup';
 
+
 class FilterControl extends Component {
   constructor(props) {
     super(props);
@@ -9,25 +10,19 @@ class FilterControl extends Component {
     this.state = {
       filterValue,
     };
-    this.onFilterValueChanged = this.onFilterValueChanged.bind(this);
-  }
-
-  onFilterValueChanged(filterValue) {
-    const { onFilterValueChanged } = this.props;
-    this.setState({ filterValue });
-    onFilterValueChanged(filterValue);
   }
 
   render() {
     const { fields, groups } = this.props;
-    const { filterValue } = this.state;
+    const { filterValue } = this.props;
+
     return (
       <div className="fc">
         <FilterGroup
           fields={fields}
           groups={groups}
           filterValue={filterValue}
-          onFilterValueChanged={this.onFilterValueChanged}
+          onFilterValueChanged={this.props.onFilterValueChanged}
         />
       </div>
     );

@@ -311,11 +311,11 @@ export default [
       {
         name: 'ctrl',
         path: '/ctrl',
-        routes: [
+        routes: [      
           {
             path: '/ctrl/eventm',
             name: 'eventm',
-            component: './Result/Success',
+            component: './List/Triggers',
           },
           {
             path: '/ctrl/controlpoints',
