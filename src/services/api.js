@@ -71,6 +71,16 @@ export async function fetchTriggersSchemas() {
   return x.list;
 }
 
+export async function fetchInToDynamicSelect(params) {
+  let x;
+  try {
+    x = await myGet(`${Logic}mymes/fetchInToDynamicSelect?schema=${params.schema}&like=${params.like}`);
+  } catch (e) {
+    console.error(e);
+  }
+  return x.list;
+}
+
 export async function fetchTriggersFields(params) {
   let x;
   try {

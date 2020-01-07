@@ -5,7 +5,7 @@ import { dept } from './schemas/Departments.js';
 import { user } from './schemas/User.js';
 import { profile } from './schemas/Profile.js';
 import { equipment } from './schemas/Equipment.js';
-import { resourceGroup } from './schemas/ResourceGroup.js';
+import { resource_groups } from './schemas/ResourceGroup.js';
 import { resource } from './schemas/Resource.js';
 import { availabilityProfile } from './schemas/AvailabilityProfile.js';
 import { availabilities } from './schemas/Availabilities.js';
@@ -54,7 +54,7 @@ const schemas = {
   iden,
   profile,
   equipment,
-  resourceGroup,
+  resource_groups,
   resource,
   availabilityProfile,
   availabilities,

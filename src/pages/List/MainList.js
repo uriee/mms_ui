@@ -105,6 +105,7 @@ class TableList extends PureComponent {
 
   /*---  change the schema in page loading ---*/
   schemaChange = () => {
+    console.log('~~~~~~~~~~~~~~!@#:',this.entity)
     this.schema = schemas[this.entity];
     this.fields = pushKey(this.schema.fields);
     this.columns = this.fields
@@ -207,9 +208,9 @@ class TableList extends PureComponent {
   resourcesRender = (x, z) => {
     if (!x[0]) return <span />;
     const resourceTypeMap = {
-      employee: { link: 'employees', color: 'green' },
-      equipment: { link: 'equipments', color: 'orange' },
-      resource_group: { link: 'resource_groups', color: 'blue' },
+      employees: { link: 'employees', color: 'green' },
+      equipments: { link: 'equipments', color: 'orange' },
+      resource_groups: { link: 'resource_groups', color: 'blue' },
       place: { link: 'places', color: 'blue' },
     };
     const types = z.resource_types.slice(1, -1).split(',');

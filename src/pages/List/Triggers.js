@@ -59,6 +59,7 @@ class Triggers extends PureComponent {
       error : false,
       del :false,
       schema : '',
+      
       conditions : {
         "groupName": "and",
         "items": []
@@ -87,8 +88,10 @@ class Triggers extends PureComponent {
          }    
       dispatch({
         type: `triggers/fetchFields`,
-        payload: {schema},
-      });  
+        payload: {schema},     
+      }).then(x => {
+        this.postSubmition()
+    });  
       this.setState({
          schema : schema,    
         })     
@@ -233,6 +236,7 @@ class Triggers extends PureComponent {
           name : `${x.table_name}.${x.column_name}`,
           operators :  (x.data_type === 'boolean' ? this.props.triggers.booleanOperators :
                         x.data_type === 'integer' ? this.props.triggers.integerOperators :
+                        x.data_type.startsWith('timestamp')  ? this.props.triggers.integerOperators.map(x=> ({...x, date : true})) :
                         x.data_type === 'ARRAY' ? this.props.triggers.arrayOperators :          
                         this.props.triggers.textOperators),
           defaultValue: null
@@ -241,7 +245,6 @@ class Triggers extends PureComponent {
     const fieldsNames = fields && fields.map(x=>x.name)
     const schemas = this.props.triggers.schemas && this.props.triggers.schemas.map(x => x.table_name)/* && JSON.parse(this.props.triggers.schemas)    */
     const {schema} = this.state
-    console.log("SCHEMAFIELDS:",fields)
     const columns = [
       {
         title: '',
@@ -278,7 +281,7 @@ class Triggers extends PureComponent {
                 showSearch
                 onChange={this.handlePick}
                 style={{ width: '100%' ,marginLeft : 8}}
-                placeholder='choose entity to rule over'
+                placeholder='Event Triggers Entity'
                 optionFilterProp="children"
                 value = {schema ? schema : undefined}
               >

@@ -263,7 +263,7 @@ export default [
             name: 'resource_groups',
             component: './List/MainList',
             params: {
-              entity: 'resourceGroup',
+              entity: 'resource_groups',
             },
           },
           {
@@ -711,7 +711,7 @@ export default [
             params: {
               entity: 'serials',
             },
-            name: 'serials',
+            name: 'serial',
           },
           {
             component: './List/MainList',

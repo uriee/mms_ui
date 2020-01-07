@@ -7,6 +7,7 @@ import {
   Input,
   Row,
   Col,
+  DatePicker,
 } from 'antd';
 
 const Condition = ({
@@ -51,6 +52,9 @@ const Condition = ({
   const handleOperatorChanged = newValue => onConditionValueChanged(updateCondition('operator', newValue));
   const handleValuePick = newValue => onConditionValueChanged(updateCondition('value', newValue));  
   const activeField = getActiveField(value);
+
+  const input = activeField && activeField.operators[0].date ? (<DatePicker showTime placeholder="Select Time"  onOk={handleValuePick} />) :
+  (<Input disabled={value.noValue} onChange={handleValueChanged} value={activeField.value}/>)
   return (
     <Row  span={24} style={{ marginTop : 8}}>
       <Col span={1} style={{margin : 8}}>
@@ -61,7 +65,7 @@ const Condition = ({
       
       <Col span={6} style={{margin : 8}}> {DropDownMenu(fields,handleFieldChanged,'Choose Field',value.field,)} </Col>
       <Col span={6} style={{margin : 8}}> {DropDownMenu(activeField.operators,handleOperatorChanged,'Choose Operator',value.operator)} </Col>
-       <Col span={6} style={{margin : 8}}> <Input disabled={value.noValue} onChange={handleValueChanged} value={activeField.value}/> </Col>
+       <Col span={6} style={{margin : 8}}> {input} </Col>
 
     </Row>
   );

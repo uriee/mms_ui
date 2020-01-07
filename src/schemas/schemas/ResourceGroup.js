@@ -1,7 +1,7 @@
 /*
 The label in forms is determents by <FormattedMessage id=forms+entity+field /> forms+entity+field
 */
-const resourceGroup = {
+const resource_groups = {
   entity: 'resource_group',
   title: 'Resource Groups',
 
@@ -268,4 +268,4 @@ const resourceGroup = {
     },
   },
 };
-export { resourceGroup };
+export { resource_groups };
